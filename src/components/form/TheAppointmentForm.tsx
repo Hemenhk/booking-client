@@ -104,7 +104,7 @@ export default function AppointmentForm() {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-1/4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-2/4">
         {step === 1 && (
           <FormField
             control={form.control}

@@ -2,6 +2,7 @@ import axios from "axios";
 import { string } from "zod";
 
 export type AppointmentType = {
+  _id: string
   name: string;
   last_name: string;
   email: string;
@@ -21,3 +22,12 @@ export const bookAppointment = async (data: AppointmentType) => {
     console.log(error);
   }
 };
+
+export const getAllBookedAppointments = async () => {
+  try {
+    const response = await axios.get<AppointmentType[]>("http://localhost:5000/api/appointments")
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
