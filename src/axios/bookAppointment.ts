@@ -1,5 +1,11 @@
 import axios from "axios";
-import { string } from "zod";
+
+export type ServiceType = {
+  _id: string;
+  name: string;
+  duration: number;
+  price: number;
+};
 
 export type AppointmentType = {
   _id: string
@@ -7,7 +13,7 @@ export type AppointmentType = {
   last_name: string;
   email: string;
   phone_number: string;
-  service: string;
+  service: ServiceType;
   date: string;
   time: string;
   status?: string;
@@ -15,7 +21,7 @@ export type AppointmentType = {
 
 export const bookAppointment = async (data: AppointmentType) => {
   try {
-    const response = await axios.post("http://localhost:5000/api/appointments", data);
+    const response = await axios.post("http://localhost:8000/api/appointments", data);
     console.log("booked appointment", response);
     return response;
   } catch (error) {
@@ -25,7 +31,7 @@ export const bookAppointment = async (data: AppointmentType) => {
 
 export const getAllBookedAppointments = async () => {
   try {
-    const response = await axios.get<AppointmentType[]>("http://localhost:5000/api/appointments")
+    const response = await axios.get<AppointmentType[]>("http://localhost:8000/api/appointments")
     return response.data
   } catch (error) {
     console.log(error)
