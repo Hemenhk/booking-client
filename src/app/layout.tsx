@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans';
 import "./globals.css";
 import ReactQueryProvider from "@/providers/tanstackProvider";
 import { Toaster } from "@/components/ui/toaster";
+import TheDashboardHeader from "@/components/header/TheDashboardHeader";
 
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <ReactQueryProvider>
+          <TheDashboardHeader />
           {children} <Toaster />
         </ReactQueryProvider>
       </body>

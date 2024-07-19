@@ -11,12 +11,15 @@ import {
 
 type AppointmentCardProps = {
   appointment: AppointmentType;
-  bgColor: string
+  bgColor: string;
 };
 
 const bgColors = ["bg-cyan-50", "bg-yellow-50", "bg-pink-50"];
 
-export default function TheAppointments({ appointment, bgColor }: AppointmentCardProps) {
+export default function TheAppointments({
+  appointment,
+  bgColor,
+}: AppointmentCardProps) {
   const calculateEndTime = (startTime: string, duration: number) => {
     const [hours, minutes] = startTime.split(":").map(Number);
     const totalMinutes = hours * 60 + minutes + duration;
@@ -37,16 +40,15 @@ export default function TheAppointments({ appointment, bgColor }: AppointmentCar
     <ul className="space-y-2">
       <Card key={appointment._id} className={`shadow-md ${bgColor}`}>
         <CardHeader>
-          <CardTitle className="text-base font-medium">
+          <CardTitle className="text-sm font-medium">
             {appointment.name} {appointment.last_name}
           </CardTitle>
-          <CardDescription className="text-gray-500 tracking-wide text-sm">
+          <CardDescription className="text-gray-500 tracking-wider text-xs">
             {appointment.service.name}
           </CardDescription>
         </CardHeader>
-
         <CardFooter>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-xs">
             Kl: {appointment.time} - {endTime}
           </p>
         </CardFooter>
