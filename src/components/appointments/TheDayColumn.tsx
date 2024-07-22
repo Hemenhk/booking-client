@@ -41,7 +41,7 @@ export default function TheDayColumn({ day }: DayColumnProps) {
           {appointment ? (
             <TheAppointments appointment={appointment} bgColor={bgColor} />
           ) : (
-            <div className="bg-red-200 p-2 rounded mt-1">No appointment</div>
+            <div />
           )}
         </div>
       );

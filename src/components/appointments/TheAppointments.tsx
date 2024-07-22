@@ -1,6 +1,5 @@
 "use client";
 
-import { AppointmentType } from "@/axios/bookAppointment";
 import {
   Card,
   CardDescription,
@@ -8,6 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AppointmentType } from "@/lib/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Phone } from "lucide-react";
+import { HiOutlineEnvelope } from "react-icons/hi2";
 
 type AppointmentCardProps = {
   appointment: AppointmentType;
@@ -37,12 +46,14 @@ export default function TheAppointments({
   );
 
   return (
-    <ul className="space-y-2">
+    <Dialog>
       <Card key={appointment._id} className={`shadow-md ${bgColor}`}>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">
-            {appointment.name} {appointment.last_name}
-          </CardTitle>
+          <DialogTrigger asChild className="cursor-pointer">
+            <CardTitle className="text-sm font-medium">
+              {appointment.name} {appointment.last_name}
+            </CardTitle>
+          </DialogTrigger>
           <CardDescription className="text-gray-500 tracking-wider text-xs">
             {appointment.service.name}
           </CardDescription>
@@ -53,6 +64,43 @@ export default function TheAppointments({
           </p>
         </CardFooter>
       </Card>
-    </ul>
+      <DialogContent>
+        <DialogHeader className="border-b py-5 space-y-4">
+          <DialogTitle>
+            {appointment.name} {appointment.last_name}
+          </DialogTitle>
+          <div className="flex items-center gap-5 text-gray-600">
+            <div className="flex items-center gap-2 text-sm">
+              <Phone size={15} />
+              {appointment.phone_number}
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <HiOutlineEnvelope />
+              <span className="underline">{appointment.email}</span>
+            </div>
+          </div>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-6">
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-gray-600 font-medium text-sm">Service</h3>
+            <p>{appointment.service.name}</p>
+          </div>
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-gray-600 font-medium text-sm">Barber</h3>
+            <p>Hemen HK</p>
+          </div>
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-gray-600 font-medium text-sm">Time</h3>
+            <p>
+              {appointment.time} - {endTime}
+            </p>
+          </div>
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-gray-600 font-medium text-sm">Price</h3>
+            <p>{appointment.service.price} kr</p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
