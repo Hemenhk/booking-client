@@ -20,7 +20,7 @@ type PersonalInfoProps = {
       service: string;
       date: string;
       time: string;
-      status: string;
+      status: "active" | "cancelled";
     },
     any,
     undefined

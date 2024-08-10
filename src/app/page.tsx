@@ -1,11 +1,12 @@
 "use client";
 
 import TheWeeklyAppointments from "@/components/appointments/TheWeeklyAppointments";
+import TheAppointmentForm from "@/components/form/TheAppointmentForm";
 
 export default function Home() {
   return (
-    <main className="h-full flex justify-center items-center py-24 bg-gray-50">
-      {/* <TheWeeklyAppointments /> */}
+    <main className="flex justify-center items-center py-24 bg-gradient-to-r from-lime-50 via-orange-50  to-violet-50">
+      <TheAppointmentForm />
     </main>
   );
 }

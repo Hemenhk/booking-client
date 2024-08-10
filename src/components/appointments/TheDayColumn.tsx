@@ -15,8 +15,6 @@ type DayColumnType = {
   appointments: any;
 };
 
-const bgColors = ["bg-cyan-50", "bg-yellow-50", "bg-pink-50", "bg-green-50"];
-
 export default function TheDayColumn({ day }: DayColumnProps) {
   const currentDate = format(new Date(), "yyyy-MM-dd");
   const isCurrentDay = day.date === currentDate;
@@ -27,21 +25,20 @@ export default function TheDayColumn({ day }: DayColumnProps) {
   });
 
   const renderTimeSlots = (day: DayColumnType) => {
-    return timeSlots.map((timeSlot, index) => {
+    return timeSlots.map((timeSlot) => {
       const appointment = day.appointments?.find(
         (app: AppointmentType) => app.time === timeSlot
       );
-      const bgColor = bgColors[index % bgColors.length];
+
       return (
         <div
           key={timeSlot}
-          className="flex flex-col items-center justify-center border-[0.4px] border-gray-200"
+          className="flex flex-col items-center justify-center border-[0.4px] border-slate-200 h-full"
         >
-          <span>{timeSlot}</span>
           {appointment ? (
-            <TheAppointments appointment={appointment} bgColor={bgColor} />
+            <TheAppointments appointment={appointment} />
           ) : (
-            <div />
+            <div className="size-14 flexr" />
           )}
         </div>
       );
@@ -61,12 +58,13 @@ export default function TheDayColumn({ day }: DayColumnProps) {
         <div
           className={`flex flex-col w-8 gap-3 mb-5 text-center ${
             isCurrentDay &&
-            "bg-blue-600 text-white flex justify-center items-center rounded-lg"
+            "bg-black text-white flex justify-center items-center rounded-lg"
           }`}
         >
           {format(new Date(day.date), "d")}
         </div>
       </h3>
+      
       <div className="grid grid-rows-10 flex-1">{renderTimeSlots(day)}</div>
     </div>
   );

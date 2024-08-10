@@ -43,3 +43,13 @@ export const getWeeklyBookedAppointments = async () => {
     console.log(error);
   }
 };
+
+export const cancelBookedAppointment = async (id: string) => {
+  try {
+    const response = await axios.patch(`http://localhost:8000/api/appointments/${id}/cancel`);
+    console.log("worked!", response)
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};

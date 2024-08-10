@@ -1,91 +1,108 @@
 "use client";
-
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import {
-  addDays,
   format,
+  addDays,
   startOfWeek,
   parse,
-  addWeeks,
-  subWeeks,
+  getHours,
+  getMinutes,
 } from "date-fns";
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getWeeklyBookedAppointments } from "@/axios/bookAppointment";
-import { Button } from "../ui/button";
-import TheDayColumn from "./TheDayColumn";
 import { AppointmentType } from "@/lib/types";
+import TheAppointments from "./TheAppointments";
+import TheTimeLine from "./TheTimeLine";
 
 export default function TheWeeklyAppointments() {
-  const [currentWeek, setCurrentWeek] = useState(new Date());
-  const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
-  const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
-    addDays(weekStart, index)
+  // Set up the start of the week and the hours
+  const startOfTheWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as the first day of the week
+  const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
+    addDays(startOfTheWeek, index)
   );
+  const hours = Array.from({ length: 10 }).map((_, index) => index + 9); // Hours from 9 to 18
 
   const {
     data: bookedData,
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ["weekly-appointments", currentWeek],
+    queryKey: ["weekly-appointments"],
     queryFn: getWeeklyBookedAppointments,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading appointments</div>;
+  if (isLoading) {
+    return <div>Laddar data...</div>;
+  }
+  if (isError) {
+    return <div>Ett fel uppstod när datan hämtades</div>;
+  }
 
-  const appointmentsByDay = daysOfWeek.map((day) => {
+  // Group appointments by day and time
+  const appointmentsByDayAndTime = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
-    const appointments = bookedData?.filter((app: AppointmentType) => {
-      const appDate = format(
-        parse(app.date, "dd/MM/yyyy", new Date()),
-        "yyyy-MM-dd"
-      );
-      return appDate === formattedDate;
-    });
 
     return {
       date: formattedDate,
-      appointments,
+      appointments: bookedData?.filter((appointment: AppointmentType) => {
+        const appointmentDate = format(
+          parse(appointment.date, "dd/MM/yyyy", new Date()),
+          "yyyy-MM-dd"
+        );
+        return appointmentDate === formattedDate;
+      }),
     };
   });
 
-  const handleNextWeek = () => {
-    setCurrentWeek((prev) => addWeeks(prev, 1));
-  };
-
-  const handlePreviousWeek = () => {
-    setCurrentWeek((prev) => subWeeks(prev, 1));
-  };
-
   return (
-    <div className="flex flex-col gap-5 h-full p-10">
-       {/* <div className="grid grid-cols-8 gap-0">
-        <div className="flex flex-col">
-          {timeSlots.map((timeSlot) => (
-            <div
-              key={timeSlot}
-              className="flex items-center justify-center h-full"
-              style={{ height: "rem" }} // Adjust height to match the height of time slots in Day columns
-            >
-              {timeSlot}
-            </div>
-          ))}
-        </div>
+    <div className="flex flex-col h-full m-8 relative">
+      {/* Time line with current time text */}
+      <TheTimeLine />
+      <div className="flex">
+        {/* First cell is empty */}
+        <div className="w-16"></div>
+        {/* Render day headers */}
+        {daysOfWeek.map((day, index) => (
+          <div key={index} className="flex-1 text-center p-3 border-gray-100">
+            {format(day, "EEE, MMM d")}
+          </div>
+        ))}
+      </div>
+      {/* Render time slots */}
+      {hours.map((hour) => (
+        <div key={hour} className="flex">
+          {/* Time label on the left */}
+          <div className="w-16 h-14 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
+            {`${hour}:00`}
+          </div>
+          {/* Time slots for each day */}
+          {daysOfWeek.map((day, index) => {
+            const formattedDate = format(day, "yyyy-MM-dd");
 
-        {appointmentsByDay?.map((day, dayIndex) => (
-          <TheDayColumn day={day} key={dayIndex} />
-        ))}
-      </div> */}
-      <div className="grid grid-cols-7 gap-0">
-        {appointmentsByDay?.map((day, dayIndex) => (
-          <TheDayColumn day={day} key={dayIndex} />
-        ))}
-      </div>
-      <div className="flex justify-between mt-4 w-full px-6">
-        <Button onClick={handlePreviousWeek}>Previous Week</Button>
-        <Button onClick={handleNextWeek}>Next Week</Button>
-      </div>
+            // Find the appointment for the current day and hour
+            const appointment = appointmentsByDayAndTime[
+              index
+            ].appointments?.find((appointment: AppointmentType) => {
+              const appointmentTime = parse(
+                appointment.time,
+                "HH:mm",
+                new Date()
+              ).getHours();
+              return appointmentTime === hour;
+            });
+
+            return (
+              <div
+                key={index}
+                className="flex-1 border-[0.4px] border-gray-300"
+              >
+                {/* Render appointment details if available */}
+                {appointment && <TheAppointments appointment={appointment} />}
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }

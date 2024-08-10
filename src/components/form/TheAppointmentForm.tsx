@@ -23,13 +23,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { getAvailableDate } from "@/axios/availableDate";
 import { useState } from "react";
 import DatePicker from "./DatePicker";
 import PersonalInformation from "./PersonalInformation";
 import { useToast } from "../ui/use-toast";
-import { AppointmentType, bookAppointment } from "@/axios/bookAppointment";
+import {  bookAppointment } from "@/axios/bookAppointment";
+import { AppointmentType } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -68,14 +67,8 @@ export default function TheAppointmentForm() {
       phone_number: "",
       service: "",
       time: "",
-      status: "",
+      status: "active",
     },
-  });
-
-  const { data: dateData, isLoading: isDateLoading } = useQuery({
-    queryKey: ["available-data"],
-    queryFn: () => getAvailableDate(selectedDate!),
-    enabled: !!selectedDate,
   });
 
   const { mutateAsync: bookAppointmentMutation } = useMutation({
@@ -104,7 +97,7 @@ export default function TheAppointmentForm() {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-2/4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-2/4 my-2">
         {step === 1 && (
           <FormField
             control={form.control}
