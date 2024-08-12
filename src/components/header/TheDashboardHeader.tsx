@@ -37,7 +37,7 @@ export default function TheDashboardHeader() {
           Logga in
         </Link>
         <Button className="rounded-3xl font-normal bg-black">
-          Prova gratis
+          <Link href={"/register"}> Prova gratis</Link>
         </Button>
       </div>
       {/* <div className="flex gap-3">

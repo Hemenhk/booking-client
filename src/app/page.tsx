@@ -1,7 +1,7 @@
 "use client";
 
 import TheWeeklyAppointments from "@/components/appointments/TheWeeklyAppointments";
-import TheAppointmentForm from "@/components/form/TheAppointmentForm";
+import TheAppointmentForm from "@/components/forms/TheAppointmentForm";
 
 export default function Home() {
   return (

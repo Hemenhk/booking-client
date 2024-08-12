@@ -16,3 +16,4 @@ export type AppointmentType = {
   time: string;
   status: "active" | "cancelled";
 };
+
