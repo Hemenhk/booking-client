@@ -5,7 +5,7 @@ import { addDays, format, startOfWeek } from "date-fns";
 export const bookAppointment = async (data: AppointmentType) => {
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/appointments",
+      "http://localhost:1/api/appointments",
       data
     );
     console.log("booked appointment", response);
@@ -18,7 +18,7 @@ export const bookAppointment = async (data: AppointmentType) => {
 export const getAllBookedAppointments = async () => {
   try {
     const response = await axios.get<AppointmentType[]>(
-      "http://localhost:8000/api/appointments"
+      "http://localhost:8001/api/appointments"
     );
     return response.data;
   } catch (error) {
@@ -31,7 +31,7 @@ export const getWeeklyBookedAppointments = async () => {
     const currentDate = new Date();
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weekEnd = addDays(weekStart, 6);
-    const response = await axios.get("http://localhost:8000/api/appointments", {
+    const response = await axios.get("http://localhost:8001/api/appointments", {
       params: {
         startDate: format(weekStart, "yyyy-MM-dd"),
         endDate: format(weekEnd, "yyyy-MM-dd"),
@@ -46,7 +46,7 @@ export const getWeeklyBookedAppointments = async () => {
 
 export const cancelBookedAppointment = async (id: string) => {
   try {
-    const response = await axios.patch(`http://localhost:8000/api/appointments/${id}/cancel`);
+    const response = await axios.patch(`http://localhost:8001/api/appointments/${id}/cancel`);
     console.log("worked!", response)
     return response;
   } catch (error) {

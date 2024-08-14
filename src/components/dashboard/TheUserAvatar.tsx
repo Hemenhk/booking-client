@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import TheSignoutBtn from "./TheSignoutBtn";
 export default function TheUserAvatar() {
   return (
     <DropdownMenu>
@@ -22,6 +23,9 @@ export default function TheUserAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Link href={"/"}>Profil</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <TheSignoutBtn />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

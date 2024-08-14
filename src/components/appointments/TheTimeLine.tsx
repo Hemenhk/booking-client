@@ -16,6 +16,12 @@ export default function TheTimeLine() {
 
   const currentHour = getHours(currentTime);
   const currentMinute = getMinutes(currentTime);
+
+  // Do not render the timeline if the time surpasses 7 PM (19:00)
+  if (currentHour >= 19) {
+    return null;
+  }
+
   const topOffset = (currentHour - 9) * 64 + (currentMinute / 60) * 64;
 
   return (

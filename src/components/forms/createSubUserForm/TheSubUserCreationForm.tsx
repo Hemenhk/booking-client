@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateStore, createStore } from "@/axios/stores";
+import { CreateSubUser, createSubUser } from "@/axios/stores";
 import { useToast } from "@/components/ui/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -16,54 +16,53 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { registerFormFields } from "@/lib/utils";
-// import { useRouter } from "next/router";
+import { subUserFormFields } from "@/lib/utils";
 
-// Validation schema using Zod
 const formSchema = z.object({
-  storeName: z.string().min(2, "Store name must be at least 2 characters"),
-  adminName: z.string().min(2, "Admin name must be at least 2 characters"),
-  adminEmail: z.string().email("Invalid email address"),
-  adminPassword: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(2, "Sub user name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function TheStoreForm() {
+type Props = {
+  storeId: string;
+};
+
+export default function TheSubUserCreationForm({ storeId }: Props) {
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
 
-  // Setting up the form with React Hook Form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      storeName: "",
-      adminName: "",
-      adminEmail: "",
-      adminPassword: "",
+      name: "",
+      email: "",
+      password: "",
     },
   });
 
-  const { mutateAsync: createStoreMutation } = useMutation({
-    mutationFn: (data: CreateStore) => createStore(data),
+  const { mutateAsync: createSubUserMutation } = useMutation({
+    mutationFn: (data: CreateSubUser) => createSubUser(storeId, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["store"], data);
     },
   });
 
-  // Handle form submission
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       toast({
-        title: `Din butik med namnet ${values.storeName} skapades`,
+        title: `Ett konto med namnet ${values.name} skapades`,
       });
-      await createStoreMutation(values);
+      await createSubUserMutation(values);
       // console.log(values);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const mappedFormFields = registerFormFields.map((formField) => (
+  const mappedFormFields = subUserFormFields.map((formField) => (
     <FormField
+      key={formField.name}
       control={form.control}
       name={formField.name}
       render={({ field }) => (
@@ -82,7 +81,6 @@ export default function TheStoreForm() {
       )}
     />
   ));
-
   return (
     <Form {...form}>
       <form
@@ -90,10 +88,10 @@ export default function TheStoreForm() {
         className="gap-3 mx-auto flex flex-col justify-center w-3/5"
       >
         <h2 className="text-center text-2xl font-semibold tracking-tight">
-          Registrera ditt konto
+          Registrera ett konto
         </h2>
         <p className="text-center mb-5 text-sm text-muted-foreground">
-          Fyll i formuläret för att registrera ditt konto på Booksy
+          Fyll i formuläret för att registrera ett konto hos din butik
         </p>
         {mappedFormFields}
         <Button type="submit" className="font-normal">
