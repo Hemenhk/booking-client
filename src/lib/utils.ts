@@ -74,3 +74,24 @@ export const subUserFormFields = [
     placeholder: "Lösenord",
   },
 ];
+
+export const serviceFormFields = [
+  {
+    name: "name",
+    type: "text",
+    label: "Namn",
+    placeholder: "Namn",
+  },
+  {
+    name: "duration",
+    type: "number",
+    label: "Tid",
+    placeholder: "Tid",
+  },
+  {
+    name: "price",
+    type: "number",
+    label: "Pris",
+    placeholder: "Pris",
+  },
+];

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getAllServices, GetServiceType } from "@/axios/getServices";
+import { getAllServices, GetServiceType } from "@/axios/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {

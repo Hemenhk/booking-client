@@ -3,22 +3,8 @@ import { ReactElement } from "react";
 import { FaCalendar, FaHome, FaUser } from "react-icons/fa";
 import { IoCreate } from "react-icons/io5";
 import { HiCog6Tooth } from "react-icons/hi2";
-
-export const links = [
-  { href: "/", name: "Hem", icon: <FaHome /> },
-  { href: "/dashboard", name: "Schema", icon: <FaCalendar /> },
-  {
-    href: "/dashboard/admin/users",
-    name: "Användare",
-    icon: <FaUser size={13} />,
-  },
-  { href: "/dashboard/admin/design", name: "Design", icon: <HiCog6Tooth /> },
-];
-
-export const userLinks = [
-  { href: "/dashboard", name: "Hem", icon: <FaHome /> },
-  { href: "/dashboard/admin", name: "Uppdrag", icon: <IoCreate /> },
-];
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export interface LinkProps {
   href: string;
@@ -27,9 +13,40 @@ export interface LinkProps {
 }
 
 export default function TheToolbar() {
+  const { data: session } = useSession();
+  const { storeId, userId } = useParams<{ storeId: string; userId: string }>();
+
+  const adminLinks = [
+    { href: "/", name: "Hem", icon: <FaHome /> },
+    { href: "/dashboard", name: "Schema", icon: <FaCalendar /> },
+    {
+      href: "/dashboard/admin/users",
+      name: "Användare",
+      icon: <FaUser size={13} />,
+    },
+    { href: "/dashboard/admin/design", name: "Design", icon: <HiCog6Tooth /> },
+  ];
+
+  const userLinks = [
+    { href: "/dashboard", name: "Hem", icon: <FaHome /> },
+    {
+      href: `/dashboard/user/${storeId}/${userId}/create-service`,
+      name: "Tjänst",
+      icon: <IoCreate />,
+    },
+  ];
+
+  const isAdmin = session?.user.role === "store_admin";
+
+  const getLinks = (isAdmin: boolean) => {
+    return isAdmin ? adminLinks : userLinks;
+  };
+
+  const linksToRender = getLinks(isAdmin);
+
   return (
     <ul className="absolute flex shadow-lg w-60 text-black h-full flex-col items-start gap-5 px-4 py-5 bg-transparent">
-      {links.map((link) => (
+      {linksToRender.map((link) => (
         <li
           key={link.href}
           className="w-full transition ease-out duration-200 rounded-md hover:bg-violet-200 hover:text-violet-800 uppercase tracking-wider text-sm p-2"

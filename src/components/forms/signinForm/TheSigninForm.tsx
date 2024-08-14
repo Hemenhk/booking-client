@@ -48,9 +48,16 @@ export default function TheSigninForm() {
       });
       if (res?.ok) {
         const storeId = session?.user?.store;
-        setTimeout(() => {
-          router.push(`dashboard/admin/${storeId}`);
-        }, 2000);
+        const userId = session?.user?.id;
+        if (storeId) {
+          setTimeout(() => {
+            if (session?.user.role === "store_admin") {
+              router.push(`dashboard/admin/${storeId}`);
+            } else if (session?.user.role === "sub_user") {
+              router.push(`dashboard/user/${storeId}/${userId}`);
+            }
+          }, 2500);
+        }
       }
       toast({
         title: `Inloggningen lyckades!`,
