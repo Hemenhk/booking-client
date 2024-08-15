@@ -29,6 +29,17 @@ export const getAllServices = async () => {
   }
 };
 
+export const getServicesForSubUser = async (userId: string) => {
+  try {
+    const res = await axios.get<GetAllServicesType>(
+      `http://localhost:8001/api/sub-users/${userId}/services/`
+    );
+    return res.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const createSerive = async (userId: string, data: CreateServiceType) => {
   try {
     const session = await getSession();

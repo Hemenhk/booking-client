@@ -28,11 +28,20 @@ export default function TheToolbar() {
   ];
 
   const userLinks = [
-    { href: "/dashboard", name: "Hem", icon: <FaHome /> },
+    {
+      href: "/dashboard/user/${storeId}/${userId}",
+      name: "Hem",
+      icon: <FaHome size={20}/>,
+    },
+    {
+      href: `/dashboard/user/${storeId}/${userId}/appointments`,
+      name: "Bokningar",
+      icon: <FaCalendar size={15}/>,
+    },
     {
       href: `/dashboard/user/${storeId}/${userId}/create-service`,
-      name: "Tjänst",
-      icon: <IoCreate />,
+      name: "Skapa tjänst",
+      icon: <IoCreate size={20}/>,
     },
   ];
 
@@ -49,7 +58,7 @@ export default function TheToolbar() {
       {linksToRender.map((link) => (
         <li
           key={link.href}
-          className="w-full transition ease-out duration-200 rounded-md hover:bg-violet-200 hover:text-violet-800 uppercase tracking-wider text-sm p-2"
+          className="w-full transition ease-out duration-200 rounded-md hover:bg-violet-200 hover:text-violet-800 tracking-wider text-sm p-2"
         >
           <Link href={link.href} className="flex items-center gap-3">
             {link.icon}

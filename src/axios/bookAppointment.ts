@@ -2,10 +2,10 @@ import { AppointmentType } from "@/lib/types";
 import axios from "axios";
 import { addDays, format, startOfWeek } from "date-fns";
 
-export const bookAppointment = async (data: AppointmentType) => {
+export const bookAppointment = async (userId: string,data: AppointmentType) => {
   try {
     const response = await axios.post(
-      "http://localhost:1/api/appointments",
+     `http://localhost:8001/api/sub-users/${userId}/appointments`,
       data
     );
     console.log("booked appointment", response);

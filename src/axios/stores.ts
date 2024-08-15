@@ -1,3 +1,4 @@
+import { Store, StoresResponse, SubUser } from "@/types/types";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
@@ -6,6 +7,8 @@ export type CreateStore = {
   adminName: string;
   adminEmail: string;
   adminPassword: string;
+  address: string;
+  service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
 };
 
 export type CreateSubUser = {
@@ -14,12 +17,19 @@ export type CreateSubUser = {
   password: string;
 };
 
-export type SingleStore = {
-  sub_users: string;
-  admin: string;
-  _id: string;
-  name: string;
-  email: string;
+export type StoreByName = {
+  data: Store
+}
+
+export const getAllStores = async () => {
+  try {
+    const res = await axios.get<StoresResponse>(
+      "http://localhost:8001/api/stores/"
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getSingleStore = async (storeId: string) => {
@@ -29,11 +39,22 @@ export const getSingleStore = async (storeId: string) => {
     if (!session || !session.user) {
       throw new Error("User is not authenticated");
     }
-    const res = await axios.get<SingleStore>(
+    const res = await axios.get<Store>(
       `http://localhost:8001/api/stores/${storeId}`,
       {
         headers: { Authorization: `Bearer ${session.user.accessToken}` },
       }
+    );
+    return res.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSingleStoreDetail = async (storeName: string) => {
+  try {
+    const res = await axios.get<StoreByName>(
+      `http://localhost:8001/api/stores/name/${storeName}`
     );
     return res.data.data;
   } catch (error) {

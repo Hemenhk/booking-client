@@ -15,6 +15,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { registerFormFields } from "@/lib/utils";
 // import { useRouter } from "next/router";
@@ -25,7 +33,17 @@ const formSchema = z.object({
   adminName: z.string().min(2, "Admin name must be at least 2 characters"),
   adminEmail: z.string().email("Invalid email address"),
   adminPassword: z.string().min(6, "Password must be at least 6 characters"),
+  address: z.string(),
+  service: z.enum(["hår", "skönhet", "massage", "tandvård", "sjukvård"]),
 });
+
+const services = [
+  { value: "hår", name: "Hår" },
+  { value: "skönhet", name: "Skönhet" },
+  { value: "massage", name: "Massage" },
+  { value: "tandvård", name: "Tandvård" },
+  { value: "sjukvård", name: "Sjukvård" },
+];
 
 export default function TheStoreForm() {
   const queryClient = useQueryClient();
@@ -39,6 +57,7 @@ export default function TheStoreForm() {
       adminName: "",
       adminEmail: "",
       adminPassword: "",
+      address: "",
     },
   });
 
@@ -96,6 +115,31 @@ export default function TheStoreForm() {
           Fyll i formuläret för att registrera ditt konto på Booksy
         </p>
         {mappedFormFields}
+        <FormField
+          control={form.control}
+          name="service"
+          render={({ field }) => (
+            <FormItem>
+              {/* <FormLabel>Bransch</FormLabel> */}
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Välj en bransch" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {services.map((service) => (
+                    <SelectItem value={service.value}>
+                      {service.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" className="font-normal">
           Skapa konto
         </Button>

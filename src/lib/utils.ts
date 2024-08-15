@@ -36,6 +36,12 @@ export const registerFormFields = [
     label: "Lösenord",
     placeholder: "Lösenord",
   },
+  {
+    name: "address",
+    type: "text",
+    label: "Address",
+    placeholder: "Address",
+  },
 ];
 
 export const signinFormFields = [
