@@ -9,18 +9,6 @@ export default function BookUserPage({
 }: {
   params: { userId: string };
 }) {
-//   const queryClient = useQueryClient();
-//   const {
-//     data: bookingData,
-//     isError,
-//     isPending,
-//   } = useMutation({
-//     mutationFn: (data: AppointmentType) => bookAppointment(params.userId, data),
-//     onSuccess: (data) => {
-//       queryClient.setQueryData(["booking"], data);
-//       // queryClient.invalidateQueries({ queryKey: ["single-store"] });
-//     },
-//   });
 
   return <><TheAppointmentForm userId={params.userId} /></>
 }

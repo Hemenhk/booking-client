@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { registerFormFields } from "@/lib/utils";
+import { useState } from "react";
 // import { useRouter } from "next/router";
 
 // Validation schema using Zod
@@ -35,6 +36,7 @@ const formSchema = z.object({
   adminPassword: z.string().min(6, "Password must be at least 6 characters"),
   address: z.string(),
   service: z.enum(["hår", "skönhet", "massage", "tandvård", "sjukvård"]),
+  logo: z.instanceof(File)
 });
 
 const services = [
@@ -48,6 +50,7 @@ const services = [
 export default function TheStoreForm() {
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
+  const [logoPreview, setLogoPreview] = useState(null)
 
   // Setting up the form with React Hook Form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,8 +61,21 @@ export default function TheStoreForm() {
       adminEmail: "",
       adminPassword: "",
       address: "",
+      logo: null
     },
   });
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      form.setValue("logo", file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const { mutateAsync: createStoreMutation } = useMutation({
     mutationFn: (data: CreateStore) => createStore(data),
@@ -140,6 +156,25 @@ export default function TheStoreForm() {
             </FormItem>
           )}
         />
+        <FormItem>
+          <FormLabel>Logo</FormLabel>
+          <Input
+            type="file"
+            className="cursor-pointer"
+            accept="image/*"
+            onChange={handleLogoChange}
+          />
+          {logoPreview && (
+            <div className="mt-2">
+              <img
+                src={logoPreview}
+                alt="Logo Preview"
+                className="size-40 object-cover rounded-full border"
+              />
+            </div>
+          )}
+          <FormMessage />
+        </FormItem>
         <Button type="submit" className="font-normal">
           Skapa konto
         </Button>

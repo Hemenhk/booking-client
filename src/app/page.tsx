@@ -1,5 +1,3 @@
-"use client";
-
 import TheAllStores from "@/components/stores/TheAllStores";
 
 export default function Home() {

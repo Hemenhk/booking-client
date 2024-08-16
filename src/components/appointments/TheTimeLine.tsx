@@ -22,7 +22,9 @@ export default function TheTimeLine() {
     return null;
   }
 
-  const topOffset = (currentHour - 9) * 64 + (currentMinute / 60) * 64;
+  const hourHeight = 56; // Each hourly cell's height in pixels (h-14)
+  const topOffset =
+    (currentHour - 9) * hourHeight + (currentMinute / 60) * hourHeight;
 
   return (
     <div
