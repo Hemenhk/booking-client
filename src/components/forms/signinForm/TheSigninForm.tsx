@@ -47,14 +47,14 @@ export default function TheSigninForm() {
         redirect: false,
       });
       if (res?.ok) {
-        const storeId = session?.user?.store;
+        const storeHandle = session?.user?.store.handle;
         const userId = session?.user?.id;
-        if (storeId) {
+        if (storeHandle) {
           setTimeout(() => {
             if (session?.user.role === "store_admin") {
-              router.push(`dashboard/admin/${storeId}`);
+              router.push(`dashboard/admin/${storeHandle}`);
             } else if (session?.user.role === "sub_user") {
-              router.push(`dashboard/user/${storeId}/${userId}`);
+              router.push(`dashboard/user/${storeHandle}/${userId}`);
             }
           }, 2500);
         }

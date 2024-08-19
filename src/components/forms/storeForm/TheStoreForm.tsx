@@ -91,6 +91,9 @@ export default function TheStoreForm() {
         title: `Din butik med namnet ${values.storeName} skapades`,
       });
       await createStoreMutation(values);
+      setTimeout(() => {
+        dismiss()
+      }, 2000);
       // console.log(values);
     } catch (error) {
       console.log(error);
@@ -139,7 +142,7 @@ export default function TheStoreForm() {
               {/* <FormLabel>Bransch</FormLabel> */}
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9">
                     <SelectValue placeholder="Välj en bransch" />
                   </SelectTrigger>
                 </FormControl>
@@ -160,7 +163,7 @@ export default function TheStoreForm() {
           <FormLabel>Logo</FormLabel>
           <Input
             type="file"
-            className="cursor-pointer"
+            className="h-9 cursor-pointer"
             accept="image/*"
             onChange={handleLogoChange}
           />

@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,12 +10,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import TheSignoutBtn from "./TheSignoutBtn";
+import { useSession } from "next-auth/react";
 export default function TheUserAvatar() {
+  const { data: session } = useSession();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={session?.user.store.logo} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

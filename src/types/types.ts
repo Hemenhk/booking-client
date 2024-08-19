@@ -44,6 +44,7 @@ export type Review = {
 export type Store = {
   _id: string;
   name: string;
+  handle: string;
   address: string;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
   opening_hours: string;
@@ -53,6 +54,7 @@ export type Store = {
   averageRating: number;
   sub_users: SubUser[];
   admin: Admin | null;
+  logo: string;
 };
 
 export type StoresResponse = {

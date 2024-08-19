@@ -20,7 +20,7 @@ export default function TheToolbar() {
     { href: "/", name: "Hem", icon: <FaHome /> },
     { href: "/dashboard", name: "Schema", icon: <FaCalendar /> },
     {
-      href: "/dashboard/admin/users",
+      href: `/dashboard/admin/${session?.user.store.handle}/users`,
       name: "Användare",
       icon: <FaUser size={13} />,
     },

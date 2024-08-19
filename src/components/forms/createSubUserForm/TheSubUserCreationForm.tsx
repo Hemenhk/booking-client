@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { subUserFormFields } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, "Sub user name must be at least 2 characters"),
@@ -24,11 +26,13 @@ const formSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type Props = {
-  storeId: string;
-};
+// type Props = {
+//   storeHandle: string;
+// };
 
-export default function TheSubUserCreationForm({ storeId }: Props) {
+export default function eTheSubUserCreationForm() {
+  const { data: session } = useSession();
+  const router = useRouter()
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
 
@@ -42,7 +46,8 @@ export default function TheSubUserCreationForm({ storeId }: Props) {
   });
 
   const { mutateAsync: createSubUserMutation } = useMutation({
-    mutationFn: (data: CreateSubUser) => createSubUser(storeId, data),
+    mutationFn: (data: CreateSubUser) =>
+      createSubUser(session?.user.store._id, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["store"], data);
     },
@@ -54,11 +59,16 @@ export default function TheSubUserCreationForm({ storeId }: Props) {
         title: `Ett konto med namnet ${values.name} skapades`,
       });
       await createSubUserMutation(values);
+      setTimeout(() => {
+        dismiss()
+      }, 2000);
+      router.push(`/dashboard/admin/${session?.user.store.handle}/users`)
       // console.log(values);
     } catch (error) {
       console.log(error);
     }
   };
+
 
   const mappedFormFields = subUserFormFields.map((formField) => (
     <FormField
@@ -67,15 +77,17 @@ export default function TheSubUserCreationForm({ storeId }: Props) {
       name={formField.name}
       render={({ field }) => (
         <FormItem>
-          {/* <FormLabel>{formField.label}</FormLabel> */}
+          <FormLabel>{formField.label}</FormLabel>
           <FormControl>
             <Input
+              autoComplete="off"
               className="h-9 rounded-lg"
               placeholder={formField.placeholder}
               type={formField.type}
               {...field}
             />
           </FormControl>
+
           <FormMessage />
         </FormItem>
       )}
@@ -85,12 +97,12 @@ export default function TheSubUserCreationForm({ storeId }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-3 mx-auto flex flex-col justify-center w-3/5"
+        className="gap-3 flex flex-col justify-center w-2/5"
       >
-        <h2 className="text-center text-2xl font-semibold tracking-tight">
+        <h2 className=" text-2xl font-semibold tracking-tight">
           Registrera ett konto
         </h2>
-        <p className="text-center mb-5 text-sm text-muted-foreground">
+        <p className=" mb-5 text-sm text-muted-foreground">
           Fyll i formuläret för att registrera ett konto hos din butik
         </p>
         {mappedFormFields}

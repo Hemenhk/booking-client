@@ -25,7 +25,7 @@ export default function DashboardLayout({
 
   console.log("session", session?.user);
   return (
-    <div className="flex justify-center md:justify-start bg-gradient-to-r from-lime-50 via-orange-50 to-violet-50 h-screen">
+    <div className="flex justify-center md:justify-start bg-gradient-to-r from-lime-50  to-violet-50 h-screen">
       <div className="hidden md:flex absolute h-full w-72 left-0 bg-transparent">
         <TheToolbar />
       </div>

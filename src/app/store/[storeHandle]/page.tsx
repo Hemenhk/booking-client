@@ -5,11 +5,11 @@ import TheStoreDetail from "@/components/single-store/TheStoreDetail";
 export default function StoreDetailPage({
   params,
 }: {
-  params: { storeName: string };
+  params: { storeHandle: string };
 }) {
   return (
     <>
-      <TheStoreDetail storeName={params.storeName} />
+      <TheStoreDetail storeHandle={params.storeHandle} />
     </>
   );
 }

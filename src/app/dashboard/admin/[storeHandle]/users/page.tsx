@@ -5,10 +5,13 @@ import TheUsersTable from "@/components/dashboard/usersTable/TheUsersTable";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
 
 export default function StoreUserPage() {
-  const { storeId } = useParams<{ storeId: string }>();
+  const { storeHandle } = useParams<{ storeHandle: string }>();
+  const {data: session} = useSession()
+  const router = useRouter()
 
   // console.log("params", params)
   const {
@@ -17,11 +20,15 @@ export default function StoreUserPage() {
     isError,
   } = useQuery({
     queryKey: ["single-store"],
-    queryFn: () => getSingleStore(storeId),
+    queryFn: () => getSingleStore(session?.user.store._id),
   });
 
   console.log("data", storeData);
 
+  const handleRedirect = () => {
+    router.push(`/dashboard/admin/${storeHandle}/create-user`)
+  }
+ 
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
@@ -32,7 +39,7 @@ export default function StoreUserPage() {
           </span>
         </h3>
         <div>
-          <Button className="tracking-wide rounded-[10px]"><span className="pr-2 text-lg">+</span>Lägg till</Button>
+          <Button className="tracking-wide rounded-[10px]" onClick={handleRedirect}><span className="pr-2 text-lg">+</span>Lägg till</Button>
         </div>
       </CardHeader>
       <CardContent>

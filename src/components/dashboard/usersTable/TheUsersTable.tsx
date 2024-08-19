@@ -1,3 +1,4 @@
+import { deleteSubUser } from "@/axios/stores";
 import {
   Table,
   TableBody,
@@ -6,13 +7,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-export default function TheUsersTable({ storeData }: { storeData: any }) {
+import { Store } from "@/types/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FaTrash } from "react-icons/fa";
+import TheDeleteUser from "./TheDeleteUser";
+
+export default function TheUsersTable({ storeData }: { storeData: Store }) {
+  const queryClient = useQueryClient();
+  const { mutateAsync: deleteSubUserMutation } = useMutation({
+    mutationFn: (userId: string) => deleteSubUser(storeData._id, userId),
+    onSuccess: (data) => {
+      queryClient.setQueriesData({ queryKey: ["single-store"] }, data);
+      queryClient.refetchQueries({ queryKey: ["single-store"] });
+    },
+  });
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Användare</TableHead>
           <TableHead className="text-right">Roll</TableHead>
+          <TableHead className="text-right">Ta bort</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -34,6 +49,9 @@ export default function TheUsersTable({ storeData }: { storeData: any }) {
                 </div>
               </TableCell>
               <TableCell className="text-right">{userRole}</TableCell>
+              <TableCell className="w-24">
+                <TheDeleteUser userId={user._id} deleteSubUserMutation={deleteSubUserMutation} />
+              </TableCell>
             </TableRow>
           );
         })}

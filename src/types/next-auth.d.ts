@@ -1,4 +1,5 @@
 import NextAuth from "next-auth/next";
+import { Store } from "./types";
 
 declare module "next-auth" {
   interface Session {
@@ -6,7 +7,7 @@ declare module "next-auth" {
       email: string;
       id: string;
       role: "store_admin" | "sub_user";
-      store: string;
+      store: Store;
       accessToken: string;
     };
   }

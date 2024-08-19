@@ -8,6 +8,7 @@ export type CreateStore = {
   adminEmail: string;
   adminPassword: string;
   address: string;
+  logo: File;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
 };
 
@@ -18,8 +19,8 @@ export type CreateSubUser = {
 };
 
 export type StoreByName = {
-  data: Store
-}
+  data: Store;
+};
 
 export const getAllStores = async () => {
   try {
@@ -51,10 +52,10 @@ export const getSingleStore = async (storeId: string) => {
   }
 };
 
-export const getSingleStoreDetail = async (storeName: string) => {
+export const getSingleStoreDetail = async (storeHandle: string) => {
   try {
     const res = await axios.get<StoreByName>(
-      `http://localhost:8001/api/stores/name/${storeName}`
+      `http://localhost:8001/api/stores/name/${storeHandle}`
     );
     return res.data.data;
   } catch (error) {
@@ -62,11 +63,18 @@ export const getSingleStoreDetail = async (storeName: string) => {
   }
 };
 
-export const createStore = async (data: CreateStore) => {
+export const createStore = async (formData) => {
   try {
-    await axios.post("http://localhost:8001/api/stores", data);
+    const res = await axios.post("http://localhost:8001/api/stores", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("store created", res);
+    return res.data;
   } catch (error) {
-    console.log(error);
+    console.error("Error in createStore:", error);
+    throw error;
   }
 };
 
@@ -87,6 +95,29 @@ export const createSubUser = async (storeId: string, data: CreateSubUser) => {
         },
       }
     );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteSubUser = async (storeId: string, userId: string) => {
+  try {
+    const session = await getSession();
+
+    if (!session || !session.user) {
+      throw new Error("User is not authenticated");
+    }
+
+    const res = await axios.delete(
+      `http://localhost:8001/api/stores/${storeId}/subuser/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      }
+    );
+
+    console.log("sub user deleted", res);
   } catch (error) {
     console.log(error);
   }

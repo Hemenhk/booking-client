@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const links = [
   { handle: "Home", href: "/" },
@@ -15,8 +16,10 @@ const links = [
 ];
 
 export default function TheHeader() {
+  const { status, data: session } = useSession();
   const pathname = usePathname();
   const isDashboardPage = pathname.startsWith("/dashboard");
+  const isAuthenticated = status === "authenticated";
 
   const dashboardHeader = (
     <>
@@ -27,17 +30,27 @@ export default function TheHeader() {
   );
 
   const header = (
-    <div className={`flex items-center space-x-8 ${GeistSans.className}`}>
-      <Link
-        href={"/signin"}
-        className={`relative w-fit block after:block after:content-[''] after:absolute after:h-[2px]  after:bg-black  after:w-2/4 after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left`}
-      >
-        Logga in
-      </Link>
-      <Button className="rounded-3xl font-normal bg-black">
-        <Link href={"/register"}> Prova gratis</Link>
-      </Button>
-    </div>
+    <>
+      {isAuthenticated ? (
+        <div className="flex">
+          <Button className="rounded-3xl font-normal bg-black">
+            <Link href={`/dashboard/admin/${session?.user.store.handle}`}>Mina sidor</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className={`flex items-center space-x-8 ${GeistSans.className}`}>
+          <Link
+            href={"/signin"}
+            className={`relative w-fit block after:block after:content-[''] after:absolute after:h-[2px]  after:bg-black  after:w-2/4 after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left`}
+          >
+            Logga in
+          </Link>
+          <Button className="rounded-3xl font-normal bg-black">
+            <Link href={"/register"}> Prova gratis</Link>
+          </Button>
+        </div>
+      )}
+    </>
   );
 
   return (

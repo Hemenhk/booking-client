@@ -1,12 +1,13 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
+import { Store } from "@/types/types";
 
 type User = {
   id: string;
   email: string;
   role?: "store_admin" | "sub_user";
-  store: string;
+  store: Store;
   accessToken: string;
 };
 
@@ -41,7 +42,7 @@ const handler = NextAuth({
               id: user._id as string,
               email: user.email,
               role: user.role,
-              store: user.store ? user.store.toString() : undefined,
+              store: user.store,
               accessToken: user.accessToken,
             };
           }

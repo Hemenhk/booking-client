@@ -7,7 +7,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
-export default function TheStoreDetail({ storeName }: { storeName: string }) {
+export default function TheStoreDetail({ storeHandle }: { storeHandle: string }) {
   const router = useRouter();
 
   const {
@@ -16,7 +16,7 @@ export default function TheStoreDetail({ storeName }: { storeName: string }) {
     isLoading,
   } = useQuery({
     queryKey: ["stores"],
-    queryFn: () => getSingleStoreDetail(storeName),
+    queryFn: () => getSingleStoreDetail(storeHandle),
   });
 
   if (isError) {
@@ -27,8 +27,8 @@ export default function TheStoreDetail({ storeName }: { storeName: string }) {
     return <div>Laddar data</div>;
   }
 
-  const handleRedirect = (storeName: string, userId: string) => {
-    router.push(`/store/${storeName}/${userId}`);
+  const handleRedirect = (storeHandle: string, userId: string) => {
+    router.push(`/store/${storeHandle}/${userId}`);
   };
 
   console.log("single store", storeData);
@@ -36,7 +36,7 @@ export default function TheStoreDetail({ storeName }: { storeName: string }) {
     <div className="flex h-full p-10 px-48">
       <div className="flex flex-col w-2/3 h-screen">
         <div className="border-b w-3/4 pb-8">
-          <h2 className="text-4xl pb-5 font-semibold">{storeData?.name}</h2>
+          <h2 className="text-4xl pb-5 font-semibold">{storeData?.name} </h2>
           <div className="flex flex-col">
             <div className="flex flex-row gap-2 items-center">
               <h3 className="font-medium text-gray-700">
@@ -63,7 +63,7 @@ export default function TheStoreDetail({ storeName }: { storeName: string }) {
         <div className="flex flex-col pt-14">
           <h3 className="text-3xl font-medium pb-5">Personal</h3>
           <ul>
-            {storeData?.sub_users.map((user) => {
+            {storeData?.sub_users?.map((user) => {
               return (
                 <li
                   key={user._id}
