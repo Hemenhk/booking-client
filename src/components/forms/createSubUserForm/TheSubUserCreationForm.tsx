@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { subUserFormFields } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, "Sub user name must be at least 2 characters"),
@@ -32,7 +33,7 @@ const formSchema = z.object({
 
 export default function eTheSubUserCreationForm() {
   const { data: session } = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
 
@@ -60,15 +61,14 @@ export default function eTheSubUserCreationForm() {
       });
       await createSubUserMutation(values);
       setTimeout(() => {
-        dismiss()
+        dismiss();
       }, 2000);
-      router.push(`/dashboard/admin/${session?.user.store.handle}/users`)
+      router.push(`/dashboard/admin/${session?.user.store.handle}/users`);
       // console.log(values);
     } catch (error) {
       console.log(error);
     }
   };
-
 
   const mappedFormFields = subUserFormFields.map((formField) => (
     <FormField
@@ -95,21 +95,25 @@ export default function eTheSubUserCreationForm() {
   ));
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-3 flex flex-col justify-center w-2/5"
-      >
-        <h2 className=" text-2xl font-semibold tracking-tight">
-          Registrera ett konto
-        </h2>
-        <p className=" mb-5 text-sm text-muted-foreground">
-          Fyll i formuläret för att registrera ett konto hos din butik
-        </p>
-        {mappedFormFields}
-        <Button type="submit" className="font-normal">
-          Skapa konto
-        </Button>
-      </form>
+      <Card className="w-2/4">
+        <CardContent>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="gap-3 flex flex-col justify-center"
+          >
+            <h2 className=" text-2xl font-semibold tracking-tight">
+              Registrera ett konto
+            </h2>
+            <p className=" mb-5 text-sm text-muted-foreground">
+              Fyll i formuläret för att registrera ett konto hos din butik
+            </p>
+            {mappedFormFields}
+            <Button type="submit" className="font-normal">
+              Skapa konto
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </Form>
   );
 }

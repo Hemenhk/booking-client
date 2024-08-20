@@ -102,6 +102,7 @@ export default function TheStoreForm() {
 
   const mappedFormFields = registerFormFields.map((formField) => (
     <FormField
+    key={formField.name}
       control={form.control}
       name={formField.name}
       render={({ field }) => (

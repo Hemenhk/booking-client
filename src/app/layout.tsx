@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import ReactQueryProvider from "@/providers/tanstackProvider";
 import { Toaster } from "@/components/ui/toaster";
-import TheDashboardHeader from "@/components/header/TheHeader";
+import TheHeader from "@/components/header/TheHeader";
 import NextAuthProvider from "./providers/nextAuthProvider";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={GeistSans.className}>
         <NextAuthProvider>
           <ReactQueryProvider>
-            <TheDashboardHeader />
+            <TheHeader />
             {children} <Toaster />
           </ReactQueryProvider>
         </NextAuthProvider>

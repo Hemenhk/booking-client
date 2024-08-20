@@ -14,11 +14,18 @@ import { useSession } from "next-auth/react";
 export default function TheUserAvatar() {
   const { data: session } = useSession();
 
+  const isAdmin = session?.user.role === "store_admin";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={session?.user.store.logo} />
+          {isAdmin ? (
+            <AvatarImage src={session?.user.store.logo} />
+          ) : (
+            <AvatarImage src={session?.user.profileImage} />
+          )}
+
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -26,7 +33,11 @@ export default function TheUserAvatar() {
         <DropdownMenuLabel>Mitt konto</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href={"/"}>Profil</Link>
+          <Link
+            href={`/dashboard/user/${session?.user.store._id}/${session?.user.id}/profile`}
+          >
+            Profil
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <TheSignoutBtn />

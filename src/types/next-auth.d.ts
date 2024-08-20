@@ -9,6 +9,7 @@ declare module "next-auth" {
       role: "store_admin" | "sub_user";
       store: Store;
       accessToken: string;
+      profileImage: string;
     };
   }
 }

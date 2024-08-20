@@ -9,6 +9,7 @@ type User = {
   role?: "store_admin" | "sub_user";
   store: Store;
   accessToken: string;
+  profileImage?: string
 };
 
 const handler = NextAuth({
@@ -44,6 +45,7 @@ const handler = NextAuth({
               role: user.role,
               store: user.store,
               accessToken: user.accessToken,
+              profileImage: user.profileImage
             };
           }
         } catch (error) {

@@ -30,7 +30,7 @@ export default function StoreUserPage() {
   }
  
   return (
-    <Card>
+    <Card className="max-w-[1200px]">
       <CardHeader className="flex flex-row justify-between">
         <h3 className="text-lg font-medium">
           Alla användare:{" "}
