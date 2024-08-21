@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { GeistSans } from 'geist/font/sans';
+import { GeistSans } from "geist/font/sans";
 
 import "./globals.css";
 import ReactQueryProvider from "@/providers/tanstackProvider";
 import { Toaster } from "@/components/ui/toaster";
-
+import TheHeader from "@/components/header/TheHeader";
+import NextAuthProvider from "./providers/nextAuthProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,9 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <ReactQueryProvider>
-          {children} <Toaster />
-        </ReactQueryProvider>
+        <NextAuthProvider>
+          <ReactQueryProvider>
+            <TheHeader />
+            {children} <Toaster />
+          </ReactQueryProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

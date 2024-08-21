@@ -17,7 +17,7 @@ type DatePickerProps = {
       service: string;
       date: string;
       time: string;
-      status: string;
+      status: "active" | "cancelled";
     },
     any,
     undefined
@@ -68,7 +68,7 @@ export default function DatePicker({ form, setStep }: DatePickerProps) {
                 {format(day, "EEEE, MMM d")}
               </h3>
 
-              <ul className="flex flex-col gap-2 py-5">
+              <ul className="flex flex-col h-full gap-2 py-5">
                 {dateData?.availableTimesByDay[format(day, "yyyy-MM-dd")]?.map(
                   (time: string) => (
                     <li

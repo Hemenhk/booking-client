@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getAllServices, GetServiceType } from "@/axios/getServices";
+import {  getServicesForSubUser, GetServiceType } from "@/axios/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -23,13 +23,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { getAvailableDate } from "@/axios/availableDate";
 import { useState } from "react";
 import DatePicker from "./DatePicker";
 import PersonalInformation from "./PersonalInformation";
 import { useToast } from "../ui/use-toast";
-import { AppointmentType, bookAppointment } from "@/axios/bookAppointment";
+import { bookAppointment } from "@/axios/bookAppointment";
+import { AppointmentType } from "@/lib/types";
+import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -42,8 +42,13 @@ const formSchema = z.object({
   status: z.string(),
 });
 
-export default function AppointmentForm() {
+export default function TheAppointmentForm({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
+  const { storeName } = useParams<{
+    storeName: string;
+    userId: string;
+  }>();
+
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
@@ -56,8 +61,10 @@ export default function AppointmentForm() {
     isLoading,
   } = useQuery({
     queryKey: ["services"],
-    queryFn: getAllServices,
+    queryFn: () => getServicesForSubUser(userId),
   });
+
+  console.log("services", serviceData)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,19 +75,13 @@ export default function AppointmentForm() {
       phone_number: "",
       service: "",
       time: "",
-      status: "",
+      status: "active",
     },
-  });
-
-  const { data: dateData, isLoading: isDateLoading } = useQuery({
-    queryKey: ["available-data"],
-    queryFn: () => getAvailableDate(selectedDate!),
-    enabled: !!selectedDate,
   });
 
   const { mutateAsync: bookAppointmentMutation } = useMutation({
     mutationKey: ["booked-appointment"],
-    mutationFn: (data: AppointmentType) => bookAppointment(data),
+    mutationFn: (data: AppointmentType) => bookAppointment(userId, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["booked-appointment"], data);
       queryClient.invalidateQueries({ queryKey: ["available-data"] });
@@ -104,7 +105,10 @@ export default function AppointmentForm() {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-2/4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 w-2/4 my-2"
+      >
         {step === 1 && (
           <FormField
             control={form.control}

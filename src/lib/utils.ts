@@ -1,6 +1,103 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { compare } from "bcryptjs";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export async function verifyPassword(password: string, hashedPassword: string) {
+  const passwordIsValid = await compare(password, hashedPassword);
+  return passwordIsValid;
+}
+
+export const registerFormFields = [
+  {
+    name: "storeName",
+    type: "text",
+    label: "Butikens namn",
+    placeholder: "Butikens namn",
+  },
+  {
+    name: "adminName",
+    type: "text",
+    label: "Admins namn",
+    placeholder: "Admins namn",
+  },
+  {
+    name: "adminEmail",
+    type: "email",
+    label: "Admins Email",
+    placeholder: "Admins Email",
+  },
+  {
+    name: "adminPassword",
+    type: "password",
+    label: "Lösenord",
+    placeholder: "Lösenord",
+  },
+  {
+    name: "address",
+    type: "text",
+    label: "Address",
+    placeholder: "Address",
+  },
+];
+
+export const signinFormFields = [
+  {
+    name: "email",
+    type: "email",
+    label: "Email",
+    placeholder: "Email",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Lösenord",
+    placeholder: "Lösenord",
+  },
+];
+
+
+export const subUserFormFields = [
+  {
+    name: "name",
+    type: "text",
+    label: "Namn",
+    placeholder: "Namn",
+  },
+  {
+    name: "email",
+    type: "email",
+    label: "Email",
+    placeholder: "Email",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Lösenord",
+    placeholder: "Lösenord",
+  },
+];
+
+export const serviceFormFields = [
+  {
+    name: "name",
+    type: "text",
+    label: "Namn",
+    placeholder: "Namn",
+  },
+  {
+    name: "duration",
+    type: "number",
+    label: "Tid",
+    placeholder: "Tid",
+  },
+  {
+    name: "price",
+    type: "number",
+    label: "Pris",
+    placeholder: "Pris",
+  },
+];
