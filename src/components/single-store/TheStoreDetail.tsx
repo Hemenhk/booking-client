@@ -6,8 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-export default function TheStoreDetail({ storeHandle }: { storeHandle: string }) {
+export default function TheStoreDetail({
+  storeHandle,
+}: {
+  storeHandle: string;
+}) {
   const router = useRouter();
 
   const {
@@ -70,9 +75,13 @@ export default function TheStoreDetail({ storeHandle }: { storeHandle: string })
                   className="flex flex-row items-center justify-between border-b py-6 w-3/4"
                 >
                   <div className="flex flex-row items-center gap-3">
-                    <div className="size-12 rounded-full flex justify-center items-center text-lg font-light bg-black text-white">
+                    <Avatar className="size-20">
+                      <AvatarImage src={user.profileImage} />
+                      <AvatarFallback className="">{user.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    {/* <div className="size-12 rounded-full flex justify-center items-center text-lg font-light bg-black text-white">
                       {user.name.charAt(0)}
-                    </div>
+                    </div> */}
                     <div className="flex flex-col">
                       <h3 className="font-medium text-lg">{user.name}</h3>
                       <p className="text-sm text-gray-500">{user.email}</p>
@@ -80,7 +89,7 @@ export default function TheStoreDetail({ storeHandle }: { storeHandle: string })
                   </div>
                   <Button
                     className="text-base font-light"
-                    onClick={() => handleRedirect(storeName, user._id)}
+                    onClick={() => handleRedirect(storeHandle, user._id)}
                   >
                     Välj
                   </Button>

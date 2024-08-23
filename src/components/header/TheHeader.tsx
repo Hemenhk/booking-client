@@ -20,6 +20,7 @@ export default function TheHeader() {
   const pathname = usePathname();
   const isDashboardPage = pathname.startsWith("/dashboard");
   const isAuthenticated = status === "authenticated";
+  const isAdmin = session?.user.role === "store_admin";
 
   // const dashboardHeader = (
   //   <>
@@ -34,9 +35,17 @@ export default function TheHeader() {
       {isAuthenticated ? (
         <div className="flex">
           <Button className="rounded-3xl font-normal bg-black">
-            <Link href={`/dashboard/admin/${session?.user.store.handle}`}>
-              Mina sidor
-            </Link>
+            {isAdmin ? (
+              <Link href={`/dashboard/admin/${session?.user.store.handle}`}>
+                Mina sidor
+              </Link>
+            ) : (
+              <Link
+                href={`/dashboard/user/${session?.user.store.handle}/${session?.user.id}`}
+              >
+                Mina sidor
+              </Link>
+            )}
           </Button>
         </div>
       ) : (

@@ -24,14 +24,6 @@ export default function UserPage() {
       </div>
     </CardContent>
   </Card>
-  <Card className="w-[400px] rounded-2xl">
-    <CardContent className="flex flex-row items-center gap-3 py-6">
-      <RiMoneyDollarCircleFill size={50}/>
-      <div className="flex flex-col">
-        <h2 className="font-bold text-2xl">+25,000 kr</h2>
-        <p className="text-sm text-gray-400">Inkomst</p>
-      </div>
-    </CardContent>
-  </Card>
+  
   </div>;
 }

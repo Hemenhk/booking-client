@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 
 import { signinFormFields } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().min(2, "Email must be at least 2 characters"),
@@ -78,7 +79,7 @@ export default function TheSigninForm() {
       name={formField.name}
       render={({ field }) => (
         <FormItem>
-          {/* <FormLabel>{formField.label}</FormLabel> */}
+          <FormLabel>{formField.label}</FormLabel>
           <FormControl>
             <Input
               className="h-9 rounded-lg"
@@ -96,18 +97,19 @@ export default function TheSigninForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-5 mx-auto flex flex-col justify-center w-3/5"
+        className="gap-3 mx-auto flex flex-col justify-center w-3/5"
       >
-        <h2 className="text-center text-2xl font-semibold tracking-tight">
-          Logga in på ditt konto
+        <h2 className="text-center text-3xl font-semibold tracking-tight">
+          Logga in 
         </h2>
-        <p className="text-center mb-5 text-sm text-muted-foreground">
+        <p className="text-center mb-5 font-light text-muted-foreground">
           Fyll i formuläret för att logga in på ditt konto
         </p>
         {mappedFormFields}
         <Button type="submit" className="font-normal">
           Logga in
         </Button>
+        <p className="text-center text-sm text-muted-foreground font-light pt-3">Har du inget konto? <Link href={"/register"} className="underline">Registrera dig.</Link></p>
       </form>
     </Form>
   );
