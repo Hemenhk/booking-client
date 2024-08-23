@@ -25,6 +25,7 @@ export type SubUser = {
   name: string;
   email: string;
   role: "sub_user";
+  profileImage: string
 };
 
 export type Admin = {

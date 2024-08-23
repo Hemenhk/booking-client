@@ -25,6 +25,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -81,55 +82,47 @@ export default function ProfilePage() {
 
   return (
     <Form {...form}>
-      <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
+      <Card className="overflow-hidden max-w-[600px]">
         <CardHeader>
-          <CardTitle>Product Images</CardTitle>
+          <CardTitle> Lägg till profilbild</CardTitle>
           <CardDescription>
-            Lipsum dolor sit amet, consectetur adipiscing elit
+            Fyll i formuläret för att göra ändringar på ditt konto
           </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="gap-3 mx-auto flex flex-col justify-center w-3/5"
-          >
-            <h2 className="text-center text-2xl font-semibold tracking-tight">
-              Lägg till profilbild
-            </h2>
-            <p className="text-center mb-5 text-sm text-muted-foreground">
-              Fyll i formuläret för att registrera ditt konto på Booksy
-            </p>
-
+        </CardHeader>{" "}
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent>
             <FormItem>
               {imagePreview ? (
                 <div className="mt-2">
                   <img
                     src={imagePreview}
                     alt="Logo Preview"
-                    className="size-40 object-cover rounded-full border mx-auto"
+                    className="size-40 object-cover rounded-full border"
                   />
                 </div>
               ) : (
                 <img
                   src="/placeholder.png"
                   alt="Logo Preview"
-                  className="size-40 object-cover rounded-full border mx-auto"
+                  className="size-40 object-cover rounded-full borde"
                 />
               )}
               <Input
                 type="file"
-                className="h-9 cursor-pointer"
+                className="h-9 cursor-pointer w-1/3"
                 accept="image/*"
                 onChange={handleLogoChange}
               />
 
               <FormMessage />
             </FormItem>
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
             <Button type="submit" className="font-normal">
               Ändra
             </Button>
-          </form>{" "}
-        </CardContent>
+          </CardFooter>
+        </form>{" "}
       </Card>
     </Form>
   );

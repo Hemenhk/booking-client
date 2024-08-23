@@ -55,7 +55,6 @@ export const signinFormFields = [
     name: "password",
     type: "password",
     label: "Lösenord",
-    placeholder: "Lösenord",
   },
 ];
 

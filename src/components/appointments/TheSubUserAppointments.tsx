@@ -1,26 +1,22 @@
 "use client";
-import { useState, useEffect } from "react";
 import {
   format,
   addDays,
   startOfWeek,
   parse,
-  getHours,
-  getMinutes,
+ 
 } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getBookedAppointmentsForSubuser,
-  getWeeklyBookedAppointments,
-} from "@/axios/bookAppointment";
+import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
 import TheTimeLine from "./TheTimeLine";
-import { useSession } from "next-auth/react";
 
-export default function TheWeeklyAppointments() {
+type Props = {
+  selectedUserId: string ;
+};
+export default function TheSubUserAppointments({ selectedUserId }: Props) {
   // Set up the start of the week and the hours
-  const { data: session } = useSession();
   const startOfTheWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as the first day of the week
   const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
     addDays(startOfTheWeek, index)
@@ -32,8 +28,8 @@ export default function TheWeeklyAppointments() {
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ["weekly-appointments"],
-    queryFn: () => getBookedAppointmentsForSubuser(session?.user.id ),
+    queryKey: ["sub-appointments", selectedUserId],
+    queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
 
   if (isLoading) {

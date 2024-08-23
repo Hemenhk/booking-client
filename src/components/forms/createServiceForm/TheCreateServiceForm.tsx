@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
 import { CreateServiceType, createSerive } from "@/axios/services";
 import { useSession } from "next-auth/react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -78,7 +79,7 @@ export default function TheCreateServiceForm() {
           <FormLabel>{formField.label}</FormLabel>
           <FormControl>
             <Input
-              className={`h-9 rounded-lg ${formField.name !== "name" && "w-2/4"}`}
+              className={`h-9 rounded-lg `}
               placeholder={formField.placeholder}
               type="text"
               {...field}
@@ -91,19 +92,26 @@ export default function TheCreateServiceForm() {
   ));
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/4 space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">
-          Skapa en tjänst
-        </h2>
-        <p className="mb-5 text-sm text-muted-foreground">
-          Fyll i formuläret för att en tjänst
-        </p>
-
-        {mappedFormFields}
-        <Button type="submit" className="font-normal">
-          Skapa tjänst
-        </Button>
-      </form>
+      <Card className="max-w-[600px]">
+        <CardHeader>
+          {" "}
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Skapa en tjänst
+          </h2>
+          <p className="mb-5 text-sm text-muted-foreground">
+            Fyll i formuläret för att en tjänst
+          </p>
+        </CardHeader>{" "}
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">{mappedFormFields}</CardContent>
+          <CardFooter className="border-t px-6 py-4">
+              <Button type="submit" className="font-normal">
+            Skapa tjänst
+          </Button>
+          </CardFooter>
+        
+        </form>
+      </Card>
     </Form>
   );
 }

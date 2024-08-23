@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { subUserFormFields } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, "Sub user name must be at least 2 characters"),
@@ -95,18 +95,19 @@ export default function eTheSubUserCreationForm() {
   ));
   return (
     <Form {...form}>
-      <Card className="w-2/4">
+      <Card className="w-2/4 shadow-sm">
+        <CardHeader><h2 className=" text-2xl font-semibold tracking-tight">
+              Registrera ett konto
+            </h2>
+            <p className=" mb-5 text-sm text-muted-foreground">
+              Fyll i formuläret för att registrera ett konto hos din butik
+            </p></CardHeader>
         <CardContent>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="gap-3 flex flex-col justify-center"
           >
-            <h2 className=" text-2xl font-semibold tracking-tight">
-              Registrera ett konto
-            </h2>
-            <p className=" mb-5 text-sm text-muted-foreground">
-              Fyll i formuläret för att registrera ett konto hos din butik
-            </p>
+            
             {mappedFormFields}
             <Button type="submit" className="font-normal">
               Skapa konto

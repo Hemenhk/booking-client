@@ -18,31 +18,39 @@ export default function TheToolbar() {
   const { storeId, userId } = useParams<{ storeId: string; userId: string }>();
 
   const adminLinks = [
-    { href: "/", name: "Hem", icon: <Home className="size-5"/> },
-    { href: "/dashboard", name: "Schema", icon: <Calendar className="size-5"/> },
+    { href: "/", name: "Hem", icon: <Home className="size-5" /> },
+    {
+      href: `/dashboard/admin/${session?.user.store.handle}/appointments`,
+      name: "Schema",
+      icon: <Calendar className="size-5" />,
+    },
     {
       href: `/dashboard/admin/${session?.user.store.handle}/users`,
       name: "Användare",
-      icon: <User className="size-5"/>,
+      icon: <User className="size-5" />,
     },
-    { href: "/dashboard/admin/design", name: "Design", icon: <Cog className="size-5"/> },
+    {
+      href: "/dashboard/admin/design",
+      name: "Design",
+      icon: <Cog className="size-5" />,
+    },
   ];
 
   const userLinks = [
     {
       href: "/dashboard/user/${storeId}/${userId}",
       name: "Hem",
-      icon: <Home className="size-5"/>,
+      icon: <Home className="size-5" />,
     },
     {
       href: `/dashboard/user/${storeId}/${userId}/appointments`,
       name: "Bokningar",
-      icon: <Calendar className="size-5"/>,
+      icon: <Calendar className="size-5" />,
     },
     {
       href: `/dashboard/user/${storeId}/${userId}/create-service`,
       name: "Skapa tjänst",
-      icon: <SquarePen className="size-5"/>,
+      icon: <SquarePen className="size-5" />,
     },
   ];
 
@@ -58,8 +66,11 @@ export default function TheToolbar() {
     <ul className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight">
-           Booksy.
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-2xl tracking-tight"
+          >
+            Booksy.
           </Link>
         </div>
         <div className="flex-1 pt-5">
