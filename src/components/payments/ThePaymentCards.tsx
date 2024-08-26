@@ -8,8 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
 
 export const plans = [
   {
