@@ -12,10 +12,11 @@ import Link from "next/link";
 import TheSignoutBtn from "./TheSignoutBtn";
 import { useSession } from "next-auth/react";
 export default function TheUserAvatar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const isAdmin = session?.user.role === "store_admin";
-
+  const customerPortalLink =
+    "https://billing.stripe.com/p/login/test_aEU28T9ah6SAeAgcMM";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -39,6 +40,20 @@ export default function TheUserAvatar() {
             Profil
           </Link>
         </DropdownMenuItem>
+        {isAdmin && status === "authenticated" ? (
+          <DropdownMenuItem>
+            <a
+              href={
+                customerPortalLink + "?prefilled_email=" + session.user.email
+              }
+            >
+              Billing
+            </a>
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
+
         <DropdownMenuItem>
           <TheSignoutBtn />
         </DropdownMenuItem>

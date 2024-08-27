@@ -27,7 +27,7 @@ export const getAllStores = async () => {
     const res = await axios.get<StoresResponse>(
       "http://localhost:8001/api/stores/"
     );
-    return res.data;
+    return res.data.stores;
   } catch (error) {
     console.log(error);
   }

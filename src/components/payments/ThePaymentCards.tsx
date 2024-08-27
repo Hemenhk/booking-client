@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -8,9 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useSession } from "next-auth/react";
 
-const plans = [
+export const plans = [
   {
     link:
       process.env.NODE_ENV === "development"
@@ -40,7 +39,7 @@ const plans = [
   {
     link:
       process.env.NODE_ENV === "development"
-        ? "https://buy.stripe.com/test_aEUbIM40r1fQcWQcMQ"
+        ? "https://buy.stripe.com/test_fZe004gNdbUu7Cw7su"
         : "",
     priceId:
       process.env.NODE_ENV === "development"
@@ -59,8 +58,12 @@ const benefits = [
   { icon: <Check />, text: "Ingen startavgift" },
   { icon: <Check />, text: "Automatisk bokföring" },
 ];
+
+type PlanSelectionProps = {
+  storeId: string | null;
+};
+
 export default function ThePaymentCards() {
-    const {data: session} = useSession()
   return (
     <ul className="flex flex-row gap-5">
       {plans.map((plan) => (
@@ -117,8 +120,16 @@ export default function ThePaymentCards() {
                   : ""
               }`}
             >
-                <a href={plan.link + "?prefilled_email=" + session?.user?.email} target="_blank">Kom igång</a>
-           
+              <a
+                href={
+                  plan.link +
+                  "?prefilled_email=" +
+                  localStorage.getItem("adminEmail")
+                }
+                target="_blank"
+              >
+                Kom igång
+              </a>
             </Button>
           </CardFooter>
         </Card>

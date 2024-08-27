@@ -11,39 +11,6 @@ export async function verifyPassword(password: string, hashedPassword: string) {
   return passwordIsValid;
 }
 
-export const registerFormFields = [
-  {
-    name: "storeName",
-    type: "text",
-    label: "Butikens namn",
-    placeholder: "Butikens namn",
-  },
-  {
-    name: "adminName",
-    type: "text",
-    label: "Admins namn",
-    placeholder: "Admins namn",
-  },
-  {
-    name: "adminEmail",
-    type: "email",
-    label: "Admins Email",
-    placeholder: "Admins Email",
-  },
-  {
-    name: "adminPassword",
-    type: "password",
-    label: "Lösenord",
-    placeholder: "Lösenord",
-  },
-  {
-    name: "address",
-    type: "text",
-    label: "Address",
-    placeholder: "Address",
-  },
-];
-
 export const signinFormFields = [
   {
     name: "email",
@@ -57,7 +24,6 @@ export const signinFormFields = [
     label: "Lösenord",
   },
 ];
-
 
 export const subUserFormFields = [
   {
