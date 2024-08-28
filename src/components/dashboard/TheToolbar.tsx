@@ -15,7 +15,7 @@ export interface LinkProps {
 
 export default function TheToolbar() {
   const { data: session } = useSession();
-  const { storeId, userId } = useParams<{ storeId: string; userId: string }>();
+  const { storeHandle, userId } = useParams<{ storeHandle: string; userId: string }>();
 
   const adminLinks = [
     { href: "/", name: "Hem", icon: <Home className="size-5" /> },
@@ -43,12 +43,12 @@ export default function TheToolbar() {
       icon: <Home className="size-5" />,
     },
     {
-      href: `/dashboard/user/${storeId}/${userId}/appointments`,
+      href: `/dashboard/user/${storeHandle}/${userId}/appointments`,
       name: "Bokningar",
       icon: <Calendar className="size-5" />,
     },
     {
-      href: `/dashboard/user/${storeId}/${userId}/create-service`,
+      href: `/dashboard/user/${storeHandle}/${userId}/create-service`,
       name: "Skapa tjänst",
       icon: <SquarePen className="size-5" />,
     },

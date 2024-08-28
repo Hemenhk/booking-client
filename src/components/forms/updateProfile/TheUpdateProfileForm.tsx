@@ -43,6 +43,7 @@ type Props = {
 };
 
 export default function TheUpdateProfileForm({ userId }: Props) {
+  const {toast, dismiss} = useToast()
   const queryClient = useQueryClient();
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -75,7 +76,12 @@ export default function TheUpdateProfileForm({ userId }: Props) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await mutateAsync(values);
-
+      toast({
+        title: `Din profilbild uppdaterades`,
+      })
+      setTimeout(() => {
+        dismiss()
+      }, 2000);
       console.log(values);
     } catch (error) {
       console.log(error);
@@ -121,7 +127,7 @@ export default function TheUpdateProfileForm({ userId }: Props) {
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
             <Button type="submit" className="font-normal">
-              Ändra
+              Spara
             </Button>
           </CardFooter>
         </form>{" "}

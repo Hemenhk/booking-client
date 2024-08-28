@@ -2,13 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getAllStores } from "@/axios/stores";
-import { Card } from "@/components/ui/card";
-import { Rating } from "@mui/material";
-import { HiOutlineLocationMarker } from "react-icons/hi";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import TheStoreCards from "./TheStoreCards";
-import { EyeIcon } from "lucide-react";
 
 export default function TheAllStores() {
   const router = useRouter();

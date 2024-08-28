@@ -76,8 +76,8 @@ export default function TheStoreDetail({
                 >
                   <div className="flex flex-row items-center gap-3">
                     <Avatar className="size-20">
-                      <AvatarImage src={user.profileImage} />
-                      <AvatarFallback className="">{user.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage className="object-cover" src={user.profileImage} />
+                      <AvatarFallback className="text-3xl">{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     {/* <div className="size-12 rounded-full flex justify-center items-center text-lg font-light bg-black text-white">
                       {user.name.charAt(0)}

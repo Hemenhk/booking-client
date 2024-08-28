@@ -1,7 +1,7 @@
 import TheAppointmentDashboard from "@/components/dashboard/TheAppointmentDashboard";
 import React from "react";
 
-export default function page() {
+export default function AppointmentDashboardPage() {
   return (
     <div>
       <TheAppointmentDashboard />

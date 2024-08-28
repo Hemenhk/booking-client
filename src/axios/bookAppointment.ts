@@ -5,7 +5,7 @@ import { addDays, format, startOfWeek } from "date-fns";
 export const bookAppointment = async (userId: string,data: AppointmentType) => {
   try {
     const response = await axios.post(
-     `http://localhost:8001/api/sub-users/${userId}/appointments`,
+     `http://localhost:8001/api/appointments/sub-users/${userId}/appointments`,
       data
     );
     console.log("booked appointment", response);

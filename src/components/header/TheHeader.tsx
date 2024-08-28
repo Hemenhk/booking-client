@@ -70,7 +70,10 @@ export default function TheHeader() {
         ""
       ) : (
         <div className="flex items-center justify-between p-6 border-b-[0.6px]">
-          <h2 className="font-bold text-2xl tracking-tight">Booksy.</h2>
+          <Link href={"/"}>
+            <h2 className="font-bold text-2xl tracking-tight">Booksy.</h2>
+          </Link>
+
           {isDashboardPage ? (
             ""
           ) : (
