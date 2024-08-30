@@ -69,7 +69,7 @@ export default function TheHeader() {
       {isDashboardPage ? (
         ""
       ) : (
-        <div className="flex items-center justify-between p-6 border-b-[0.6px]">
+        <div className="flex items-center justify-between py-4 px-8 border-b-[0.6px]">
           <Link href={"/"}>
             <h2 className="font-bold text-2xl tracking-tight">Booksy.</h2>
           </Link>
