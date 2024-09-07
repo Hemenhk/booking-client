@@ -6,6 +6,7 @@ import ReactQueryProvider from "@/providers/tanstackProvider";
 import { Toaster } from "@/components/ui/toaster";
 import TheHeader from "@/components/header/TheHeader";
 import NextAuthProvider from "./providers/nextAuthProvider";
+import TheFooter from "@/components/footer/TheFooter";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,6 +25,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <TheHeader />
             {children} <Toaster />
+            <TheFooter />
           </ReactQueryProvider>
         </NextAuthProvider>
       </body>
