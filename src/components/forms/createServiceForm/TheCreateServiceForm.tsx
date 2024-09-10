@@ -16,9 +16,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
-import { CreateServiceType, createSerive } from "@/axios/services";
+import { CreateServiceType, createService } from "@/axios/services";
 import { useSession } from "next-auth/react";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -41,8 +46,10 @@ export default function TheCreateServiceForm() {
   });
 
   const { mutateAsync: createServiceMutation } = useMutation({
-    mutationFn: (data: CreateServiceType) =>
-      createSerive(session?.user.id, data),
+    mutationFn: (data: CreateServiceType) => {
+      if (session?.user.id) return createService(session?.user.id, data);
+      return Promise.reject(new Error("user id is undefined"));
+    },
     onSuccess: (data) => {
       queryClient.setQueryData(["service"], data);
       queryClient.invalidateQueries({ queryKey: ["single-store"] });
@@ -72,6 +79,7 @@ export default function TheCreateServiceForm() {
 
   const mappedFormFields = serviceFormFields.map((formField) => (
     <FormField
+      key={formField.name}
       control={form.control}
       name={formField.name}
       render={({ field }) => (
@@ -105,11 +113,10 @@ export default function TheCreateServiceForm() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">{mappedFormFields}</CardContent>
           <CardFooter className="border-t px-6 py-4">
-              <Button type="submit" className="font-normal">
-            Skapa tjänst
-          </Button>
+            <Button type="submit" className="font-normal">
+              Skapa tjänst
+            </Button>
           </CardFooter>
-        
         </form>
       </Card>
     </Form>

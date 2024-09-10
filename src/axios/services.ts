@@ -40,7 +40,7 @@ export const getServicesForSubUser = async (userId: string) => {
   }
 };
 
-export const createSerive = async (userId: string, data: CreateServiceType) => {
+export const createService = async (userId: string, data: CreateServiceType) => {
   try {
     const session = await getSession();
 

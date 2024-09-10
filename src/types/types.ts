@@ -7,6 +7,7 @@ export type Service = {
 };
 
 export type Appointment = {
+  _id: string;
   name: string;
   last_name: string;
   email: string;
@@ -18,6 +19,10 @@ export type Appointment = {
   createdBy: string;
 };
 
+export type Appointments = {
+  data: Appointment[];
+};
+
 export type SubUser = {
   services: Service[];
   appointments: Appointment[];
@@ -25,7 +30,7 @@ export type SubUser = {
   name: string;
   email: string;
   role: "sub_user";
-  profileImage: string
+  profileImage: string;
 };
 
 export type Admin = {

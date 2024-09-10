@@ -1,4 +1,5 @@
 import { AppointmentType } from "@/lib/types";
+import { Appointments } from "@/types/types";
 import axios from "axios";
 import { addDays, format, startOfWeek } from "date-fns";
 
@@ -33,7 +34,7 @@ export const getBookedAppointmentsForSubuser = async (userId: string) => {
     const currentDate = new Date();
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weekEnd = addDays(weekStart, 6);
-    const response = await axios.get(`http://localhost:8001/api/appointments/sub-users/${userId}/appointments`, {
+    const response = await axios.get<Appointments>(`http://localhost:8001/api/appointments/sub-users/${userId}/appointments`, {
       params: {
         startDate: format(weekStart, "yyyy-MM-dd"),
         endDate: format(weekEnd, "yyyy-MM-dd"),

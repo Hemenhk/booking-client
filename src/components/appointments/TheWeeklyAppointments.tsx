@@ -33,12 +33,14 @@ export default function TheWeeklyAppointments() {
     isLoading,
   } = useQuery({
     queryKey: ["weekly-appointments"],
-    queryFn: () => getBookedAppointmentsForSubuser(session?.user.id ),
+    queryFn: () => {
+      if (session?.user.id) return getBookedAppointmentsForSubuser(session?.user.id);
+    },
   });
-
   if (isLoading) {
     return <div>Laddar data...</div>;
   }
+
   if (isError) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }

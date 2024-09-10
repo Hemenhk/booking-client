@@ -19,7 +19,14 @@ import { Input } from "@/components/ui/input";
 import { subUserFormFields } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, "Sub user name must be at least 2 characters"),
@@ -31,7 +38,7 @@ const formSchema = z.object({
 //   storeHandle: string;
 // };
 
-export default function eTheSubUserCreationForm() {
+export default function TheSubUserCreationForm() {
   const { data: session } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -95,25 +102,21 @@ export default function eTheSubUserCreationForm() {
   ));
   return (
     <Form {...form}>
-      <Card className="w-2/4 shadow-sm">
-        <CardHeader><h2 className=" text-2xl font-semibold tracking-tight">
-              Registrera ett konto
-            </h2>
-            <p className=" mb-5 text-sm text-muted-foreground">
-              Fyll i formuläret för att registrera ett konto hos din butik
-            </p></CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="gap-3 flex flex-col justify-center"
-          >
-            
-            {mappedFormFields}
+      <Card className="w-2/4">
+        <CardHeader>
+          <CardTitle>Registrera ett konto</CardTitle>
+          <CardDescription>
+            Fyll i formuläret för att registrera ett konto hos din butik
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-3">{mappedFormFields}</CardContent>
+          <CardFooter className="border-t px-6 py-4">
             <Button type="submit" className="font-normal">
               Skapa konto
             </Button>
-          </form>
-        </CardContent>
+          </CardFooter>
+        </form>
       </Card>
     </Form>
   );

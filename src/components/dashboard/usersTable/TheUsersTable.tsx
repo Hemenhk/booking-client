@@ -9,13 +9,25 @@ import {
 } from "@/components/ui/table";
 import { Store } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FaTrash } from "react-icons/fa";
 import TheDeleteUser from "./TheDeleteUser";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 
-export default function TheUsersTable({ storeData }: { storeData: Store }) {
+export default function TheUsersTable({
+  storeHandle,
+}: {
+  storeHandle: string;
+}) {
   const queryClient = useQueryClient();
+
+  const { storeData } = useAdminQuery(storeHandle);
+
   const { mutateAsync: deleteSubUserMutation } = useMutation({
-    mutationFn: (userId: string) => deleteSubUser(storeData._id, userId),
+    mutationFn: (userId: string) => {
+      if (storeData?._id) {
+      return  deleteSubUser(storeData?._id, userId);
+      }
+      return Promise.reject(new Error("Store ID is undefined"));
+    },
     onSuccess: (data) => {
       queryClient.setQueriesData({ queryKey: ["single-store"] }, data);
       queryClient.refetchQueries({ queryKey: ["single-store"] });
@@ -50,7 +62,10 @@ export default function TheUsersTable({ storeData }: { storeData: Store }) {
               </TableCell>
               <TableCell className="text-right">{userRole}</TableCell>
               <TableCell className="w-24">
-                <TheDeleteUser userId={user._id} deleteSubUserMutation={deleteSubUserMutation} />
+                <TheDeleteUser
+                  userId={user._id}
+                  deleteSubUserMutation={deleteSubUserMutation}
+                />
               </TableCell>
             </TableRow>
           );

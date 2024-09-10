@@ -13,23 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {  useState } from "react";
+import { Card } from "@/components/ui/card";
 import { CardContent } from "@mui/material";
 import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 export default function TheAdminAppointmentPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
-  const {
-    data: subUserData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["stores"],
-    queryFn: () => getSingleStoreDetail(storeHandle),
-  });
+  const { isError, isLoading, subUsers} = useAdminQuery(storeHandle)
 
-  const subUsers = subUserData?.sub_users;
 
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     subUsers?.[0]?._id

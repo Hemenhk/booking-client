@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { signinFormFields } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios";
 
 const formSchema = z.object({
   email: z.string().min(2, "Email must be at least 2 characters"),
@@ -26,7 +27,7 @@ const formSchema = z.object({
 });
 
 export default function TheSigninForm() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const router = useRouter();
   const { toast, dismiss } = useToast();
@@ -42,33 +43,57 @@ export default function TheSigninForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      // Attempt sign-in using credentials
       const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        redirect: false,
+        redirect: false, // Disable automatic redirect
       });
-      if (res?.ok) {
-        const storeHandle = session?.user?.store.handle;
-        const userId = session?.user?.id;
-        if (storeHandle) {
-          setTimeout(() => {
-            if (session?.user.role === "store_admin") {
-              router.push(`dashboard/admin/${storeHandle}`);
-            } else if (session?.user.role === "sub_user") {
-              router.push(`dashboard/user/${storeHandle}/${userId}`);
-            }
-          }, 2500);
-        }
+
+      if (res?.error) {
+        // Handle sign-in errors
+        throw new Error(
+          "Inloggningen misslyckades. Kontrollera dina uppgifter."
+        );
       }
+
+      // Show success toast
       toast({
         title: `Inloggningen lyckades!`,
       });
 
-      setTimeout(() => {
-        dismiss();
-      }, 1000);
+      // Poll to check if session is updated
+      const checkSession = async () => {
+        const updatedSession = await fetch("/api/auth/session").then((res) =>
+          res.json()
+        );
+
+        if (updatedSession?.user) {
+          const storeHandle = updatedSession?.user?.store?.handle;
+          const userId = updatedSession?.user?.id;
+
+          // Redirect based on user role
+          if (storeHandle) {
+            if (updatedSession?.user.role === "store_admin") {
+              router.push(`dashboard/admin/${storeHandle}`);
+            } else if (updatedSession?.user.role === "sub_user") {
+              router.push(`dashboard/user/${storeHandle}/${userId}`);
+            }
+          }
+        } else {
+          // Retry polling session until it's updated
+          setTimeout(checkSession, 500);
+        }
+      };
+
+      await checkSession(); // Start polling for session update
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast({
+        title: "Inloggningen misslyckades",
+        description: (error as Error).message || "Något gick fel, försök igen.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -100,16 +125,21 @@ export default function TheSigninForm() {
         className="gap-3 mx-auto flex flex-col justify-center w-3/5"
       >
         <h2 className="text-center text-3xl font-semibold tracking-tight">
-          Logga in 
+          Logga in
         </h2>
         <p className="text-center mb-5 font-light text-muted-foreground">
           Fyll i formuläret för att logga in på ditt konto
         </p>
         {mappedFormFields}
         <Button type="submit" className="font-normal">
-          Logga in
+        {status === "loading" ? "Loggar in..." : "Logga in"}
         </Button>
-        <p className="text-center text-sm text-muted-foreground font-light pt-3">Har du inget konto? <Link href={"/register"} className="underline">Registrera dig.</Link></p>
+        <p className="text-center text-sm text-muted-foreground font-light pt-3">
+          Har du inget konto?{" "}
+          <Link href={"/register"} className="underline">
+            Registrera dig.
+          </Link>
+        </p>
       </form>
     </Form>
   );
