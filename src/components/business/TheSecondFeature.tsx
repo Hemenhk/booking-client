@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import featureImage from "../../../public/features-2.png";
+
+import featureImage2 from "../../../public/feature-2.png";
 import { useRef } from "react";
 import useInView from "@/hooks/useInView";
 
@@ -15,14 +16,14 @@ export default function TheSecondFeature() {
     >
       <div className="relative">
         <Image
-          src={featureImage}
+          src={featureImage2}
           alt="feature image"
           className={`${isInView ? "animate-fade-in" : "opacity-0"}`}
-          width={600}
-          height={600}
+          width={400}
+          height={400}
         />
       </div>
-      <div className="flex flex-col w-2/4">
+      <div className="flex flex-col w-1/3">
         <h3 className={`text-5xl font-extrabold mb-12 text-gray-800 ${isInView ? "animate-fade-in-left" : "opacity-0"}`}>
           Undvik <span className="text-[#A58F7D]">stressen</span> av att driva
           företag

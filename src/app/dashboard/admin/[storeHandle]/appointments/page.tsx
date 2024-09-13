@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {  useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CardContent } from "@mui/material";
 import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
@@ -21,13 +21,13 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 export default function TheAdminAppointmentPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
-  const { isError, isLoading, subUsers} = useAdminQuery(storeHandle)
-
+  const { isError, isLoading, subUsers, storeData, admin } = useAdminQuery(storeHandle);
 
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    subUsers?.[0]?._id
+    admin?._id || subUsers?.[0]?._id
   );
 
+  console.log("store data:", storeData)
   console.log("selected value: ", selectedValue);
 
   if (isLoading) {
@@ -45,12 +45,21 @@ export default function TheAdminAppointmentPage() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-row justify-between items-center">
-        <h2 className="text-2xl font-semibold tracking-tight">Anställdas schema:</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Anställdas schema:
+        </h2>
         <Select value={selectedValue} onValueChange={handleProductSelect}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Välj anställd" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            {/* Include the admin option if admin is available */}
+            {admin && (
+              <SelectItem key={admin._id} value={admin._id}>
+                {admin.name}
+              </SelectItem>
+            )}
+            {/* List sub-users */}
             {subUsers?.map((user) => (
               <SelectItem key={user._id} value={user._id}>
                 {user.name}

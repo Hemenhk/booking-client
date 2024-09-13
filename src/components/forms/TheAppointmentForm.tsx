@@ -107,7 +107,7 @@ export default function TheAppointmentForm({ userId }: { userId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-2/4 my-2"
+        className="space-y-8 w-2/4 mx-auto my-2"
       >
         {step === 1 && (
           <FormField

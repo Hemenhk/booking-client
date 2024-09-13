@@ -23,6 +23,15 @@ export type Appointments = {
   data: Appointment[];
 };
 
+export type AdminUser = {
+  services: Service[];
+  appointments: Appointment[];
+  _id: string;
+  name: string;
+  email: string;
+  role: "store_admin";
+};
+
 export type SubUser = {
   services: Service[];
   appointments: Appointment[];
@@ -33,13 +42,6 @@ export type SubUser = {
   profileImage: string;
 };
 
-export type Admin = {
-  _id: string;
-  name: string;
-  email: string;
-  role: "store_admin";
-};
-
 export type Review = {
   reviewer: string;
   review: string;
@@ -47,11 +49,17 @@ export type Review = {
   createdAt: string;
 };
 
+type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
 export type Store = {
   _id: string;
   name: string;
   handle: string;
   address: string;
+  address_coordinates: Coordinates;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
   opening_hours: string;
   reviews: Review[];
@@ -59,7 +67,7 @@ export type Store = {
   sumReviews: number;
   averageRating: number;
   sub_users: SubUser[];
-  admin: Admin | null;
+  admin: AdminUser;
   logo: string;
 };
 

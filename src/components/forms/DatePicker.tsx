@@ -52,25 +52,27 @@ export default function DatePicker({ form, setStep }: DatePickerProps) {
   };
   return (
     <FormField
-    control={form.control}
-    name="date"
-    render={({ field }) => (
-      <FormItem className="flex flex-col">
-        <div className="flex gap-5">
-          {daysOfWeek.map((day) => (
-            <div
-              key={day.toString()}
-              className={`text-sm w-40 ${
-                isSameDay(day, selectedDate) ? "selected" : ""
-              }`}
-            >
-              <h3 className="font-medium tracking-tight">
-                {format(day, "EEEE, MMM d")}
-              </h3>
+      control={form.control}
+      name="date"
+    
+      render={({ field }) => (
+        <FormItem className="flex flex-col">
+          <div className="flex gap-5">
+            {daysOfWeek.map((day) => (
+              <div
+                key={day.toString()}
+                className={`text-sm w-40 ${
+                  isSameDay(day, selectedDate) ? "selected" : ""
+                }`}
+              >
+                <h3 className="font-medium tracking-tight">
+                  {format(day, "EEEE, MMM d")}
+                </h3>
 
-              <ul className="flex flex-col h-full gap-2 py-5">
-                {dateData?.availableTimesByDay[format(day, "yyyy-MM-dd")]?.map(
-                  (time: string) => (
+                <ul className="flex flex-col h-full gap-2 py-5">
+                  {dateData?.availableTimesByDay[
+                    format(day, "yyyy-MM-dd")
+                  ]?.map((time: string) => (
                     <li
                       key={time}
                       className={`bg-teal-600 border-green-500 transition ease-out duration-300 hover:bg-teal-800 text-white border max-w-14 h-10 flex justify-center items-center rounded-md cursor-pointer ${
@@ -84,15 +86,14 @@ export default function DatePicker({ form, setStep }: DatePickerProps) {
                     >
                       {time}
                     </li>
-                  )
-                )}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <FormMessage />
-      </FormItem>
-    )}
-  />
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }

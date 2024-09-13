@@ -3,9 +3,10 @@ import bgImage from "../../../public/booksy-bg.png";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import dottedSquare from "../../../public/dotted-square.png";
-import TheEasyBookings from "@/components/home/TheEasyBookings";
-import TheSecondFeature from "@/components/home/TheSecondFeature";
+import TheFirstFeature from "@/components/business/TheFirstFeature";
+import TheSecondFeature from "@/components/business/TheSecondFeature";
 import Link from "next/link";
+import TheThirdFeature from "@/components/business/TheThirdFeature";
 
 export default function BusinessPage() {
   return (
@@ -49,8 +50,9 @@ export default function BusinessPage() {
           />
         </div>
       </section>
-      <TheEasyBookings />
+      <TheFirstFeature />
       <TheSecondFeature />
+      <TheThirdFeature />
     </main>
   );
 }

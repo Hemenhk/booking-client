@@ -4,7 +4,7 @@ import phone from "../../../public/phone-1.png";
 import { useRef } from "react";
 import useInView from "@/hooks/useInView";
 
-export default function TheEasyBookings() {
+export default function TheFirstFeature() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef);
   return (

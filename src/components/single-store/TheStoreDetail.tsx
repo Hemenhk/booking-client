@@ -7,6 +7,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import TheStoreDetailMap from "../maps/TheStoreDetailMap";
 
 export default function TheStoreDetail({
   storeHandle,
@@ -76,8 +77,13 @@ export default function TheStoreDetail({
                 >
                   <div className="flex flex-row items-center gap-3">
                     <Avatar className="size-20">
-                      <AvatarImage className="object-cover" src={user.profileImage} />
-                      <AvatarFallback className="text-3xl">{user.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage
+                        className="object-cover"
+                        src={user.profileImage}
+                      />
+                      <AvatarFallback className="text-3xl">
+                        {user.name.charAt(0)}
+                      </AvatarFallback>
                     </Avatar>
                     {/* <div className="size-12 rounded-full flex justify-center items-center text-lg font-light bg-black text-white">
                       {user.name.charAt(0)}
@@ -99,7 +105,15 @@ export default function TheStoreDetail({
           </ul>
         </div>
       </div>
-      <div className="w-1/3 h-screen bg-red-100"></div>
+      <div className="w-1/3 h-[800px] bg-zinc-100 rounded-lg">
+        <div className="h-56">
+          <TheStoreDetailMap storeData={storeData} />
+          <div className="flex flex-row items-center gap-2 p-4" >
+            <HiOutlineLocationMarker size={25} className="text-gray-600"/>
+            <p className="text-lg text-gray-600">{storeData?.address}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
