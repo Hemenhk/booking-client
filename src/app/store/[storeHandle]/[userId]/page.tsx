@@ -1,9 +1,4 @@
-import { bookAppointment } from "@/axios/bookAppointment";
-import TheBookAppointmentForm from "@/components/forms/bookAppoitmentForm.tsx/TheBookAppointmentForm";
-import TheAppointmentForm from "@/components/forms/TheAppointmentForm";
-import { AppointmentType } from "@/lib/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import TheBookAppointmentForm from "@/components/forms/bookAppoitmentForm/TheBookAppointmentForm";
 
 export default function BookUserPage({
   params,
@@ -12,6 +7,6 @@ export default function BookUserPage({
 }) {
 
   return (
-    <TheBookAppointmentForm />
+    <TheBookAppointmentForm userId={params.userId} />
   )
 }

@@ -3,7 +3,14 @@
 import { getAvailableDate } from "@/axios/availableDate";
 import { useQuery } from "@tanstack/react-query";
 import { SetStateAction, useState } from "react";
-import { format, startOfWeek, addDays, isSameDay } from "date-fns";
+import {
+  format,
+  startOfWeek,
+  addDays,
+  isSameDay,
+  parse,
+  addMinutes,
+} from "date-fns";
 
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
@@ -15,6 +22,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Service } from "@/types/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
@@ -38,6 +47,13 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
   // Set selectedDate to the current date by default
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const savedService = localStorage.getItem("service");
+
+  if (!savedService) {
+    return <p>No service saved in local storage.</p>;
+  }
+
+  const service: Service = JSON.parse(savedService);
 
   // Start of the current week (Monday)
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -54,14 +70,24 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
     addDays(weekStart, index)
   );
 
+  // Calculate the end time using selectedTime and service.duration
+  const calculateEndTime = (startTime: string, duration: number) => {
+    const parsedStartTime = parse(startTime, "HH:mm", new Date());
+    const endTime = addMinutes(parsedStartTime, duration);
+    return format(endTime, "HH:mm");
+  };
+
   // Handle user click on an appointment
   const handleAppointmentClick = (day: Date, time: string) => {
     const formattedDate = format(day, "yyyy-MM-dd");
     setSelectedDate(day);
     setSelectedTime(time);
-    setStep((prevStep) => prevStep + 1);
     form.setValue("date", formattedDate);
     form.setValue("time", time);
+  };
+
+  const handleNextStep = () => {
+    setStep((prevStep) => prevStep + 1);
   };
   return (
     <FormField
@@ -117,12 +143,49 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                 </ul>
               )}
 
-              <div className="h-28 w-[90%] mx-auto px-10 mt-6 bg-zinc-200 rounded-lg">
-                <div>Klippning</div>
+              <div className="h-full w-[90%] mx-auto px-10 pt-5 mt-6 bg-zinc-100 rounded-lg">
+                <div className="border-b pb-3 w-full flex justify-between">
+                  <div className="flex flex-row gap-2">
+                    <h3 className="font-medium">Tjänst:</h3>
+                    <p className="text-gray-600">{service.name}</p>
+                  </div>
+                  <div className="flex flex-col text-right">
+                    <h3 className="font-medium">{service.price}kr</h3>
+                    <p className="text-gray-500 text-sm font-light">
+                      {selectedTime
+                        ? `${selectedTime} - ${calculateEndTime(
+                            selectedTime,
+                            service.duration
+                          )}`
+                        : "Välj en tid"}{" "}
+                    </p>
+                  </div>
+                </div>
+                  <div className="py-4">
+                    <div className="flex flex-row items-center gap-3">
+                      <Avatar className="size-10">
+                        <AvatarImage
+                          className="object-cover"
+                          src={service?.createdBy?.profileImage}
+                        />
+                        <AvatarFallback className="text-3xl">
+                          None
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex flex-col text-left">
+                        <h3 className="text-gray-600 font-light">
+                          {service?.createdBy?.name}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
               </div>
             </CardContent>
             <CardFooter className="w-full flex justify-center border-t pt-6">
-              <Button className="w-[90%] font-light">Gå vidare</Button>
+              <Button className="w-[90%] font-light" onClick={handleNextStep}>
+                Gå vidare
+              </Button>
             </CardFooter>
           </Card>
           <FormMessage />

@@ -20,6 +20,8 @@ export default function DashboardLayout({
     );
   }
 
+  console.log("user id: ", session?.user.id)
+
   if (status === "unauthenticated") {
     router.push("/signin");
   }

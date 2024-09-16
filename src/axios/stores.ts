@@ -1,4 +1,4 @@
-import { Store, StoresResponse, SubUser } from "@/types/types";
+import { OpeningHours, Store, StoresResponse, SubUser } from "@/types/types";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
@@ -123,4 +123,31 @@ export const deleteSubUser = async (storeId: string, userId: string) => {
   }
 };
 
+export const updateOpeningHours = async (
+  storeId: string,
+  openingHours: OpeningHours
+) => {
+  try {
+    const session = await getSession();
 
+    if (!session || !session.user) {
+      throw new Error("User is not authenticated");
+    }
+    const res = await axios.patch(
+      `http://localhost:8001/api/stores/${storeId}/opening-hours`,
+      {
+        opening_hours: openingHours,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error("Error updating opening hours:", error);
+    throw error;
+  }
+};

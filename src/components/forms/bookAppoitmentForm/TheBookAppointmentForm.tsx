@@ -1,28 +1,35 @@
 "use client";
 
-import { getAvailableDate } from "@/axios/availableDate";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SetStateAction, useState } from "react";
-import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { getServicesForSubUser, GetServiceType } from "@/axios/services";
 import { bookAppointment } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheDatePicker from "./TheDatePicker";
 import ThePersonalInformation from "./ThePersonalInformation";
+import { Button } from "@/components/ui/button";
+import { Service } from "@/types/types";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
@@ -59,14 +66,13 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);
 
-  const {
-    data: serviceData,
-    isError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["services"],
-    queryFn: () => getServicesForSubUser(userId),
-  });
+  const savedService = localStorage.getItem("service");
+
+  if (!savedService) {
+    return <p>No saved service in local storage.</p>;
+  }
+
+  const service: Service = JSON.parse(savedService);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,7 +81,7 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
       last_name: "",
       email: "",
       phone_number: "",
-      service: "",
+      service: service._id,
       time: "",
       status: "active",
     },
@@ -90,10 +96,6 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
       queryClient.refetchQueries({ queryKey: ["available-data"] });
     },
   });
-
-  if (isLoading) {
-    return <p>Loading services...</p>; // Display loading indicator while fetching services
-  }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -110,38 +112,8 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
     <div className="h-screen px-48 py-16 bg-zinc-50 flex flex-col items-center w-full gap-14">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {step === 1 && (
-            <FormField
-              control={form.control}
-              name="service"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Service</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a service" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {serviceData &&
-                        serviceData.map((service: GetServiceType) => (
-                          <SelectItem key={service._id} value={service?._id}>
-                            {service?.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-          {step === 2 && <TheDatePicker form={form} setStep={setStep} />}
-          {step === 3 && <ThePersonalInformation form={form} />}
+          {step === 1 && <TheDatePicker form={form} setStep={setStep} />}
+          {step === 2 && <ThePersonalInformation form={form} step={step}/>}
         </form>
       </Form>
     </div>

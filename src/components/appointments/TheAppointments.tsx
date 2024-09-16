@@ -86,7 +86,10 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
     mutationFn: (id: string) => cancelBookedAppointment(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["available-data"] });
+      queryClient.invalidateQueries({ queryKey: ["sub-appointments"] });
       queryClient.invalidateQueries({ queryKey: ["weekly-appointments"] });
+      queryClient.refetchQueries({ queryKey: ["weekly-appointments"] });
+      queryClient.refetchQueries({ queryKey: ["sub-appointments"] });
     },
   });
 
@@ -103,7 +106,7 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
           style={{ height: `${cardHeight}px` }} // Dynamic height based on duration
         >
           <CardHeader className="flex gap-1 h-full flex-row space-y-0 p-0 m-0 items-center">
-            <div className="h-7 w-0.5 bg-blue-700"/>
+            <div className="h-full w-0.5 bg-blue-700" />
             <CardTitle className="text-sm font-light text-blue-900 p-0 flex justify-center items-center">
               {appointment.name} {appointment.last_name}
             </CardTitle>

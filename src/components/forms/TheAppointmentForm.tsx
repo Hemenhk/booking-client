@@ -42,12 +42,14 @@ const formSchema = z.object({
   status: z.string(),
 });
 
-export default function TheAppointmentForm({ userId }: { userId: string }) {
+export default function TheAppointmentForm() {
   const queryClient = useQueryClient();
-  const { storeName } = useParams<{
+  const { storeName, userId } = useParams<{
     storeName: string;
     userId: string;
   }>();
+
+  console.log("user id", userId)
 
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);

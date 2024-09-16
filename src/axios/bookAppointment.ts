@@ -67,7 +67,7 @@ export const getWeeklyBookedAppointments = async () => {
 
 export const cancelBookedAppointment = async (id: string) => {
   try {
-    const response = await axios.patch(`http://localhost:8001/api/appointments/${id}/cancel`);
+    const response = await axios.delete(`http://localhost:8001/api/appointments/${id}/cancel`);
     console.log("worked!", response)
     return response;
   } catch (error) {

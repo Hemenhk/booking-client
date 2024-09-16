@@ -1,9 +1,16 @@
+export type User = {
+  _id: string;
+  name: string;
+  email: string;
+  profileImage: string;
+};
+
 export type Service = {
   _id: string;
   name: string;
   duration: number;
   price: number;
-  createdBy: string;
+  createdBy: User;
 };
 
 export type Appointment = {
@@ -29,6 +36,7 @@ export type AdminUser = {
   _id: string;
   name: string;
   email: string;
+  profileImage: string;
   role: "store_admin";
 };
 
@@ -54,6 +62,16 @@ type Coordinates = {
   longitude: number;
 };
 
+export type OpeningHours = {
+  monday: { open: string; close: string; closed: boolean };
+  tuesday: { open: string; close: string; closed: boolean };
+  wednesday: { open: string; close: string; closed: boolean };
+  thursday: { open: string; close: string; closed: boolean };
+  friday: { open: string; close: string; closed: boolean };
+  saturday: { open: string; close: string; closed: boolean };
+  sunday: { open: string; close: string; closed: boolean };
+};
+
 export type Store = {
   _id: string;
   name: string;
@@ -61,7 +79,7 @@ export type Store = {
   address: string;
   address_coordinates: Coordinates;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
-  opening_hours: string;
+  opening_hours: OpeningHours[];
   reviews: Review[];
   totalReviews: number;
   sumReviews: number;

@@ -5,7 +5,7 @@ import { IoCreate } from "react-icons/io5";
 import { HiCog6Tooth } from "react-icons/hi2";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Calendar, Cog, Home, SquarePen, User } from "lucide-react";
+import { Calendar, Clock3, Cog, Home, SquarePen, User } from "lucide-react";
 
 export interface LinkProps {
   href: string;
@@ -25,9 +25,19 @@ export default function TheToolbar() {
       icon: <Calendar className="size-5" />,
     },
     {
+      href: `/dashboard/admin/${storeHandle}/${userId}/create-service`,
+      name: "Skapa tjänst",
+      icon: <SquarePen className="size-5" />,
+    },
+    {
       href: `/dashboard/admin/${session?.user.store.handle}/users`,
       name: "Användare",
       icon: <User className="size-5" />,
+    },
+    {
+      href: `/dashboard/admin/${session?.user.store.handle}/opening-hours`,
+      name: "Öppettider",
+      icon: <Clock3 className="size-5" />,
     },
     {
       href: "/dashboard/admin/design",
@@ -44,7 +54,7 @@ export default function TheToolbar() {
     },
     {
       href: `/dashboard/user/${storeHandle}/${userId}/appointments`,
-      name: "Bokningar",
+      name: "Schema",
       icon: <Calendar className="size-5" />,
     },
     {

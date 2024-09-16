@@ -1,4 +1,5 @@
 "use client";
+import TheOpeningHoursForm from "@/components/forms/openingHoursForm/TheOpeningHoursForm";
 import TheUpdatePasswordForm from "@/components/forms/updatePassword/TheUpdatePasswordForm";
 import TheUpdateProfileForm from "@/components/forms/updateProfile/TheUpdateProfileForm";
 import { useParams } from "next/navigation";

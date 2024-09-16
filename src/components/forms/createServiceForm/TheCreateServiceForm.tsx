@@ -45,6 +45,8 @@ export default function TheCreateServiceForm() {
     },
   });
 
+  console.log("user id", session?.user.id)
+
   const { mutateAsync: createServiceMutation } = useMutation({
     mutationFn: (data: CreateServiceType) => {
       if (session?.user.id) return createService(session?.user.id, data);
