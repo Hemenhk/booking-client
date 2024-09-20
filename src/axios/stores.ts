@@ -151,3 +151,29 @@ export const updateOpeningHours = async (
     throw error;
   }
 };
+
+export const updateStore = async (storeId: string, data: Store) => {
+  try {
+    const session = await getSession();
+
+    if (!session || !session.user) {
+      throw new Error("User is not authenticated");
+    }
+    const res = await axios.patch(
+      `http://localhost:8001/api/stores/${storeId}`,
+      {
+        data,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error("Error updating opening hours:", error);
+    throw error;
+  }
+};

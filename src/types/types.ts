@@ -51,6 +51,8 @@ export type SubUser = {
 };
 
 export type Review = {
+  _id: string;
+  isVerified: boolean;
   reviewer: string;
   review: string;
   rating: number;
@@ -72,6 +74,11 @@ export type OpeningHours = {
   sunday: { open: string; close: string; closed: boolean };
 };
 
+export type TotalReviewArray = {
+  stars: number;
+  count: number;
+};
+
 export type Store = {
   _id: string;
   name: string;
@@ -79,7 +86,9 @@ export type Store = {
   address: string;
   address_coordinates: Coordinates;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
+  phone_number: string;
   opening_hours: OpeningHours[];
+  description: string;
   reviews: Review[];
   totalReviews: number;
   sumReviews: number;
@@ -87,6 +96,7 @@ export type Store = {
   sub_users: SubUser[];
   admin: AdminUser;
   logo: string;
+  totalReviewsArray: TotalReviewArray[];
 };
 
 export type StoresResponse = {

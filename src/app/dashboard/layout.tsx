@@ -28,7 +28,7 @@ export default function DashboardLayout({
 
   console.log("session", session?.user);
   return (
-    <div className="grid min-h-screen bg-gradient-to-r from-lime-50   to-indigo-50 w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="grid min-h-screen bg-zinc-50 w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <TheToolbar />
       <div className="flex flex-col">
         <TheDashboardHeader />

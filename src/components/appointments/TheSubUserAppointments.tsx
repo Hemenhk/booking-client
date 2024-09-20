@@ -4,7 +4,11 @@ import {
   addDays,
   startOfWeek,
   parse,
- 
+  getHours,
+  getMinutes,
+  addMinutes,
+  isBefore,
+  isAfter,
 } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
@@ -32,6 +36,8 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
 
+
+
   if (isLoading) {
     return <div>Laddar data...</div>;
   }
@@ -39,8 +45,10 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  // Group appointments by day and time
-  const appointmentsByDayAndTime = daysOfWeek.map((day) => {
+  console.log("appointments", bookedData)
+
+   // Group appointments by day
+   const appointmentsByDay = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
 
     return {
@@ -73,32 +81,60 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
       {hours.map((hour) => (
         <div key={hour} className="flex">
           {/* Time label on the left */}
-          <div className="w-16 h-14 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
+          <div className="w-16 h-20 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
             {`${hour}:00`}
           </div>
           {/* Time slots for each day */}
-          {daysOfWeek.map((day, index) => {
+          {daysOfWeek.map((day, dayIndex) => {
             const formattedDate = format(day, "yyyy-MM-dd");
 
-            // Find the appointment for the current day and hour
-            const appointment = appointmentsByDayAndTime[
-              index
-            ].appointments?.find((appointment: AppointmentType) => {
-              const appointmentTime = parse(
-                appointment.time,
-                "HH:mm",
+            // Find appointments that either start or overlap with the current hour
+            const appointments = appointmentsByDay[
+              dayIndex
+            ].appointments?.filter((appointment: AppointmentType) => {
+              const appointmentStartTime = parse(
+                `${appointment.date} ${appointment.time}`,
+                "dd/MM/yyyy HH:mm",
                 new Date()
-              ).getHours();
-              return appointmentTime === hour;
+              );
+              const appointmentEndTime = addMinutes(
+                appointmentStartTime,
+                appointment.service.duration
+              );
+
+              const slotStartTime = new Date(formattedDate).setHours(
+                hour,
+                0,
+                0,
+                0
+              );
+              const slotEndTime = new Date(formattedDate).setHours(
+                hour + 1,
+                0,
+                0,
+                0
+              );
+
+              // Check if the appointment starts or ends within the current hour slot
+              return (
+                (isAfter(appointmentEndTime, slotStartTime) &&
+                  isBefore(appointmentStartTime, slotEndTime)) ||
+                (getHours(appointmentStartTime) === hour &&
+                  getMinutes(appointmentStartTime) === 0)
+              );
             });
 
             return (
               <div
-                key={index}
+                key={dayIndex}
                 className="flex-1 border-[0.4px] border-gray-300"
               >
-                {/* Render appointment details if available */}
-                {appointment && <TheAppointments appointment={appointment} />}
+                {/* Render multiple appointments if available */}
+                {appointments?.map((appointment: AppointmentType) => (
+                  <div key={appointment._id} className="mb-1">
+                    <TheAppointments appointment={appointment} />
+                  </div>
+                ))}
               </div>
             );
           })}

@@ -10,6 +10,7 @@ import {
   isSameDay,
   parse,
   addMinutes,
+  isBefore,
 } from "date-fns";
 
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -89,6 +90,13 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
   const handleNextStep = () => {
     setStep((prevStep) => prevStep + 1);
   };
+
+  const isTimePassed = (day: Date, time: string) => {
+    const now = new Date();
+    const selectedDateTime = parse(time, "HH:mm", day);
+    return isBefore(selectedDateTime, now);
+  };
+
   return (
     <FormField
       control={form.control}
@@ -127,19 +135,26 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                 <ul className="grid grid-cols-6 gap-3 pt-8 px-10">
                   {dateData?.availableTimesByDay[
                     format(selectedDate, "yyyy-MM-dd")
-                  ]?.map((time: string) => (
-                    <li
-                      key={time}
-                      className={`cursor-pointer px-4 py-2 text-center rounded-lg border ${
-                        selectedTime === time
-                          ? "bg-gray-800 text-white"
-                          : "border-gray-200 text-gray-800"
-                      } hover:bg-gray-800 hover:text-white transition duration-300 ease-out`}
-                      onClick={() => handleAppointmentClick(selectedDate, time)}
-                    >
-                      {time}
-                    </li>
-                  ))}
+                  ]
+                    ?.filter((time: string) => {
+                      // Only show times that have not passed
+                      return !isTimePassed(selectedDate, time);
+                    })
+                    .map((time: string) => (
+                      <li
+                        key={time}
+                        className={`cursor-pointer px-4 py-2 text-center rounded-lg border ${
+                          selectedTime === time
+                            ? "bg-gray-800 text-white"
+                            : "border-gray-200 text-gray-800"
+                        } hover:bg-gray-800 hover:text-white transition duration-300 ease-out`}
+                        onClick={() =>
+                          handleAppointmentClick(selectedDate, time)
+                        }
+                      >
+                        {time}
+                      </li>
+                    ))}
                 </ul>
               )}
 
@@ -161,25 +176,23 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                     </p>
                   </div>
                 </div>
-                  <div className="py-4">
-                    <div className="flex flex-row items-center gap-3">
-                      <Avatar className="size-10">
-                        <AvatarImage
-                          className="object-cover"
-                          src={service?.createdBy?.profileImage}
-                        />
-                        <AvatarFallback className="text-3xl">
-                          None
-                        </AvatarFallback>
-                      </Avatar>
+                <div className="py-4">
+                  <div className="flex flex-row items-center gap-3">
+                    <Avatar className="size-10">
+                      <AvatarImage
+                        className="object-cover"
+                        src={service?.createdBy?.profileImage}
+                      />
+                      <AvatarFallback className="text-3xl">None</AvatarFallback>
+                    </Avatar>
 
-                      <div className="flex flex-col text-left">
-                        <h3 className="text-gray-600 font-light">
-                          {service?.createdBy?.name}
-                        </h3>
-                      </div>
+                    <div className="flex flex-col text-left">
+                      <h3 className="text-gray-600 font-light">
+                        {service?.createdBy?.name}
+                      </h3>
                     </div>
                   </div>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="w-full flex justify-center border-t pt-6">

@@ -21,12 +21,7 @@ export default function TheUserAvatar() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          {isAdmin ? (
-            <AvatarImage src={session?.user.store.logo} />
-          ) : (
-            <AvatarImage src={session?.user.profileImage} />
-          )}
-
+          <AvatarImage src={session?.user.profileImage} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

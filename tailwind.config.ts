@@ -139,6 +139,10 @@ const config = {
           "0%": { width: "0%" },
           "100%": { width: "100%" },
         },
+        "ping-once": {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(1.5)", opacity: "0" },
+        },
       },
       animation: {
         shiny: "shiny 2s linear infinite",
@@ -151,6 +155,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "border-timer": "border-fill 5s linear forwards",
         "progress-bar": "progress-bar 5s linear",
+        "ping-once": "ping-once 1s cubic-bezier(0, 0, 0.2, 1) forwards",
       },
     },
   },
