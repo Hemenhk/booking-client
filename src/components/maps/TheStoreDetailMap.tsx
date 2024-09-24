@@ -45,7 +45,7 @@ export default function TheStoreDetailMap({
       zoomControl={false}
       zoom={16}
       scrollWheelZoom={false}
-      className="rounded-t-lg brightness-90 h-[500px]" // Make sure the map has enough height
+      className="rounded-t-lg brightness-90" // Make sure the map has enough height
     >
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"

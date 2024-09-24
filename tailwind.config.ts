@@ -159,7 +159,19 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }) {
+      addUtilities({
+        '.hidden-timeline': {
+          display: 'none',
+        },
+        '.visible-timeline': {
+          display: 'block',
+        },
+      });
+    },
+  ],
 } satisfies Config;
 
 export default config;

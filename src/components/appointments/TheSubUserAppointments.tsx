@@ -14,26 +14,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
-import TheTimeLine from "./TheTimeLine";
-import { useEffect, useState } from "react";
+
 
 type Props = {
-  selectedUserId: string;
+  selectedUserId: string ;
 };
 export default function TheSubUserAppointments({ selectedUserId }: Props) {
-  const [availableTimes, setAvailableTimes] = useState({});
-
-// Fetch available times in a useEffect
-useEffect(() => {
-  const fetchAvailableTimes = async () => {
-    const response = await fetch('/appointments/available-times');
-    const data = await response.json();
-    setAvailableTimes(data.availableTimesByDay);
-  };
-
-  fetchAvailableTimes();
-}, [selectedUserId]);
-
   // Set up the start of the week and the hours
   const startOfTheWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as the first day of the week
   const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
@@ -57,10 +43,9 @@ useEffect(() => {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  console.log("appointments", bookedData);
-
-  // Group appointments by day
-  const appointmentsByDay = daysOfWeek.map((day) => {
+  console.log("appointments", bookedData)
+   // Group appointments by day
+   const appointmentsByDay = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
 
     return {
@@ -77,9 +62,7 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col h-full m-8 relative">
-      {/* Time line with current time text */}
-      {/* <TheTimeLine /> */}
-
+      
       <div className="flex">
         {/* First cell is empty */}
         <div className="w-16"></div>
@@ -114,7 +97,6 @@ useEffect(() => {
                 appointmentStartTime,
                 appointment.service.duration
               );
-
               const slotStartTime = new Date(formattedDate).setHours(
                 hour,
                 0,
@@ -127,7 +109,6 @@ useEffect(() => {
                 0,
                 0
               );
-
               // Check if the appointment starts or ends within the current hour slot
               return (
                 (isAfter(appointmentEndTime, slotStartTime) &&
@@ -140,11 +121,11 @@ useEffect(() => {
             return (
               <div
                 key={dayIndex}
-                className="flex-1 relative border-[0.4px] border-gray-300 "
+                className="flex-1 border-[0.4px] border-gray-300"
               >
                 {/* Render multiple appointments if available */}
                 {appointments?.map((appointment: AppointmentType) => (
-                  <div key={appointment._id} className="mb-1 absolute w-full">
+                  <div key={appointment._id} className="mb-1">
                     <TheAppointments appointment={appointment} />
                   </div>
                 ))}

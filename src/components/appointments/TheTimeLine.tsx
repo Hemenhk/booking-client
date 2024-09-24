@@ -1,39 +1,39 @@
-"use client";
+import { getHours, getMinutes } from "date-fns";
+import { useEffect, useState } from "react";
 
-import { format, getHours, getMinutes } from "date-fns";
-import React, { useState, useEffect } from "react";
+type TimelineProps = {
+  currentTime: Date; // Current time
+  startHour: number; // Start hour of the schedule (e.g., 9)
+};
 
-export default function TheTimeLine() {
-  const [currentTime, setCurrentTime] = useState(new Date());
+export default function TheTimeline({ currentTime, startHour }: TimelineProps) {
+  const [timelinePosition, setTimelinePosition] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    const updateTimelinePosition = () => {
+      const currentHour = getHours(currentTime);
+      const currentMinute = getMinutes(currentTime);
+      const hourSlotHeight = 80; // Height of each hour slot in pixels
+      const minuteHeight = hourSlotHeight / 60; // Height per minute
 
-    return () => clearInterval(interval);
-  }, []);
+      // Only calculate position if the current time is within the schedule
+      if (currentHour >= startHour) {
+        const hoursOffset = (currentHour - startHour) * hourSlotHeight;
+        const minutesOffset = currentMinute * minuteHeight;
+        setTimelinePosition(hoursOffset + minutesOffset);
+      }
+    };
 
-  const currentHour = getHours(currentTime);
-  const currentMinute = getMinutes(currentTime);
-
-  // Do not render the timeline if the time surpasses 7 PM (19:00)
-  if (currentHour >= 19) return null;
-
-  const hourHeight = 80; // Ensure this matches the hour cell height
-  const topOffset = (currentHour - 9) * hourHeight + (currentMinute / 60) * hourHeight; // Calculate the vertical position
-
-  console.log(`Current Time: ${format(currentTime, "HH:mm")}, Top Offset: ${topOffset}px`); // Debugging output
+    // Update the timeline position when the time changes
+    updateTimelinePosition();
+  }, [currentTime, startHour]);
 
   return (
     <div
-      className="absolute left-16 right-0 h-0.5 bg-blue-400 flex items-center"
-      style={{ top: `${topOffset}px` }} // Correctly position the timeline
-    >
-      <span className="bg-blue-400 text-white text-xs px-2 py-0.5 rounded absolute -left-16">
-        {format(currentTime, "HH:mm")}
-      </span>
-      <div className="flex-1 h-0.5 bg-blue-400"></div>
-    </div>
+      className="absolute bg-red-500 h-1 w-full z-10"
+      style={{
+        top: `${timelinePosition}px`, // Position the timeline at the calculated position
+      }}
+    />
   );
 }

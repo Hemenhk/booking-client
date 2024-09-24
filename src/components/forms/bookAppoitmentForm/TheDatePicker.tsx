@@ -1,5 +1,4 @@
 "use client";
-
 import { getAvailableDate } from "@/axios/availableDate";
 import { useQuery } from "@tanstack/react-query";
 import { SetStateAction, useState } from "react";
@@ -59,12 +58,19 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
   // Start of the current week (Monday)
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
 
-  // Fetch available dates data
+  // Fetch available dates data and pass service duration
   const { data: dateData, isLoading: isDateLoading } = useQuery({
-    queryKey: ["available-data"],
-    queryFn: () => getAvailableDate(format(weekStart, "yyyy-MM-dd")),
+    queryKey: ["available-data", service.duration], // Add duration to the query key for caching
+    queryFn: () =>
+      getAvailableDate(
+        service.createdBy._id,
+        format(weekStart, "yyyy-MM-dd"),
+        service.duration
+      ), // Pass the duration to the function
     enabled: !!weekStart,
   });
+
+  console.log("dates", dateData);
 
   // Generate days for the week
   const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
