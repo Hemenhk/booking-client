@@ -9,7 +9,7 @@ export default function TheTimeLine() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000);
+    }, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, []);
@@ -18,18 +18,17 @@ export default function TheTimeLine() {
   const currentMinute = getMinutes(currentTime);
 
   // Do not render the timeline if the time surpasses 7 PM (19:00)
-  if (currentHour >= 19) {
-    return null;
-  }
+  if (currentHour >= 19) return null;
 
-  const hourHeight = 56; // Each hourly cell's height in pixels (h-14)
-  const topOffset =
-    (currentHour - 9) * hourHeight + (currentMinute / 60) * hourHeight;
+  const hourHeight = 80; // Ensure this matches the hour cell height
+  const topOffset = (currentHour - 9) * hourHeight + (currentMinute / 60) * hourHeight; // Calculate the vertical position
+
+  console.log(`Current Time: ${format(currentTime, "HH:mm")}, Top Offset: ${topOffset}px`); // Debugging output
 
   return (
     <div
       className="absolute left-16 right-0 h-0.5 bg-blue-400 flex items-center"
-      style={{ top: `${topOffset}px` }}
+      style={{ top: `${topOffset}px` }} // Correctly position the timeline
     >
       <span className="bg-blue-400 text-white text-xs px-2 py-0.5 rounded absolute -left-16">
         {format(currentTime, "HH:mm")}

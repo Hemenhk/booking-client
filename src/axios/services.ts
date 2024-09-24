@@ -1,6 +1,6 @@
 import { Service } from "@/types/types";
+import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
-import { getSession } from "next-auth/react";
 
 export type CreateServiceType = {
   name: string;
@@ -36,46 +36,13 @@ export const getServicesForSubUser = async (userId: string) => {
 
 export const createService = async (
   userId: string,
-  data: CreateServiceType
+  serviceData: CreateServiceType
 ) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.post<GetAllServicesType>(
-      `http://localhost:8001/api/sub-users/${userId}/services`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-
-    console.log("res back", res);
-  } catch (error: any) {
-    console.log(error);
-  }
+  const url = `http://localhost:8001/api/sub-users/${userId}/services`;
+  return makeRequest("POST", url, serviceData);
 };
 
 export const deleteService = async (userId: string, serviceId: string) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.delete(
-      `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-  } catch (error: any) {
-    console.log(error);
-  }
+  const url = `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`;
+  return makeRequest("DELETE", url);
 };

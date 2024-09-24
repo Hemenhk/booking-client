@@ -15,11 +15,25 @@ import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
 import TheTimeLine from "./TheTimeLine";
+import { useEffect, useState } from "react";
 
 type Props = {
-  selectedUserId: string ;
+  selectedUserId: string;
 };
 export default function TheSubUserAppointments({ selectedUserId }: Props) {
+  const [availableTimes, setAvailableTimes] = useState({});
+
+// Fetch available times in a useEffect
+useEffect(() => {
+  const fetchAvailableTimes = async () => {
+    const response = await fetch('/appointments/available-times');
+    const data = await response.json();
+    setAvailableTimes(data.availableTimesByDay);
+  };
+
+  fetchAvailableTimes();
+}, [selectedUserId]);
+
   // Set up the start of the week and the hours
   const startOfTheWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as the first day of the week
   const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
@@ -36,8 +50,6 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
 
-
-
   if (isLoading) {
     return <div>Laddar data...</div>;
   }
@@ -45,10 +57,10 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  console.log("appointments", bookedData)
+  console.log("appointments", bookedData);
 
-   // Group appointments by day
-   const appointmentsByDay = daysOfWeek.map((day) => {
+  // Group appointments by day
+  const appointmentsByDay = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
 
     return {
@@ -66,7 +78,8 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
   return (
     <div className="flex flex-col h-full m-8 relative">
       {/* Time line with current time text */}
-      <TheTimeLine />
+      {/* <TheTimeLine /> */}
+
       <div className="flex">
         {/* First cell is empty */}
         <div className="w-16"></div>
@@ -127,11 +140,11 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
             return (
               <div
                 key={dayIndex}
-                className="flex-1 border-[0.4px] border-gray-300"
+                className="flex-1 relative border-[0.4px] border-gray-300 "
               >
                 {/* Render multiple appointments if available */}
                 {appointments?.map((appointment: AppointmentType) => (
-                  <div key={appointment._id} className="mb-1">
+                  <div key={appointment._id} className="mb-1 absolute w-full">
                     <TheAppointments appointment={appointment} />
                   </div>
                 ))}

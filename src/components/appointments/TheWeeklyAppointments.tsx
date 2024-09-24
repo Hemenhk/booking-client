@@ -46,10 +46,8 @@ export default function TheWeeklyAppointments() {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
+  console.log("appointments", bookedData);
 
-  console.log("appointments", bookedData)
-
-  
   // Group appointments by day
   const appointmentsByDay = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
@@ -69,7 +67,7 @@ export default function TheWeeklyAppointments() {
   return (
     <div className="flex flex-col h-full m-8 relative">
       {/* Time line with current time text */}
-      <TheTimeLine />
+      {/* <TheTimeLine /> */}
       <div className="flex">
         {/* First cell is empty */}
         <div className="w-16"></div>
@@ -82,9 +80,9 @@ export default function TheWeeklyAppointments() {
       </div>
       {/* Render time slots */}
       {hours.map((hour) => (
-        <div key={hour} className="flex">
+        <div key={hour} className="flex" >
           {/* Time label on the left */}
-          <div className="w-16 h-20 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
+          <div className="w-16 h-16 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
             {`${hour}:00`}
           </div>
           {/* Time slots for each day */}
@@ -92,46 +90,33 @@ export default function TheWeeklyAppointments() {
             const formattedDate = format(day, "yyyy-MM-dd");
 
             // Find appointments that either start or overlap with the current hour
-            const appointments = appointmentsByDay[
-              dayIndex
-            ].appointments?.filter((appointment: AppointmentType) => {
-              const appointmentStartTime = parse(
-                `${appointment.date} ${appointment.time}`,
-                "dd/MM/yyyy HH:mm",
-                new Date()
-              );
-              const appointmentEndTime = addMinutes(
-                appointmentStartTime,
-                appointment.service.duration
-              );
+            const appointments = appointmentsByDay[dayIndex].appointments?.filter(
+              (appointment: AppointmentType) => {
+                const appointmentStartTime = parse(
+                  `${appointment.date} ${appointment.time}`,
+                  "dd/MM/yyyy HH:mm",
+                  new Date()
+                );
+                const appointmentEndTime = addMinutes(
+                  appointmentStartTime,
+                  appointment.service.duration
+                );
 
-              const slotStartTime = new Date(formattedDate).setHours(
-                hour,
-                0,
-                0,
-                0
-              );
-              const slotEndTime = new Date(formattedDate).setHours(
-                hour + 1,
-                0,
-                0,
-                0
-              );
+                const slotStartTime = new Date(formattedDate).setHours(hour, 0, 0, 0);
+                const slotEndTime = new Date(formattedDate).setHours(hour + 1, 0, 0, 0);
 
-              // Check if the appointment starts or ends within the current hour slot
-              return (
-                (isAfter(appointmentEndTime, slotStartTime) &&
-                  isBefore(appointmentStartTime, slotEndTime)) ||
-                (getHours(appointmentStartTime) === hour &&
-                  getMinutes(appointmentStartTime) === 0)
-              );
-            });
+                // Check if the appointment starts or ends within the current hour slot
+                return (
+                  (isAfter(appointmentEndTime, slotStartTime) &&
+                   isBefore(appointmentStartTime, slotEndTime)) ||
+                  (getHours(appointmentStartTime) === hour &&
+                   getMinutes(appointmentStartTime) === 0)
+                );
+              }
+            );
 
             return (
-              <div
-                key={dayIndex}
-                className="flex-1 border-[0.4px] border-gray-300"
-              >
+              <div key={dayIndex} className="flex-1 border-[0.4px] border-gray-300">
                 {/* Render multiple appointments if available */}
                 {appointments?.map((appointment: AppointmentType) => (
                   <div key={appointment._id} className="mb-1">

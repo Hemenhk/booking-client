@@ -1,4 +1,5 @@
 import { OpeningHours, Store, StoresResponse, SubUser } from "@/types/types";
+import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
@@ -33,23 +34,28 @@ export const getAllStores = async () => {
   }
 };
 
-export const getSingleStore = async (storeId: string) => {
-  try {
-    const session = await getSession();
+// export const getSingleStore = async (storeId: string) => {
+//   try {
+//     const session = await getSession();
 
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.get<Store>(
-      `http://localhost:8001/api/stores/${storeId}`,
-      {
-        headers: { Authorization: `Bearer ${session.user.accessToken}` },
-      }
-    );
-    return res.data.data;
-  } catch (error) {
-    console.log(error);
-  }
+//     if (!session || !session.user) {
+//       throw new Error("User is not authenticated");
+//     }
+//     const res = await axios.get<Store>(
+//       `http://localhost:8001/api/stores/${storeId}`,
+//       {
+//         headers: { Authorization: `Bearer ${session.user.accessToken}` },
+//       }
+//     );
+//     return res.data.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export const getSingleStore = async (storeId: string) => {
+  const url = `http://localhost:8001/api/stores/${storeId}`;
+  return makeRequest("GET", url);
 };
 
 export const getSingleStoreDetail = async (storeHandle: string) => {
@@ -78,102 +84,23 @@ export const createStore = async (formData) => {
   }
 };
 
-export const createSubUser = async (storeId: string, data: CreateSubUser) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-
-    await axios.post(
-      `http://localhost:8001/api/stores/${storeId}/subuser`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
+export const createSubUSer = async (storeId: string, data: CreateSubUser) => {
+  const url = `http://localhost:8001/api/stores/${storeId}/subuser`;
+  return makeRequest("POST", url, data);
 };
 
 export const deleteSubUser = async (storeId: string, userId: string) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-
-    const res = await axios.delete(
-      `http://localhost:8001/api/stores/${storeId}/subuser/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-
-    console.log("sub user deleted", res);
-  } catch (error) {
-    console.log(error);
-  }
+  const url = `http://localhost:8001/api/stores/${storeId}/subuser/${userId}`;
+  return makeRequest("DELETE", url);
 };
 
-export const updateOpeningHours = async (
-  storeId: string,
-  openingHours: OpeningHours
-) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.patch(
-      `http://localhost:8001/api/stores/${storeId}/opening-hours`,
-      {
-        opening_hours: openingHours,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-
-    return res.data;
-  } catch (error) {
-    console.error("Error updating opening hours:", error);
-    throw error;
-  }
-};
+export const updateOpeningHours = async (storeId:string, openingHours: OpeningHours) => {
+  const url = `http://localhost:8001/api/stores/${storeId}/opening-hours`;
+  return makeRequest("PATCH", url, { opening_hours: openingHours })
+}
 
 export const updateStore = async (storeId: string, data: Store) => {
-  try {
-    const session = await getSession();
+  const url = `http://localhost:8001/api/stores/${storeId}`;
+  return makeRequest("PATCH", url, data)
+}
 
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.patch(
-      `http://localhost:8001/api/stores/${storeId}`,
-      {
-        data,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-
-    return res.data;
-  } catch (error) {
-    console.error("Error updating opening hours:", error);
-    throw error;
-  }
-};

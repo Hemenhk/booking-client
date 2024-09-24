@@ -8,26 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Store } from "@/types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAdminQuery } from "@/hooks/useAdminQuery";
-import {
-  deleteService,
-  getServicesForSubUser,
-} from "@/axios/services";
+import { Service} from "@/types/types";
+import { useMutation,  useQueryClient } from "@tanstack/react-query";
+import { deleteService } from "@/axios/services";
 import TheDeleteDialog from "../usersTable/TheDeleteDialog";
 
-export default function TheServicesTable({ userId }: { userId: string }) {
-  const queryClient = useQueryClient();
+type Props = {
+  serviceData: Service[];
+  userId: string;
+};
 
-  const {
-    data: serviceData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["services", userId],
-    queryFn: () => getServicesForSubUser(userId),
-  });
+export default function TheServicesTable({ serviceData, userId }: Props) {
+  const queryClient = useQueryClient();
 
   console.log("serivice data", serviceData);
 
@@ -46,18 +38,6 @@ export default function TheServicesTable({ userId }: { userId: string }) {
     },
   });
 
-  if (isLoading) {
-    return <div>Laddar data...</div>;
-  }
-
-  if (isError) {
-    return <div>Ett fel uppstod när vi hämtade tjänsterna.</div>;
-  }
-
-  // Handle case when `serviceData` might be empty or undefined
-  if (!serviceData || serviceData.length === 0) {
-    return <div>Inga tjänster tillgängliga.</div>;
-  }
   return (
     <Table>
       <TableHeader>
@@ -68,7 +48,7 @@ export default function TheServicesTable({ userId }: { userId: string }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {serviceData.map((service) => {
+        {serviceData?.map((service) => {
           return (
             <TableRow key={service._id}>
               <TableCell className="font-medium">{service.name}</TableCell>

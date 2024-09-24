@@ -18,13 +18,13 @@ import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
 import { CreateServiceType, createService } from "@/axios/services";
 import { useSession } from "next-auth/react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+
 import { useParams } from "next/navigation";
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -34,8 +34,8 @@ const formSchema = z.object({
 
 export default function TheCreateServiceForm() {
   const queryClient = useQueryClient();
-  const {userId} = useParams<{userId: string}>()
-  
+  const { userId } = useParams<{ userId: string }>();
+
   const { data: session } = useSession();
   const { toast, dismiss } = useToast();
 
@@ -48,7 +48,7 @@ export default function TheCreateServiceForm() {
     },
   });
 
-  console.log("user id", session?.user.id)
+  console.log("user id", session?.user.id);
 
   const { mutateAsync: createServiceMutation } = useMutation({
     mutationFn: (data: CreateServiceType) => {
@@ -56,7 +56,8 @@ export default function TheCreateServiceForm() {
       return Promise.reject(new Error("user id is undefined"));
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["service"], data);
+      queryClient.setQueryData(["services"], data);
+      queryClient.refetchQueries({queryKey: ["services"]})
       queryClient.invalidateQueries({ queryKey: ["single-store"] });
     },
   });
@@ -74,7 +75,7 @@ export default function TheCreateServiceForm() {
       const res = await createServiceMutation(data);
 
       toast({
-        title: `Ett konto med namnet ${values.name} skapades`,
+        title: `En tjänst med namnet ${values.name} skapades`,
       });
       console.log("res", res);
     } catch (error) {
@@ -105,25 +106,25 @@ export default function TheCreateServiceForm() {
   ));
   return (
     <Form {...form}>
-      <Card className="max-w-[600px]">
-        <CardHeader>
-          {" "}
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Skapa en tjänst
-          </h2>
-          <p className="mb-5 text-sm text-muted-foreground">
-            Fyll i formuläret för att en tjänst
-          </p>
-        </CardHeader>{" "}
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">{mappedFormFields}</CardContent>
-          <CardFooter className="border-t px-6 py-4">
+        <DialogContent>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <DialogHeader>
+            {" "}
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Skapa en tjänst
+            </h2>
+            <p className="mb-5 text-sm text-muted-foreground">
+              Fyll i formuläret för att en tjänst
+            </p>
+          </DialogHeader>{" "}
+          {mappedFormFields}
+          <DialogFooter className="px-6 py-4">
             <Button type="submit" className="font-normal">
               Skapa tjänst
             </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </DialogFooter>
+      </form>
+        </DialogContent>
     </Form>
   );
 }

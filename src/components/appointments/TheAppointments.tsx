@@ -94,7 +94,7 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
   });
 
   // Calculate the height of the card based on the duration of the appointment
-  const hourHeight = 64; // Assuming each hour cell is 64px tall
+  const hourHeight = 80; // Assuming each hour cell is 64px tall
   const cardHeight = (appointment.service.duration / 60) * hourHeight;
 
   return (
@@ -110,11 +110,6 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
             <CardTitle className="text-sm font-light text-blue-900 p-0 flex justify-center items-center">
               {appointment.name} {appointment.last_name}
             </CardTitle>
-            {/* <CardDescription className="text-gray-600 text-xs">
-              <p>
-                {appointment.service.name} | Kl: {appointment.time} - {endTime}
-              </p>
-            </CardDescription> */}
           </CardHeader>
         </Card>
       </DialogTrigger>
