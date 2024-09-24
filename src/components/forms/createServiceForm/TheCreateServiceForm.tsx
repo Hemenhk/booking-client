@@ -24,6 +24,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -33,6 +34,8 @@ const formSchema = z.object({
 
 export default function TheCreateServiceForm() {
   const queryClient = useQueryClient();
+  const {userId} = useParams<{userId: string}>()
+  
   const { data: session } = useSession();
   const { toast, dismiss } = useToast();
 

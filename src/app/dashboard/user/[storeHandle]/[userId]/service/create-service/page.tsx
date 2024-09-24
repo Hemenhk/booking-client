@@ -1,7 +1,7 @@
 import TheCreateServiceForm from "@/components/forms/createServiceForm/TheCreateServiceForm";
 import React from "react";
 
-export default function CreateServicePage() {
+export default function CreateUserServicePage() {
   return (
     <div>
       <TheCreateServiceForm />

@@ -34,7 +34,7 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
 
   return (
     <div className="flex flex-col">
-      <h3 className="text-3xl font-medium pb-5">Personal</h3>
+      <h3 className="text-3xl font-medium pb-5">Personal & Tjänster</h3>
       <ul>
         <Accordion type="single" collapsible className="w-3/4">
           <AccordionItem value="item-1">

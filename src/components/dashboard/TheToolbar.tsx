@@ -25,8 +25,8 @@ export default function TheToolbar() {
       icon: <Calendar className="size-5" />,
     },
     {
-      href: `/dashboard/admin/${storeHandle}/${userId}/create-service`,
-      name: "Skapa tjänst",
+      href: `/dashboard/admin/${storeHandle}/${session?.user.id}/service`,
+      name: "Tjänster",
       icon: <SquarePen className="size-5" />,
     },
     {
@@ -58,8 +58,8 @@ export default function TheToolbar() {
       icon: <Calendar className="size-5" />,
     },
     {
-      href: `/dashboard/user/${storeHandle}/${userId}/create-service`,
-      name: "Skapa tjänst",
+      href: `/dashboard/user/${storeHandle}/${userId}/service`,
+      name: "Tjänster",
       icon: <SquarePen className="size-5" />,
     },
   ];

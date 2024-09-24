@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/table";
 import { Store } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import TheDeleteUser from "./TheDeleteUser";
+import TheDeleteUser from "./TheDeleteDialog";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
+import TheDeleteDialog from "./TheDeleteDialog";
 
 export default function TheUsersTable({
   storeHandle,
@@ -24,7 +25,7 @@ export default function TheUsersTable({
   const { mutateAsync: deleteSubUserMutation } = useMutation({
     mutationFn: (userId: string) => {
       if (storeData?._id) {
-      return  deleteSubUser(storeData?._id, userId);
+        return deleteSubUser(storeData?._id, userId);
       }
       return Promise.reject(new Error("Store ID is undefined"));
     },
@@ -62,9 +63,11 @@ export default function TheUsersTable({
               </TableCell>
               <TableCell className="text-right">{userRole}</TableCell>
               <TableCell className="w-24">
-                <TheDeleteUser
-                  userId={user._id}
-                  deleteSubUserMutation={deleteSubUserMutation}
+                <TheDeleteDialog
+                  deleteMutation={deleteSubUserMutation}
+                  mutationArgs={[user._id]} // Pass arguments for the delete function
+                  title="Är du säker?"
+                  description="Den här handlingen kommer permanent ta bort användaren."
                 />
               </TableCell>
             </TableRow>

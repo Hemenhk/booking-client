@@ -2,18 +2,15 @@
 
 import { Rating } from "@mui/material";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import TheStoreDetailMap from "../maps/TheStoreDetailMap";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 
-import { Service } from "@/types/types";
 import TheOpeningHours from "./components/TheOpeningHours";
 import { Smartphone } from "lucide-react";
 import TheReviews from "./components/TheReviews";
 import TheAboutStore from "./components/TheAboutStore";
 import TheStoreStaff from "./components/TheStoreStaff";
 import TheSocialMedias from "./components/TheSocialMedias";
+import TheStoreDetailMap from "../maps/TheStoreDetailMap";
 
 export default function TheStoreDetail({
   storeHandle,
@@ -32,7 +29,7 @@ export default function TheStoreDetail({
 
   console.log("single store", storeData);
   return (
-    <div className="flex h-full mb-20 p-10 px-80">
+    <div className="flex h-full mb-20 p-10 px-48">
       <div className="flex flex-col w-2/3 space-y-16">
         <div className="border-b w-3/4 pb-8">
           <h2 className="text-4xl pb-5 font-semibold">{storeData?.name} </h2>
@@ -69,8 +66,10 @@ export default function TheStoreDetail({
         <TheReviews storeData={storeData} />
       </div>
       <div className="w-1/3 h-full bg-gray-100 pb-4 rounded-lg">
-        {/* <TheStoreDetailMap storeData={storeData} /> */}
-        <div className="h-64 rounded-t-lg bg-gray-300"></div>
+        {/* <div className="h-56">
+          <TheStoreDetailMap storeData={storeData} />
+        </div> */}
+        <div className="h-64 rounded-t-lg"></div>
         <div className="flex flex-col px-5 py-8">
           <h3 className="pb-4 border-b">Butiksinformation</h3>
           <div className="flex flex-row items-center gap-2 py-4 border-b">

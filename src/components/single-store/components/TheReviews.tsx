@@ -13,7 +13,7 @@ type Props = {
 
 export default function TheReviews({ storeData }: Props) {
   const [currentAmount, setCurrentAmount] = useState(1);
-  const [reviewsPerAmount] = useState(5);
+  const [reviewsPerAmount] = useState(4);
 
   if (!storeData) {
     return <div>No reviews available.</div>;

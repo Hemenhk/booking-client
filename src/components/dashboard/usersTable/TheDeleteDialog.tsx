@@ -9,18 +9,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa";
 
-type Props = {
-  deleteSubUserMutation: UseMutateAsyncFunction<void, Error, string, unknown>;
-  userId: string;
+
+type Props<T extends any[]> = {
+  deleteMutation: (...args: T) => Promise<void>; 
+  mutationArgs: T; 
+  title: string;
+  description: string; 
 };
 
-export default function TheDeleteUser({
-  deleteSubUserMutation,
-  userId,
-}: Props) {
+export default function TheDeleteDialog<T extends any[]>({
+  deleteMutation,
+  mutationArgs,
+  title,
+  description,
+}: Props<T>) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -28,14 +32,20 @@ export default function TheDeleteUser({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Är du helt säker?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Den här handlingen kommer permanent ta bort kontot.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Avbryt</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deleteSubUserMutation(userId)}>
+          <AlertDialogAction
+            onClick={async () => {
+              try {
+                await deleteMutation(...mutationArgs);
+              } catch (error) {
+                console.error("Error deleting:", error);
+              }
+            }}
+          >
             Radera
           </AlertDialogAction>
         </AlertDialogFooter>

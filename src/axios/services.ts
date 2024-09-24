@@ -1,12 +1,6 @@
+import { Service } from "@/types/types";
 import axios from "axios";
 import { getSession } from "next-auth/react";
-
-export type GetServiceType = {
-  _id: string;
-  name: string;
-  duration: number;
-  price: number;
-};
 
 export type CreateServiceType = {
   name: string;
@@ -15,7 +9,7 @@ export type CreateServiceType = {
 };
 
 export type GetAllServicesType = {
-  data: GetServiceType[];
+  data: Service[];
 };
 
 export const getAllServices = async () => {
@@ -32,7 +26,7 @@ export const getAllServices = async () => {
 export const getServicesForSubUser = async (userId: string) => {
   try {
     const res = await axios.get<GetAllServicesType>(
-      `http://localhost:8001/api/sub-users/${userId}/services/`
+      `http://localhost:8001/api/sub-users/${userId}/services`
     );
     return res.data.data;
   } catch (error) {
@@ -40,14 +34,17 @@ export const getServicesForSubUser = async (userId: string) => {
   }
 };
 
-export const createService = async (userId: string, data: CreateServiceType) => {
+export const createService = async (
+  userId: string,
+  data: CreateServiceType
+) => {
   try {
     const session = await getSession();
 
     if (!session || !session.user) {
       throw new Error("User is not authenticated");
     }
-   const res = await axios.post<GetAllServicesType>(
+    const res = await axios.post<GetAllServicesType>(
       `http://localhost:8001/api/sub-users/${userId}/services`,
       data,
       {
@@ -57,7 +54,27 @@ export const createService = async (userId: string, data: CreateServiceType) => 
       }
     );
 
-    console.log("res back", res)
+    console.log("res back", res);
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+export const deleteService = async (userId: string, serviceId: string) => {
+  try {
+    const session = await getSession();
+
+    if (!session || !session.user) {
+      throw new Error("User is not authenticated");
+    }
+    const res = await axios.delete(
+      `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      }
+    );
   } catch (error: any) {
     console.log(error);
   }
