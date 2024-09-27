@@ -6,26 +6,15 @@ import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormItem, FormMessage } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { updateUser } from "@/axios/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -43,7 +32,7 @@ type Props = {
 };
 
 export default function TheUpdateProfileForm({ userId }: Props) {
-  const {toast, dismiss} = useToast()
+  const { toast, dismiss } = useToast();
   const queryClient = useQueryClient();
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -78,9 +67,9 @@ export default function TheUpdateProfileForm({ userId }: Props) {
       await mutateAsync(values);
       toast({
         title: `Din profilbild uppdaterades`,
-      })
+      });
       setTimeout(() => {
-        dismiss()
+        dismiss();
       }, 2000);
       console.log(values);
     } catch (error) {
@@ -90,48 +79,49 @@ export default function TheUpdateProfileForm({ userId }: Props) {
 
   return (
     <Form {...form}>
-      <Card className="overflow-hidden max-w-[600px]">
-        <CardHeader>
-          <CardTitle> Lägg till profilbild</CardTitle>
-          <CardDescription>
-            Fyll i formuläret för att göra ändringar på ditt konto
-          </CardDescription>
-        </CardHeader>{" "}
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent>
-            <FormItem>
-              {imagePreview ? (
-                <div className="mt-2">
-                  <img
-                    src={imagePreview}
-                    alt="Logo Preview"
-                    className="size-40 object-cover rounded-full border"
-                  />
-                </div>
-              ) : (
-                <img
-                  src="/placeholder.png"
-                  alt="Logo Preview"
-                  className="size-40 object-cover rounded-full borde"
-                />
-              )}
-              <Input
-                type="file"
-                className="h-9 cursor-pointer w-1/3"
-                accept="image/*"
-                onChange={handleLogoChange}
-              />
+      <DialogContent className="overflow-hidden max-w-[600px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <DialogHeader>
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Ändra Profilbild
+            </h2>
+            <p className="mb-5 text-sm text-muted-foreground">
+              Fyll i fälten för att ändra din profilbild
+            </p>
+          </DialogHeader>
 
-              <FormMessage />
-            </FormItem>
-          </CardContent>
-          <CardFooter className="border-t px-6 py-4">
+          <FormItem>
+            {imagePreview ? (
+              <div className="mt-2">
+                <img
+                  src={imagePreview}
+                  alt="Logo Preview"
+                  className="size-40 object-cover rounded-full border"
+                />
+              </div>
+            ) : (
+              <img
+                src="/placeholder.png"
+                alt="Logo Preview"
+                className="size-40 object-cover rounded-full borde"
+              />
+            )}
+            <Input
+              type="file"
+              className="h-9 cursor-pointer w-1/3"
+              accept="image/*"
+              onChange={handleLogoChange}
+            />
+
+            <FormMessage />
+          </FormItem>
+          <DialogFooter className="px-6 py-4">
             <Button type="submit" className="font-normal">
               Spara
             </Button>
-          </CardFooter>
+          </DialogFooter>
         </form>{" "}
-      </Card>
+      </DialogContent>
     </Form>
   );
 }

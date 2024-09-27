@@ -62,7 +62,7 @@ export const serviceFormFields = [
   {
     name: "price",
     type: "number",
-    label: "Pris",
+    label: "Pris (kr)",
     placeholder: "Pris",
   },
 ];

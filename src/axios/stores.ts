@@ -94,13 +94,44 @@ export const deleteSubUser = async (storeId: string, userId: string) => {
   return makeRequest("DELETE", url);
 };
 
-export const updateOpeningHours = async (storeId:string, openingHours: OpeningHours) => {
+export const updateOpeningHours = async (
+  storeId: string,
+  openingHours: OpeningHours
+) => {
   const url = `http://localhost:8001/api/stores/${storeId}/opening-hours`;
-  return makeRequest("PATCH", url, { opening_hours: openingHours })
-}
+  return makeRequest("PATCH", url, { opening_hours: openingHours });
+};
 
 export const updateStore = async (storeId: string, data: Store) => {
   const url = `http://localhost:8001/api/stores/${storeId}`;
-  return makeRequest("PATCH", url, data)
-}
+  return makeRequest("PATCH", url, data);
+};
 
+export const getSubscriptionCustomer = async (customerId: string) => {
+  const url = `http://localhost:8001/api/stores/subscription/${customerId}`;
+  return makeRequest("GET", url);
+};
+
+export const updateStoreImages = async (storeId: string, data: any) => {
+  try {
+    const session = await getSession();
+
+    if (!session || !session.user) {
+      throw new Error("User is not authenticated");
+    }
+    const res = await axios.patch(
+      `http://localhost:8001/api/stores/${storeId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Error in createStore:", error);
+    throw error;
+  }
+};

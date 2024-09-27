@@ -11,6 +11,7 @@ export type Service = {
   duration: number;
   price: number;
   createdBy: User;
+  bgColor: string;
 };
 
 export type Appointment = {
@@ -84,6 +85,8 @@ export type Store = {
   name: string;
   handle: string;
   address: string;
+  city: string;
+  country: string;
   address_coordinates: Coordinates;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
   phone_number: string;
@@ -97,6 +100,9 @@ export type Store = {
   admin: AdminUser;
   logo: string;
   totalReviewsArray: TotalReviewArray[];
+  collageImages: string[];
+  customerId: string;
+  commitmentPeriod: number;
 };
 
 export type StoresResponse = {

@@ -30,20 +30,25 @@ export default function TheUserAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Link
-            href={`/dashboard/user/${session?.user.store._id}/${session?.user.id}/profile`}
+            href={`/dashboard/user/${session?.user.store.handle}/${session?.user.id}/profile`}
           >
             Profil
           </Link>
         </DropdownMenuItem>
         {isAdmin && status === "authenticated" ? (
           <DropdownMenuItem>
-            <a
+            {/* <a
               href={
                 customerPortalLink + "?prefilled_email=" + session.user.email
               }
             >
               Billing
-            </a>
+            </a> */}
+            <Link
+            href={`/dashboard/admin/${session?.user.store.handle}/subscription-portal`}
+          >
+            Fakturering
+          </Link>
           </DropdownMenuItem>
         ) : (
           ""

@@ -57,17 +57,17 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
     },
     {
       icon: <User className="text-blue-600" />,
-      title: "Barber",
-      content: "Hemen HK",
+      title: "Utövare",
+      content: appointment.createdBy.name,
     },
     {
       icon: <Clock className="text-blue-600" />,
-      title: "Time",
+      title: "Tid",
       content: formatTimeRange(appointment.time, endTime),
     },
     {
       icon: <CircleDollarSign className="text-blue-600" />,
-      title: "Price",
+      title: "Pris",
       content: appointment.service.price,
     },
   ];
@@ -102,8 +102,8 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
       <DialogTrigger asChild>
         <Card
           key={appointment._id}
-          className="shadow-sm rounded-none bg-blue-50 p-0 m-0 cursor-pointer hover:bg-blue-100 transition-all duration-200"
-          style={{ height: `${cardHeight}px` }} // Dynamic height based on duration
+          className={`shadow-sm rounded-none p-0 m-0 cursor-pointer ${appointment?.service?.bgColor} transition duration-300 ease-out hover:brightness-90`}
+          style={{ height: `${cardHeight}px` }}
         >
           <CardHeader className="flex gap-1 h-full flex-row space-y-0 p-0 m-0 items-center">
             <div className="h-full w-0.5 bg-blue-700" />
@@ -132,15 +132,11 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 mt-4">{mappedGridContent}</div>
         <div className="border-t pt-5 mt-5 flex justify-end gap-2">
-          <Button variant="secondary" className="w-32">
-            Reschedule
-          </Button>
           <Button
-            variant="destructive"
             className="w-32"
             onClick={() => cancelAppointmentMutation(appointment._id)}
           >
-            Cancel
+            Avboka
           </Button>
         </div>
       </DialogContent>

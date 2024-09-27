@@ -6,6 +6,7 @@ export type CreateServiceType = {
   name: string;
   duration: number;
   price: number;
+  bgColor: string;
 };
 
 export type GetAllServicesType = {
@@ -21,6 +22,11 @@ export const getAllServices = async () => {
   } catch (error: any) {
     console.log(error);
   }
+};
+
+export const getSingleService = async (serviceId: string) => {
+  const url = `http://localhost:8001/api/sub-users/services/${serviceId}`;
+  return makeRequest("GET", url);
 };
 
 export const getServicesForSubUser = async (userId: string) => {
@@ -45,4 +51,13 @@ export const createService = async (
 export const deleteService = async (userId: string, serviceId: string) => {
   const url = `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`;
   return makeRequest("DELETE", url);
+};
+
+export const updateService = async (
+  userId: string,
+  serviceId: string,
+  serviceData: CreateServiceType
+) => {
+  const url = `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`;
+  return makeRequest("PATCH", url, serviceData);
 };

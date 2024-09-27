@@ -18,13 +18,15 @@ import { Card } from "@/components/ui/card";
 import { CardContent } from "@mui/material";
 import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
+import { useSession } from "next-auth/react";
 
 export default function TheAdminAppointmentPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
+  const {data: session} = useSession()
   const { isError, isLoading, subUsers, storeData, admin } = useAdminQuery(storeHandle);
 
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    admin?._id || subUsers?.[0]?._id
+    session?.user?.id || subUsers?.[0]?._id
   );
 
   console.log("store data:", storeData)

@@ -1,0 +1,166 @@
+"use client";
+
+import { getSubscriptionCustomer } from "@/axios/stores";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import React, { useState, useEffect } from "react";
+
+export default function TheSubscriptionPortalPage() {
+  const { data: session } = useSession();
+  const customerId = session?.user.store.customerId;
+  const commitmentPeriod = session?.user.store.commitmentPeriod || 1; // Default to 1 month if not provided
+
+  const [canCancel, setCanCancel] = useState(false); // State for cancel button
+  const [errorMessage, setErrorMessage] = useState(""); // Error message for cancelation attempt
+  const [endDate, setEndDate] = useState<Date | null>(null); // State for storing subscription end date
+
+  // Fetch subscription data
+  const {
+    data: subscriptionData,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["subscription", customerId],
+    queryFn: () => {
+      if (customerId) {
+        return getSubscriptionCustomer(customerId);
+      }
+      return Promise.reject(new Error("Customer ID is undefined"));
+    },
+  });
+
+  // Function to check if the commitment period has passed
+  const checkCommitmentPeriod = (data: any) => {
+    const commitmentStartDate = new Date(data.start_date * 1000); // Convert Unix timestamp to JavaScript Date
+
+    // Check if the date is valid
+    if (isNaN(commitmentStartDate.getTime())) {
+      setErrorMessage("Invalid commitment start date.");
+      return;
+    }
+
+    // Calculate the commitment end date
+    const period = data.commitmentPeriod || commitmentPeriod;
+    const commitmentEndDate = new Date(commitmentStartDate);
+    commitmentEndDate.setMonth(commitmentEndDate.getMonth() + period);
+
+    // Store the end date in state
+    setEndDate(commitmentEndDate);
+
+    // Compare current date with commitment end date
+    const currentDate = new Date();
+    if (currentDate >= commitmentEndDate) {
+      setCanCancel(true); // Allow cancellation if the commitment period has passed
+    } else {
+      setErrorMessage(
+        `You can cancel after ${commitmentEndDate.toLocaleDateString()}`
+      );
+    }
+  };
+
+  // Call checkCommitmentPeriod after subscription data is fetched
+  useEffect(() => {
+    if (subscriptionData) {
+      checkCommitmentPeriod(subscriptionData.data);
+    }
+  }, [subscriptionData]);
+
+  // Handle cancelation attempt
+  const handleCancelSubscription = () => {
+    if (canCancel) {
+      // Call your API to cancel the subscription
+      console.log("Canceling subscription...");
+      // Implement your cancelation API call here
+    } else {
+      console.error(
+        "Cannot cancel subscription before commitment period ends."
+      );
+    }
+  };
+
+  if (isLoading) {
+    return <div>Laddar abonnemanget</div>;
+  }
+
+  if (!subscriptionData || isError) {
+    return <div>No subscription data or an error occurred</div>;
+  }
+
+  // Convert Unix timestamps to JavaScript Date objects
+  const startDate = new Date(subscriptionData.data.start_date * 1000);
+  const billingCycleAnchorDate = new Date(
+    subscriptionData.data.billing_cycle_anchor * 1000
+  );
+
+  const getSubscriptionPlan = (commitmentPeriod: number) => {
+    switch (commitmentPeriod) {
+      case 1:
+        return "Månadsvis";
+      case 3:
+        return "Kvartalsvis";
+      case 12:
+        return "Årsvis";
+      default:
+        return null; // Return null or a default icon if country is not in the list
+    }
+  };
+
+  return (
+    <Card className="overflow-hidden max-w-[600px]">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Din prenumeration</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
+          <p className="text-sm">
+            Plan:{" "}
+            <span className="font-medium">
+              {getSubscriptionPlan(commitmentPeriod)}
+            </span>
+          </p>
+          <p className="text-sm">
+            Startdatum:{" "}
+            <span className="font-medium">
+              {isNaN(startDate.getTime())
+                ? "Invalid Date"
+                : startDate.toLocaleDateString()}
+            </span>
+          </p>
+        </div>
+        <div className="bg-gray-50 flex flex-row justify-between items-center p-3 border rounded-lg">
+          <p className="text-sm">
+            Bindningstid:{" "}
+            <span className="font-medium">{commitmentPeriod} månader</span>
+          </p>
+          {endDate && (
+            <div className="text-sm">
+              <p>
+                Prenumerationen upphör:{" "}
+                <span className="font-medium">
+                  {endDate.toLocaleDateString()}
+                </span>
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="bg-gray-50 p-3 border rounded-lg">
+          <p className="text-sm">
+            PrenumerationsID:{" "}
+            <span className="font-medium">{subscriptionData.data.id}</span>
+          </p>
+        </div>
+        <div>
+          <Button
+            variant={"destructive"}
+            onClick={handleCancelSubscription}
+            disabled={!canCancel}
+          >
+            Avsluta Prenumeration
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

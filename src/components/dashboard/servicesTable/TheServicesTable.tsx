@@ -8,10 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Service} from "@/types/types";
-import { useMutation,  useQueryClient } from "@tanstack/react-query";
+import { Service } from "@/types/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteService } from "@/axios/services";
 import TheDeleteDialog from "../usersTable/TheDeleteDialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import TheUpdateServiceForm from "@/components/forms/updateServiceForm/TheUpdateServiceForm";
 
 type Props = {
   serviceData: Service[];
@@ -43,18 +45,30 @@ export default function TheServicesTable({ serviceData, userId }: Props) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Namn</TableHead>
-          <TableHead className="">Pris</TableHead>
-          <TableHead className="text-right">Tid</TableHead>
+          <TableHead>Pris</TableHead>
+          <TableHead>Tid</TableHead>
+          <TableHead className="text-right">Bakgrundsfärg</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {serviceData?.map((service) => {
           return (
             <TableRow key={service._id}>
-              <TableCell className="font-medium">{service.name}</TableCell>
-              <TableCell className="">{service.price}kr</TableCell>
-              <TableCell className="text-right">
-                {service.duration} minuter
+              <Dialog>
+                <DialogTrigger asChild>
+                  <TableCell className="font-medium hover:underline cursor-pointer">
+                    {service.name}
+                  </TableCell>
+                </DialogTrigger>
+                <TheUpdateServiceForm serviceId={service._id} />
+              </Dialog>
+
+              <TableCell>{service.price}kr</TableCell>
+              <TableCell>{service.duration} minuter</TableCell>
+              <TableCell className="flex justify-end">
+                <div
+                  className={`size-8 rounded-md ${service?.bgColor}`}
+                />
               </TableCell>
               <TableCell className="w-24">
                 <TheDeleteDialog

@@ -19,13 +19,10 @@ import {
 import { Input } from "@/components/ui/input";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 
 import { PasswordsType, updateUserPassword } from "@/axios/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -76,53 +73,51 @@ export default function TheUpdatePasswordForm({ userId }: Props) {
 
   return (
     <Form {...form}>
-      <Card className="overflow-hidden max-w-[600px]">
-        <CardHeader>
-          <CardTitle>Ändra Lösenord</CardTitle>
-          <CardDescription>
-            Fyll i fälten för att ändra ditt lösenord
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent>
-            <FormField
-              control={form.control}
-              name="oldPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gamla lösenordet</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Detta är ditt gamla lösenord
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nya lösenordet</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormDescription>Detta är ditt nya lösenord</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="border-t px-6 py-4">
+      <DialogContent className="overflow-hidden max-w-[600px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <DialogHeader>
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Ändra Lösenord
+            </h2>
+            <p className="mb-5 text-sm text-muted-foreground">
+              Fyll i fälten för att ändra ditt lösenord
+            </p>
+          </DialogHeader>
+          <FormField
+            control={form.control}
+            name="oldPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gamla lösenordet</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormDescription>Detta är ditt gamla lösenord</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nya lösenordet</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormDescription>Detta är ditt nya lösenord</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <DialogFooter className="px-6 py-4">
             <Button type="submit" className="font-normal">
               Spara
             </Button>
-          </CardFooter>
+          </DialogFooter>
         </form>{" "}
-      </Card>
+      </DialogContent>
     </Form>
   );
 }

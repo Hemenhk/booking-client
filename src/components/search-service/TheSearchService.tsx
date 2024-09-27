@@ -32,6 +32,7 @@ export default function TheSearchService() {
     queryFn: getAllStores,
   });
 
+  // Search logic for stores or services by name
   useEffect(() => {
     if (storeSearchTimeout) {
       clearTimeout(storeSearchTimeout);
@@ -51,6 +52,7 @@ export default function TheSearchService() {
     setStoreSearchTimeout(timeout);
   }, [storeOrService, storeData]);
 
+  // Search logic for stores by city
   useEffect(() => {
     if (addressSearchTimeout) {
       clearTimeout(addressSearchTimeout);
@@ -59,7 +61,7 @@ export default function TheSearchService() {
     const timeout = setTimeout(() => {
       if (address) {
         const filtered = storeData?.filter((store: Store) =>
-          store.address.toLowerCase().includes(address.toLowerCase())
+          store.city?.toLowerCase().includes(address.toLowerCase())
         );
         setFilteredAddresses(filtered || []);
       } else {
@@ -70,8 +72,26 @@ export default function TheSearchService() {
     setAddressSearchTimeout(timeout);
   }, [address, storeData]);
 
-  const handleSearch = (handle: string) => {
-    router.push(`/store/${handle}`);
+  // New handleSearch function that redirects to /search
+  const handleSearch = () => {
+    const searchQuery = new URLSearchParams();
+    if (storeOrService) searchQuery.append("storeOrService", storeOrService);
+    if (address) searchQuery.append("address", address);
+
+    router.push(`/search?${searchQuery.toString()}`);
+  };
+
+  // Function to handle link click inside the Popover
+  const handleLinkStoreClick = (storeName: string) => {
+    const searchQuery = new URLSearchParams();
+    searchQuery.append("storeOrService", storeName);
+    router.push(`/search?${searchQuery.toString()}`);
+  };
+
+  const handleLinkAddressClick = (storeName: string) => {
+    const searchQuery = new URLSearchParams();
+    searchQuery.append("city", storeName);
+    router.push(`/search?${searchQuery.toString()}`);
   };
 
   if (isLoading) {
@@ -81,8 +101,10 @@ export default function TheSearchService() {
   if (isError) {
     return <p>Failed to load stores. Please try again later.</p>;
   }
+
   return (
     <div className="flex flex-row items-center w-2/4 justify-center bg-white h-20 px-5 rounded-full shadow-md">
+      {/* Store/Service search input */}
       <div className="flex flex-row items-center text-gray-600 w-full">
         <Popover>
           <PopoverTrigger asChild>
@@ -91,33 +113,36 @@ export default function TheSearchService() {
               <Input
                 type="text"
                 className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                placeholder="Sök efter butik"
+                placeholder="Sök efter butik eller tjänst"
                 value={storeOrService}
                 onChange={(e) => setStoreOrService(e.target.value)}
               />
             </div>
           </PopoverTrigger>
-          {/* Display suggestions based on filtered addresses */}
+          {/* Display suggestions based on filtered stores by name */}
           {filteredStores.length > 0 && (
             <PopoverContent className="w-96 relative top-3">
               <ul>
                 {filteredStores.map((store) => (
-                  <Link
+                  <li
                     key={store._id}
-                    // onClick={() => handleSearch(store.handle)}
-                    href={`/store/${store.handle}`}
-                    className="flex flow-row gap-2 items-center px-4 py-2 cursor-pointer lowercase font-medium hover:bg-gray-100 hover:rounded-xl"
+                    onClick={() => handleLinkStoreClick(store.name)} // Redirect to /search with store name
+                    className="flex flex-row gap-2 items-center px-4 py-2 cursor-pointer lowercase font-medium hover:bg-gray-100 hover:rounded-xl"
                   >
                     <Search className="text-gray-400" size={15} />
                     {store.name}
-                  </Link>
+                  </li>
                 ))}
               </ul>
             </PopoverContent>
           )}
         </Popover>
       </div>
+
+      {/* Separator between store and city search */}
       <Separator orientation="vertical" className="h-3/4 mx-5" />
+
+      {/* City search input */}
       <div className="flex flex-row items-center text-gray-600 w-full">
         <Popover>
           <PopoverTrigger asChild>
@@ -126,33 +151,36 @@ export default function TheSearchService() {
               <Input
                 type="text"
                 className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                placeholder="Sök efter plats"
+                placeholder="Sök efter plats (stad)"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
           </PopoverTrigger>
-          {/* Display suggestions based on filtered addresses */}
+          {/* Display suggestions based on filtered stores by city */}
           {filteredAddresses.length > 0 && (
             <PopoverContent className="w-96 relative top-3">
               <ul>
                 {filteredAddresses.map((store) => (
-                  <Link
+                  <li
                     key={store._id}
-                    // onClick={() => handleSearch(store.handle)}
-                    href={`/store/${store.handle}`}
-                    className="flex flow-row gap-2 items-center px-4 py-2 cursor-pointer lowercase font-medium hover:bg-gray-100 hover:rounded-xl"
+                    onClick={() => handleLinkAddressClick(store.city)} // Redirect to /search with city name
+                    className="flex flex-row gap-2 items-center px-4 py-2 cursor-pointer lowercase font-medium hover:bg-gray-100 hover:rounded-xl"
                   >
-                    <Search className="text-gray-400" size={15} />
-                    {store.address}
-                  </Link>
+                    <MapPin className="text-gray-400" size={15} />
+                    {store.city}
+                  </li>
                 ))}
               </ul>
             </PopoverContent>
           )}
         </Popover>
       </div>
-      <Button className="w-36 h-12 rounded-3xl">Sök</Button>
+
+      {/* Search button */}
+      <Button className="w-36 h-12 rounded-3xl" onClick={handleSearch}>
+        Sök
+      </Button>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import TheAboutStore from "./components/TheAboutStore";
 import TheStoreStaff from "./components/TheStoreStaff";
 import TheSocialMedias from "./components/TheSocialMedias";
 import TheStoreDetailMap from "../maps/TheStoreDetailMap";
+import Image from "next/image";
 
 export default function TheStoreDetail({
   storeHandle,
@@ -56,6 +57,7 @@ export default function TheStoreDetail({
             </div>
           </div>
         </div>
+
         <TheAboutStore description={storeData?.description} />
         <TheStoreStaff
           admin={admin}
@@ -65,11 +67,19 @@ export default function TheStoreDetail({
         {/* The Review Section */}
         <TheReviews storeData={storeData} />
       </div>
-      <div className="w-1/3 h-full bg-gray-100 pb-4 rounded-lg">
+      <div className="w-1/3 h-full bg-gray-100 rounded-lg">
         {/* <div className="h-56">
           <TheStoreDetailMap storeData={storeData} />
         </div> */}
-        <div className="h-64 rounded-t-lg"></div>
+        <div className="relative overflow-hidden h-80 w-full rounded-t-lg brightness-90">
+          <Image
+            src={storeData?.collageImages[0]}
+            alt="store images"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+        {/* <div className="h-64 rounded-t-lg"></div> */}
         <div className="flex flex-col px-5 py-8">
           <h3 className="pb-4 border-b">Butiksinformation</h3>
           <div className="flex flex-row items-center gap-2 py-4 border-b">
@@ -85,8 +95,11 @@ export default function TheStoreDetail({
             </p>
           </div>
           <TheOpeningHours openingHours={storeData?.opening_hours} />
-          <TheSocialMedias />
+          <TheSocialMedias />{" "}
         </div>
+        {/* <div className="h-56">
+          <TheStoreDetailMap storeData={storeData} />
+        </div> */}
       </div>
     </div>
   );

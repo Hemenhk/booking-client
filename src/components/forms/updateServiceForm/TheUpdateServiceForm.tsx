@@ -2,10 +2,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
-
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,17 +12,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
-import { CreateServiceType, createService } from "@/axios/services";
+import {
+  CreateServiceType,
+  createService,
+  getServicesForSubUser,
+  getSingleService,
+  updateService,
+} from "@/axios/services";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
-import { useParams } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+import { Service } from "@/types/types";
+import { tailwindBgColors100 } from "@/lib/bgColors";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -33,28 +47,40 @@ const formSchema = z.object({
   bgColor: z.string(),
 });
 
-export default function TheCreateServiceForm() {
+export default function TheUpdateServiceForm({
+  serviceId,
+}: {
+  serviceId: string;
+}) {
   const queryClient = useQueryClient();
-  const { userId } = useParams<{ userId: string }>();
-
   const { data: session } = useSession();
+
+  const {
+    data: serviceData,
+    isLoading,
+    isError,
+  } = useQuery<Service>({
+    queryKey: ["services", serviceId],
+    queryFn: () => getSingleService(serviceId),
+  });
+
+  console.log("single service data", serviceData);
   const { toast, dismiss } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      duration: "",
-      price: "",
-      bgColor: "#fff",
+    values: {
+      name: serviceData?.data?.name || "",
+      duration: serviceData?.data?.duration?.toString() || "",
+      price: serviceData?.data?.price?.toString() || "",
+      bgColor: serviceData?.data?.bgColor || "#fff",
     },
   });
 
-  console.log("user id", session?.user.id);
-
-  const { mutateAsync: createServiceMutation } = useMutation({
+  const { mutateAsync: updateServiceMutation } = useMutation({
     mutationFn: (data: CreateServiceType) => {
-      if (session?.user.id) return createService(session?.user.id, data);
+      if (session?.user.id)
+        return updateService(session?.user.id, serviceId, data);
       return Promise.reject(new Error("user id is undefined"));
     },
     onSuccess: (data) => {
@@ -74,10 +100,10 @@ export default function TheCreateServiceForm() {
 
       console.log("data", data);
 
-      const res = await createServiceMutation(data);
+      const res = await updateServiceMutation(data);
 
       toast({
-        title: `En tjänst med namnet ${values.name} skapades`,
+        title: `Tjänsten uppdaterades`,
       });
       console.log("res", res);
     } catch (error) {
@@ -95,6 +121,7 @@ export default function TheCreateServiceForm() {
           <FormLabel>{formField.label}</FormLabel>
           <FormControl>
             <Input
+              defaultValue={field.value}
               className={`h-9 rounded-lg `}
               placeholder={formField.placeholder}
               type="text"
@@ -106,6 +133,7 @@ export default function TheCreateServiceForm() {
       )}
     />
   ));
+
   return (
     <Form {...form}>
       <DialogContent>
@@ -124,22 +152,32 @@ export default function TheCreateServiceForm() {
             control={form.control}
             name="bgColor"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-1/3">
                 <FormLabel>Bakgrundsfärg</FormLabel>
                 <FormControl>
-                  <Input
-                    className={`h-9 rounded-lg `}
-                    type="color"
-                    {...field}
-                  />
+                  <Select
+                    value={field.value}
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Välj färg" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tailwindBgColors100.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          <div className={`size-6 rounded-full ${color}`} />
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-          <DialogFooter className="px-6 py-4">
-            <Button type="submit" className="font-normal">
-              Skapa tjänst
+          <DialogFooter className="py-4">
+            <Button type="submit" className="font-normal w-full">
+              Updatera tjänsten
             </Button>
           </DialogFooter>
         </form>
