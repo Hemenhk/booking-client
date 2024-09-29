@@ -24,30 +24,48 @@ export default function TheHeader() {
   const isHomePage = pathname === "/";
   const isAuthenticated = status === "authenticated";
   const isAdmin = session?.user.role === "store_admin";
+  const isNotStoreUser = session?.user.role === "user";
 
   const header = (
     <>
       {isAuthenticated ? (
         <div className="flex items-center gap-3">
-          {isAdmin ? (
-            <Link href={`/dashboard/admin/${session?.user.store.handle}`}>
-              <HiOutlineUserCircle
-                className={`size-9 cursor-pointer ${
-                  isHomePage ? "text-white" : "text-black"
-                } `}
-              />
-            </Link>
-          ) : (
-            <Link
-              href={`/dashboard/user/${session?.user.store.handle}/${session?.user.id}`}
-            >
-              <HiOutlineUserCircle
-                className={`size-9 cursor-pointer ${
-                  isHomePage ? "text-white" : "text-black"
-                } `}
-              />
-            </Link>
-          )}
+          {(() => {
+            switch (session?.user.role) {
+              case "store_admin":
+                return (
+                  <Link href={`/dashboard/admin/${session?.user.store.handle}`}>
+                    <HiOutlineUserCircle
+                      className={`size-9 cursor-pointer ${
+                        isHomePage ? "text-white" : "text-black"
+                      } `}
+                    />
+                  </Link>
+                );
+              case "user":
+                return (
+                  <Link href={`/dashboard/user/${session?.user.id}`}>
+                    <HiOutlineUserCircle
+                      className={`size-9 cursor-pointer ${
+                        isHomePage ? "text-white" : "text-black"
+                      } `}
+                    />
+                  </Link>
+                );
+              default:
+                return (
+                  <Link
+                    href={`/dashboard/user/${session?.user.store.handle}/${session?.user.id}`}
+                  >
+                    <HiOutlineUserCircle
+                      className={`size-9 cursor-pointer ${
+                        isHomePage ? "text-white" : "text-black"
+                      } `}
+                    />
+                  </Link>
+                );
+            }
+          })()}
 
           {isBusinessPage ? (
             ""

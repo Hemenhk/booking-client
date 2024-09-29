@@ -1,15 +1,22 @@
-import ThePaymentCards from "@/components/payments/ThePaymentCards";
+import TheRegisterUserForm from '@/components/forms/registerUserForm/TheRegisterUserForm';
+import TheSigninForm from '@/components/forms/signinForm/TheSigninForm';
+import React from 'react'
 
-export default function RegisterPage() {
-  return (
-    <main className="flex flex-col justify-center items-center gap-12 pb-24 pt-14 bg-gradient-to-r from-blue-50 via-pink-100 to-blue-50">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-5xl font-semibold tracking-tight capitalize">
-          Börja ta emot bokningar nu
-        </h2>
-        <p className="text-gray-500 text-center">Välj mellan planerna nedan.</p>
-      </div>
-      <ThePaymentCards />
-    </main>
-  );
+export default function TheRegisterPage() {
+    return (
+        <div className="flex flex-col my-20 h-[650px] max-w-[1200px] items-center justify-center mx-auto md:grid lg:grid-cols-2 border rounded-md shadow-md">
+          <div className="lg:p-8">
+            <TheRegisterUserForm />
+          </div>{" "}
+          <div className="hidden  relative h-full flex-col justify-between bg-muted p-10 text-white bg-gradient-to-br from-gray-900 to-gray-950 lg:flex rounded-tr-md rounded-br-md">
+            <h2 className="text-lg font-semibold">Booksy.</h2>
+            <div className="w-3/4">
+              <p>
+                Samla alla dina bokningar under ett och samma konto för dina
+                anställda
+              </p>
+            </div>
+          </div>
+        </div>
+      );
 }

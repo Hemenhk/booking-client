@@ -6,10 +6,10 @@ import { Store } from "@/types/types";
 type User = {
   id: string;
   email: string;
-  role?: "store_admin" | "sub_user";
-  store: Store;
+  role?: "store_admin" | "sub_user" | "user";
+  store?: Store;
   accessToken: string;
-  profileImage?: string
+  profileImage?: string;
 };
 
 const handler = NextAuth({
@@ -27,25 +27,40 @@ const handler = NextAuth({
         const { email, password } = credentials as any;
 
         try {
-          // Replace with your local server endpoint
-          const response = await axios.post(
+          // First, try logging in as a subscription-based user (BooksyUser)
+          let response = await axios.post(
             "http://localhost:8001/api/auth/login",
-            {
-              email,
-              password,
-            }
+            { email, password, userType: "booksyUser" } // You can differentiate user types on your backend
           );
 
-          const user = response.data;
+          let user = response.data;
 
           if (user) {
             return {
               id: user._id as string,
               email: user.email,
-              role: user.role,
+              role: user.role, // "store_admin" or "sub_user"
               store: user.store,
               accessToken: user.accessToken,
-              profileImage: user.profileImage
+              profileImage: user.profileImage || null,
+            };
+          }
+
+          // If no BooksyUser found, try logging in as a standard user
+          response = await axios.post("http://localhost:8001/api/auth/login", {
+            email,
+            password,
+            userType: "standardUser",
+          });
+
+          user = response.data;
+
+          if (user) {
+            return {
+              id: user._id as string,
+              email: user.email,
+              role: "user", // Standard users have no specific roles
+              accessToken: user.accessToken,
             };
           }
         } catch (error) {

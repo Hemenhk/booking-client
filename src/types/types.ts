@@ -24,8 +24,12 @@ export type Appointment = {
   date: string;
   time: string;
   status: "active" | "cancelled";
-  createdBy: string;
+  createdBy: User;
 };
+
+export type UserAppointments = {
+  appointments: Appointment[]
+}
 
 export type Appointments = {
   data: Appointment[];

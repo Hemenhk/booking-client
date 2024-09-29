@@ -5,7 +5,15 @@ import { IoCreate } from "react-icons/io5";
 import { HiCog6Tooth } from "react-icons/hi2";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Calendar, Clock3, Cog, Factory, Home, SquarePen, User } from "lucide-react";
+import {
+  Calendar,
+  Clock3,
+  Cog,
+  Factory,
+  Home,
+  SquarePen,
+  User,
+} from "lucide-react";
 
 export interface LinkProps {
   href: string;
@@ -23,7 +31,7 @@ export default function TheToolbar() {
   const adminLinks = [
     { href: "/", name: "Hem", icon: <Home className="size-5" /> },
     {
-      href: `/dashboard/admin/${session?.user.store.handle}/appointments`,
+      href: `/dashboard/admin/${storeHandle}/appointments`,
       name: "Schema",
       icon: <Calendar className="size-5" />,
     },
@@ -33,17 +41,17 @@ export default function TheToolbar() {
       icon: <SquarePen className="size-5" />,
     },
     {
-      href: `/dashboard/admin/${session?.user.store.handle}/users`,
+      href: `/dashboard/admin/${storeHandle}/users`,
       name: "Användare",
       icon: <User className="size-5" />,
     },
     {
-      href: `/dashboard/admin/${session?.user.store.handle}/opening-hours`,
+      href: `/dashboard/admin/${storeHandle}/opening-hours`,
       name: "Öppettider",
       icon: <Clock3 className="size-5" />,
     },
     {
-      href: `/dashboard/admin/${session?.user.store.handle}/store-info`,
+      href: `/dashboard/admin/${storeHandle}/store-info`,
       name: "Butik",
       icon: <Factory className="size-5" />,
     },
@@ -51,29 +59,49 @@ export default function TheToolbar() {
 
   const userLinks = [
     {
-      href: "/dashboard/user/${storeId}/${userId}",
+      href: `/dashboard/sub-user/${storeHandle}/${userId}`,
       name: "Hem",
       icon: <Home className="size-5" />,
     },
     {
-      href: `/dashboard/user/${storeHandle}/${userId}/appointments`,
+      href: `/dashboard/sub-user/${storeHandle}/${userId}/appointments`,
       name: "Schema",
       icon: <Calendar className="size-5" />,
     },
     {
-      href: `/dashboard/user/${storeHandle}/${userId}/service`,
+      href: `/dashboard/sub-user/${storeHandle}/${userId}/service`,
       name: "Tjänster",
       icon: <SquarePen className="size-5" />,
     },
   ];
 
-  const isAdmin = session?.user.role === "store_admin";
+  const standardUserLinks = [
+    {
+      href: `/dashboard/user/${userId}`,
+      name: "Hem",
+      icon: <Home className="size-5" />,
+    },
+    {
+      href: `/dashboard/user/${userId}/appointments`,
+      name: "Bokningar",
+      icon: <Calendar className="size-5" />,
+    },
+  ];
 
-  const getLinks = (isAdmin: boolean) => {
-    return isAdmin ? adminLinks : userLinks;
+  const getLinks = (userRole: string) => {
+    switch (userRole) {
+      case "store_admin":
+        return adminLinks;
+      case "sub_user":
+        return userLinks;
+      case "user":
+        return standardUserLinks;
+      default:
+        return [];
+    }
   };
 
-  const linksToRender = getLinks(isAdmin);
+  const linksToRender = getLinks(session?.user.role || "");
 
   return (
     <ul className="hidden border-r bg-muted/40 md:block">

@@ -12,6 +12,7 @@ import TheStoreStaff from "./components/TheStoreStaff";
 import TheSocialMedias from "./components/TheSocialMedias";
 import TheStoreDetailMap from "../maps/TheStoreDetailMap";
 import Image from "next/image";
+import TheCollageImages from "./components/TheCollageImages";
 
 export default function TheStoreDetail({
   storeHandle,
@@ -28,11 +29,15 @@ export default function TheStoreDetail({
     return <div>Laddar data</div>;
   }
 
+  if (!storeData){
+    return <div>Ingen data</div>
+  }
+
   console.log("single store", storeData);
   return (
     <div className="flex h-full mb-20 p-10 px-48">
-      <div className="flex flex-col w-2/3 space-y-16">
-        <div className="border-b w-3/4 pb-8">
+      <div className="flex flex-col w-2/3 space-y-12">
+        <div className="w-3/4">
           <h2 className="text-4xl pb-5 font-semibold">{storeData?.name} </h2>
           <div className="flex flex-col">
             <div className="flex flex-row gap-2 items-center">
@@ -57,6 +62,15 @@ export default function TheStoreDetail({
             </div>
           </div>
         </div>
+        <TheCollageImages collageImages={storeData?.collageImages} />
+         {/* <div className="relative overflow-hidden h-96 w-3/4 rounded-t-lg brightness-90">
+          <Image
+            src={storeData?.collageImages[0]}
+            alt="store images"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div> */}
 
         <TheAboutStore description={storeData?.description} />
         <TheStoreStaff
@@ -68,17 +82,17 @@ export default function TheStoreDetail({
         <TheReviews storeData={storeData} />
       </div>
       <div className="w-1/3 h-full bg-gray-100 rounded-lg">
-        {/* <div className="h-56">
+        <div className="h-56">
           <TheStoreDetailMap storeData={storeData} />
-        </div> */}
-        <div className="relative overflow-hidden h-80 w-full rounded-t-lg brightness-90">
+        </div>
+        {/* <div className="relative overflow-hidden h-80 w-full rounded-t-lg brightness-90">
           <Image
             src={storeData?.collageImages[0]}
             alt="store images"
             layout="fill"
             objectFit="cover"
           />
-        </div>
+        </div> */}
         {/* <div className="h-64 rounded-t-lg"></div> */}
         <div className="flex flex-col px-5 py-8">
           <h3 className="pb-4 border-b">Butiksinformation</h3>

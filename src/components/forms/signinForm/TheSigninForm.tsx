@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { signinFormFields } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 
 const formSchema = z.object({
   email: z.string().min(2, "Email must be at least 2 characters"),
@@ -59,34 +58,26 @@ export default function TheSigninForm() {
 
       // Show success toast
       toast({
-        title: `Inloggningen lyckades!`,
+        title: "Inloggningen lyckades!",
       });
 
-      // Poll to check if session is updated
-      const checkSession = async () => {
-        const updatedSession = await fetch("/api/auth/session").then((res) =>
-          res.json()
-        );
+      // Fetch the updated session
+      const updatedSession = await fetch("/api/auth/session").then((res) =>
+        res.json()
+      );
 
-        if (updatedSession?.user) {
-          const storeHandle = updatedSession?.user?.store?.handle;
-          const userId = updatedSession?.user?.id;
+      if (updatedSession?.user) {
+        const { role, store, id } = updatedSession.user;
 
-          // Redirect based on user role
-          if (storeHandle) {
-            if (updatedSession?.user.role === "store_admin") {
-              router.push(`dashboard/admin/${storeHandle}`);
-            } else if (updatedSession?.user.role === "sub_user") {
-              router.push(`dashboard/user/${storeHandle}/${userId}`);
-            }
-          }
-        } else {
-          // Retry polling session until it's updated
-          setTimeout(checkSession, 500);
+        // Redirect based on user role
+        if (role === "store_admin") {
+          router.push(`dashboard/admin/${store?.handle}`);
+        } else if (role === "sub_user") {
+          router.push(`dashboard/user/${store?.handle}/${id}`);
+        } else if (role === "user") {
+          router.push("/"); // Redirect to home for user role
         }
-      };
-
-      await checkSession(); // Start polling for session update
+      }
     } catch (error) {
       console.error(error);
       toast({
@@ -132,7 +123,7 @@ export default function TheSigninForm() {
         </p>
         {mappedFormFields}
         <Button type="submit" className="font-normal">
-        {status === "loading" ? "Loggar in..." : "Logga in"}
+          {status === "loading" ? "Loggar in..." : "Logga in"}
         </Button>
         <p className="text-center text-sm text-muted-foreground font-light pt-3">
           Har du inget konto?{" "}

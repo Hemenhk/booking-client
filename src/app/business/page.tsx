@@ -30,7 +30,7 @@ export default function BusinessPage() {
           </div>
           <div className="flex flex-row gap-4 animate-fade-in-right">
             <Button className="p-7 bg-violet-600 hover:bg-violet-800">
-                <Link href={"/register"}>Gå med nu - Spara 50%</Link>
+                <Link href={"/register-store"}>Gå med nu - Spara 50%</Link>
                </Button>
             <Button
               className="flex items-center gap-4 p-7 text-lg hover:bg-violet-50"

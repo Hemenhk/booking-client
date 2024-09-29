@@ -4,6 +4,7 @@ import { getSubscriptionCustomer } from "@/axios/stores";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { CreditCard } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 
@@ -31,6 +32,7 @@ export default function TheSubscriptionPortalPage() {
     },
   });
 
+  const planCost = subscriptionData?.data?.plan.amount as number;
   // Function to check if the commitment period has passed
   const checkCommitmentPeriod = (data: any) => {
     const commitmentStartDate = new Date(data.start_date * 1000); // Convert Unix timestamp to JavaScript Date
@@ -80,6 +82,13 @@ export default function TheSubscriptionPortalPage() {
     }
   };
 
+  const formatPrice = (amount: number) => {
+    return new Intl.NumberFormat("sv-SE", {
+      style: "currency",
+      currency: "SEK",
+    }).format(amount / 100);
+  };
+
   if (isLoading) {
     return <div>Laddar abonnemanget</div>;
   }
@@ -93,6 +102,9 @@ export default function TheSubscriptionPortalPage() {
   const billingCycleAnchorDate = new Date(
     subscriptionData.data.billing_cycle_anchor * 1000
   );
+
+  const customerPortalLink =
+    "https://billing.stripe.com/p/login/test_aEU28T9ah6SAeAgcMM";
 
   const getSubscriptionPlan = (commitmentPeriod: number) => {
     switch (commitmentPeriod) {
@@ -108,11 +120,23 @@ export default function TheSubscriptionPortalPage() {
   };
 
   return (
-    <Card className="overflow-hidden max-w-[600px]">
+    <Card className="overflow-hidden max-w-[700px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Din prenumeration</CardTitle>
+        <Button variant={"link"}>
+          <a
+            href={
+              customerPortalLink + "?prefilled_email=" + session?.user.email
+            }
+            target="_blank"
+            className="flex flex-row items-center gap-2"
+          >
+            <CreditCard size={15} />
+            Hantera betalningmetoden
+          </a>
+        </Button>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-7">
         <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
           <p className="text-sm">
             Plan:{" "}
@@ -121,6 +145,12 @@ export default function TheSubscriptionPortalPage() {
             </span>
           </p>
           <p className="text-sm">
+            Kostnad:{" "}
+            <span className="font-medium">{formatPrice(planCost)}</span>/månaden
+          </p>
+        </div>
+        <div className="bg-gray-50 flex flex-row justify-between items-center p-3 border rounded-lg">
+          <p className="text-sm">
             Startdatum:{" "}
             <span className="font-medium">
               {isNaN(startDate.getTime())
@@ -128,12 +158,7 @@ export default function TheSubscriptionPortalPage() {
                 : startDate.toLocaleDateString()}
             </span>
           </p>
-        </div>
-        <div className="bg-gray-50 flex flex-row justify-between items-center p-3 border rounded-lg">
-          <p className="text-sm">
-            Bindningstid:{" "}
-            <span className="font-medium">{commitmentPeriod} månader</span>
-          </p>
+
           {endDate && (
             <div className="text-sm">
               <p>
@@ -145,12 +170,17 @@ export default function TheSubscriptionPortalPage() {
             </div>
           )}
         </div>
-        <div className="bg-gray-50 p-3 border rounded-lg">
+        <div className="flex flex-row items-center justify-between bg-gray-50 p-3 border rounded-lg">
           <p className="text-sm">
             PrenumerationsID:{" "}
             <span className="font-medium">{subscriptionData.data.id}</span>
           </p>
+          <p className="text-sm">
+            Bindningstid:{" "}
+            <span className="font-medium">{commitmentPeriod} månader</span>
+          </p>
         </div>
+
         <div>
           <Button
             variant={"destructive"}

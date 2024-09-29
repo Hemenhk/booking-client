@@ -2,8 +2,13 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 
 export type PasswordsType = {
-    oldPassword: string;
-    newPassword: string;
+  oldPassword: string;
+  newPassword: string;
+};
+
+export type CreateUser = {
+  email: string;
+  password: string;
 };
 
 export const updateUser = async (userId: string, data: any) => {
@@ -31,7 +36,10 @@ export const updateUser = async (userId: string, data: any) => {
   }
 };
 
-export const updateUserPassword = async (userId: string, data: PasswordsType) => {
+export const updateUserPassword = async (
+  userId: string,
+  data: PasswordsType
+) => {
   try {
     const session = await getSession();
 
@@ -52,5 +60,17 @@ export const updateUserPassword = async (userId: string, data: PasswordsType) =>
   } catch (error) {
     console.error("Error in changing passwords:", error);
     throw error;
+  }
+};
+
+export const createUser = async (data: CreateUser) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:8001/api/auth/register",
+      data
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
   }
 };

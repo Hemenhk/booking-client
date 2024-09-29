@@ -25,6 +25,31 @@ export const signinFormFields = [
   },
 ];
 
+export const registerFormFields = [
+  {
+    name: "email",
+    type: "email",
+    label: "Email",
+    placeholder: "Email",
+  },
+  {
+    name: "name",
+    type: "text",
+    label: "Namn",
+    placeholder: "Namn",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Lösenord",
+  },
+  {
+    name: "confirmPassword",
+    type: "password",
+    label: "Bekräfta Lösenord",
+  },
+];
+
 export const subUserFormFields = [
   {
     name: "name",

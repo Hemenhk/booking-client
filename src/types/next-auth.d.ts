@@ -6,7 +6,7 @@ declare module "next-auth" {
     user: {
       email: string;
       id: string;
-      role: "store_admin" | "sub_user";
+      role: "store_admin" | "sub_user" | "user";
       store: Store;
       accessToken: string;
       profileImage: string;
