@@ -1,3 +1,4 @@
+import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
@@ -36,31 +37,20 @@ export const updateUser = async (userId: string, data: any) => {
   }
 };
 
+export const updateStandardUserPassword = async (
+  userId: string,
+  data: PasswordsType
+) => {
+  const url = `http://localhost:8001/api/auth/${userId}/standard-user/profile/change-password`;
+  return makeRequest("PATCH", url, data);
+};
+
 export const updateUserPassword = async (
   userId: string,
   data: PasswordsType
 ) => {
-  try {
-    const session = await getSession();
-
-    if (!session || !session.user) {
-      throw new Error("User is not authenticated");
-    }
-    const res = await axios.patch(
-      `http://localhost:8001/api/auth/${userId}/profile/change-password`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      }
-    );
-    console.log("Password updated", res);
-    return res.data;
-  } catch (error) {
-    console.error("Error in changing passwords:", error);
-    throw error;
-  }
+  const url = `http://localhost:8001/api/auth/${userId}/profile/change-password`;
+  return makeRequest("PATCH", url, data);
 };
 
 export const createUser = async (data: CreateUser) => {

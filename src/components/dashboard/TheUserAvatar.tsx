@@ -32,7 +32,7 @@ export default function TheUserAvatar() {
           <Link
             href={
               session?.user.store
-                ? `/dashboard/user/${session?.user.store.handle}/${session?.user.id}/profile`
+                ? `/dashboard/admin/${session?.user.store.handle}/${session?.user.id}/profile`
                 : `/dashboard/user/${session?.user.id}/profile`
             }
           >

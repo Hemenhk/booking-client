@@ -12,22 +12,10 @@ export default function ProfilePage() {
     userId: string;
   }>();
 
-  const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
-
-  if (isLoading) {
-    return <div>Laddar data</div>;
-  }
-
-  if (!storeData) {
-    return <div>Finns ingen butik information</div>;
-  }
+ 
 
   return (
     <div className="flex flex-col gap-5">
-      <ThePhoneCard storeData={storeData} />
-      {/* Profile image card */}
-      <TheProfileImageCard userId={userId} storeData={storeData} />
-      {/* Password Card */}
       <ThePasswordCard userId={userId} />
     </div>
   );

@@ -6,7 +6,7 @@ import TheProfileImageCard from "@/components/dashboard/profile/TheProfileImageC
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useParams } from "next/navigation";
 
-export default function ProfilePage() {
+export default function AdminProfilePage() {
   const { storeHandle, userId } = useParams<{
     storeHandle: string;
     userId: string;

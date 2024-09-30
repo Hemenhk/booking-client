@@ -3,6 +3,7 @@ export type User = {
   name: string;
   email: string;
   profileImage: string;
+  store: Store
 };
 
 export type Service = {

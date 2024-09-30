@@ -24,8 +24,13 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 
-import { PasswordsType, updateUserPassword } from "@/axios/user";
+import {
+  PasswordsType,
+  updateStandardUserPassword,
+  updateUserPassword,
+} from "@/axios/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   oldPassword: z.string().min(8),
@@ -37,6 +42,7 @@ type Props = {
 };
 
 export default function TheUpdatePasswordForm({ userId }: Props) {
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
 
@@ -49,7 +55,15 @@ export default function TheUpdatePasswordForm({ userId }: Props) {
   });
 
   const { mutateAsync } = useMutation({
-    mutationFn: (data: PasswordsType) => updateUserPassword(userId, data),
+    mutationFn: (data: PasswordsType) => {
+      // Check the user's role from the session
+      if (session?.user.role !== "user") {
+        // If the role is not "user", it's a store admin or sub-user
+        return updateUserPassword(userId, data);
+      }
+      // Otherwise, it's a standard user
+      return updateStandardUserPassword(userId, data);
+    },
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data);
     },

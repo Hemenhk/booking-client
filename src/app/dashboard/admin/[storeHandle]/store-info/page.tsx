@@ -79,7 +79,7 @@ export default function TheStoreAddressPage() {
       </Card>
       <Card className="overflow-hidden max-w-[600px]">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Butiksbilder</CardTitle>
+          <CardTitle className="text-lg">Butiksbilder: <span className="font-normal">{storeData.collageImages.length} av 10</span></CardTitle>
           <Dialog>
             <DialogTrigger asChild>
               <span className="cursor-pointer p-2 rounded-lg transition duration-300 ease-out hover:bg-gray-100">
@@ -90,16 +90,23 @@ export default function TheStoreAddressPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="p-3 border rounded-lg w-40 flex justify-center ">
-            <div className="relative overflow-hidden size-32 rounded-lg">
-              <Image
-                src={storeData?.collageImages[0]}
-                alt="butiksbilder"
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-          </div>
+          <ul className="grid grid-cols-3">
+          {storeData &&
+            storeData?.collageImages.map((image, idx) => (
+              <div
+                key={idx}
+                className="p-2 border rounded-lg w-40 flex justify-center "
+              >
+                <div className="relative overflow-hidden size-32 rounded-lg">
+                  <Image
+                    src={image}
+                    alt="butiksbilder"
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
+              </div>
+            ))}</ul>
         </CardContent>
       </Card>
     </div>

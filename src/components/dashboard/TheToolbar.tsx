@@ -12,6 +12,7 @@ import {
   Factory,
   Home,
   SquarePen,
+  Store,
   User,
 } from "lucide-react";
 
@@ -53,7 +54,7 @@ export default function TheToolbar() {
     {
       href: `/dashboard/admin/${storeHandle}/store-info`,
       name: "Butik",
-      icon: <Factory className="size-5" />,
+      icon: <Store className="size-5" />,
     },
   ];
 
@@ -83,7 +84,7 @@ export default function TheToolbar() {
     },
     {
       href: `/dashboard/user/${userId}/appointments`,
-      name: "Bokningar",
+      name: "Mina Bokningar",
       icon: <Calendar className="size-5" />,
     },
   ];
