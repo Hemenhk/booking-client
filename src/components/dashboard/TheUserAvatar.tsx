@@ -16,6 +16,18 @@ export default function TheUserAvatar() {
   const { data: session, status } = useSession();
 
   const isAdmin = session?.user.role === "store_admin";
+  const isSubUser = session?.user.role === "sub_user";
+  const isUser = session?.user.role === "user";
+
+  const profileLink = () => {
+    if (isAdmin && session?.user.store) {
+      return `/dashboard/admin/${session?.user.store.handle}/${session?.user.id}/profile`;
+    } else if (isSubUser && session?.user.store) {
+      return `/dashboard/sub-user/${session?.user.store.handle}/${session?.user.id}/profile`;
+    } else {
+      return `/dashboard/user/${session?.user.id}/profile`;
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -29,15 +41,8 @@ export default function TheUserAvatar() {
         <DropdownMenuLabel>Mitt konto</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link
-            href={
-              session?.user.store
-                ? `/dashboard/admin/${session?.user.store.handle}/${session?.user.id}/profile`
-                : `/dashboard/user/${session?.user.id}/profile`
-            }
-          >
-            Profil
-          </Link>
+          {/* This link */}
+          <Link href={profileLink()}>Profil</Link>
         </DropdownMenuItem>
         {isAdmin && status === "authenticated" && session?.user.store ? (
           <DropdownMenuItem>

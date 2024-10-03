@@ -73,7 +73,7 @@ export default function TheUpdateServiceForm({
       name: serviceData?.data?.name || "",
       duration: serviceData?.data?.duration?.toString() || "",
       price: serviceData?.data?.price?.toString() || "",
-      bgColor: serviceData?.data?.bgColor || "#fff",
+      bgColor: serviceData?.data?.bgColor || "bg-lime-100",
     },
   });
 

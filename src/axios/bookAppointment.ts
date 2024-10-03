@@ -1,15 +1,17 @@
 import { AppointmentType } from "@/lib/types";
 import { Appointments } from "@/types/types";
+import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { addDays, format, startOfWeek } from "date-fns";
 
 export const bookAppointment = async (
   userId: string,
+  storeHandle: string,
   data: AppointmentType
 ) => {
   try {
     const response = await axios.post(
-      `http://localhost:8001/api/appointments/sub-users/${userId}/appointments`,
+      `http://localhost:8001/api//appointments/sub-users/${userId}/appointments/${storeHandle}`,
       data
     );
     console.log("booked appointment", response);
@@ -79,4 +81,9 @@ export const cancelBookedAppointment = async (id: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const updateAppointmentPrice = async (id: string, newPrice: number) => {
+  const url = `http://localhost:8001/api/appointments/${id}/update`;
+  makeRequest("PATCH", url, { newPrice });
 };

@@ -17,6 +17,8 @@ export default function TheSubscriptionPortalPage() {
   const [errorMessage, setErrorMessage] = useState(""); // Error message for cancelation attempt
   const [endDate, setEndDate] = useState<Date | null>(null); // State for storing subscription end date
 
+  console.log("customer id", customerId);
+
   // Fetch subscription data
   const {
     data: subscriptionData,
@@ -32,7 +34,11 @@ export default function TheSubscriptionPortalPage() {
     },
   });
 
-  const planCost = subscriptionData?.data?.plan.amount as number;
+  // Check if subscription data and plan exist before accessing plan cost
+  const planCost = subscriptionData?.data?.items.data[0]
+    ? subscriptionData?.data?.items.data[0].plan.amount
+    : 0;
+
   // Function to check if the commitment period has passed
   const checkCommitmentPeriod = (data: any) => {
     const commitmentStartDate = new Date(data.start_date * 1000); // Convert Unix timestamp to JavaScript Date
@@ -119,6 +125,8 @@ export default function TheSubscriptionPortalPage() {
     }
   };
 
+  console.log("plans", subscriptionData?.data?.items);
+
   return (
     <Card className="overflow-hidden max-w-[700px]">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -149,6 +157,44 @@ export default function TheSubscriptionPortalPage() {
             <span className="font-medium">{formatPrice(planCost)}</span>/månaden
           </p>
         </div>
+        {subscriptionData?.data?.items?.data[1]?.quantity !== 0 ? (
+          <>
+            <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
+              <p className="text-sm">
+                Extra användare (199 kr/st):{" "}
+                <span className="font-medium">
+                  x{subscriptionData?.data?.items?.data[1]?.quantity}
+                </span>
+              </p>
+              <p className="text-sm">
+                Kostnad:{" "}
+                <span className="font-medium">
+                  {formatPrice(
+                    subscriptionData?.data?.items?.data[1]?.plan?.amount *
+                      subscriptionData?.data?.items?.data[1]?.quantity
+                  )}
+                </span>
+                /månaden
+              </p>
+            </div>
+            <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
+              <p className="text-sm">Total kostnad per månad: </p>
+              <p className="text-sm">
+                <span className="font-medium">
+                  {formatPrice(
+                    planCost +
+                      subscriptionData?.data?.items?.data[1]?.plan?.amount *
+                        subscriptionData?.data?.items?.data[1]?.quantity
+                  )}
+                </span>
+                /månaden
+              </p>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+
         <div className="bg-gray-50 flex flex-row justify-between items-center p-3 border rounded-lg">
           <p className="text-sm">
             Startdatum:{" "}

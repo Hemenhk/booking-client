@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {  getServicesForSubUser, GetServiceType } from "@/axios/services";
+import { getServicesForSubUser, GetServiceType } from "@/axios/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -42,14 +42,22 @@ const formSchema = z.object({
   status: z.string(),
 });
 
-export default function TheAppointmentForm() {
-  const queryClient = useQueryClient();
-  const { storeName, userId } = useParams<{
-    storeName: string;
-    userId: string;
-  }>();
+type Props ={
+storeHandle: string;
+userId: string
+}
 
-  console.log("user id", userId)
+export default function TheAppointmentForm({storeHandle, userId} : Props) {
+  const queryClient = useQueryClient();
+  // const { storeHandle, userId } = useParams<{
+  //   storeHandle: string;
+  //   userId: string;
+  // }>();
+  // const params = useParams()
+
+  // console.log("params",params)
+
+  // console.log("user id", userId);
 
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);
@@ -66,7 +74,7 @@ export default function TheAppointmentForm() {
     queryFn: () => getServicesForSubUser(userId),
   });
 
-  console.log("services", serviceData)
+  console.log("services", serviceData);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,7 +91,8 @@ export default function TheAppointmentForm() {
 
   const { mutateAsync: bookAppointmentMutation } = useMutation({
     mutationKey: ["booked-appointment"],
-    mutationFn: (data: AppointmentType) => bookAppointment(userId, data),
+    mutationFn: (data: AppointmentType) =>
+      bookAppointment(userId, storeHandle, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["booked-appointment"], data);
       queryClient.invalidateQueries({ queryKey: ["available-data"] });
@@ -99,8 +108,8 @@ export default function TheAppointmentForm() {
       toast({
         title: `Your appointment was booked for ${values.time} on ${values.date}`,
       });
-      await bookAppointmentMutation(values);
-      // console.log(values);
+     const res = await bookAppointmentMutation(values);
+      console.log(res);
     } catch (error) {
       console.log(error);
     }

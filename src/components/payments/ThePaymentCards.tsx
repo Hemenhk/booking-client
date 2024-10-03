@@ -13,11 +13,11 @@ export const plans = [
   {
     link:
       process.env.NODE_ENV === "development"
-        ? "https://buy.stripe.com/test_fZe004gNdbUu7Cw7su"
+        ? "https://buy.stripe.com/test_dR63cgcwXbUu9KEaEL"
         : "",
     priceId:
       process.env.NODE_ENV === "development"
-        ? "price_1Pqs0BCwzfkCBOe6vWttZmD5"
+        ? "price_1Q5UYdCwzfkCBOe6wTThCrIF"
         : "",
     price: 699.0,
     duration: "/månaden",
@@ -26,11 +26,11 @@ export const plans = [
   {
     link:
       process.env.NODE_ENV === "development"
-        ? "https://buy.stripe.com/test_aEU148cwXaQq9KEaEH"
+        ? "https://buy.stripe.com/test_5kA4gk9kL1fQ7CwfZ4"
         : "",
     priceId:
       process.env.NODE_ENV === "development"
-        ? "price_1PqrzCCwzfkCBOe6iDD1jyvA"
+        ? "price_1Q5UYMCwzfkCBOe6O1MhaKQU"
         : "",
     price: 599.0,
     duration: "/månaden",
@@ -39,11 +39,15 @@ export const plans = [
   {
     link:
       process.env.NODE_ENV === "development"
-        ? "https://buy.stripe.com/test_fZe004gNdbUu7Cw7su"
+        ? "https://buy.stripe.com/test_aEU148eF52jU5uodQV"
         : "",
+    // priceId:
+    //   process.env.NODE_ENV === "development"
+    //     ? "price_1PqrntCwzfkCBOe6pSO3ABEI"
+    //     : "",
     priceId:
       process.env.NODE_ENV === "development"
-        ? "price_1PqrntCwzfkCBOe6pSO3ABEI"
+        ? "price_1Q5UY1CwzfkCBOe6az94LGcm"
         : "",
     price: 499.0,
     duration: "/månaden",

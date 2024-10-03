@@ -37,7 +37,7 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
       <h3 className="text-3xl font-medium pb-5">Personal & Tjänster</h3>
       <ul>
         <Accordion type="single" collapsible className="w-3/4">
-          <AccordionItem value="item-1">
+          <AccordionItem value={admin?._id as string}>
             <AccordionTrigger className="hover:no-underline">
               <li
                 key={admin?._id}

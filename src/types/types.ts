@@ -3,7 +3,7 @@ export type User = {
   name: string;
   email: string;
   profileImage: string;
-  store: Store
+  store: Store;
 };
 
 export type Service = {
@@ -29,8 +29,8 @@ export type Appointment = {
 };
 
 export type UserAppointments = {
-  appointments: Appointment[]
-}
+  appointments: Appointment[];
+};
 
 export type Appointments = {
   data: Appointment[];
@@ -108,6 +108,7 @@ export type Store = {
   collageImages: string[];
   customerId: string;
   commitmentPeriod: number;
+  totalIncome: number;
 };
 
 export type StoresResponse = {

@@ -18,9 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Dispatch, SetStateAction } from "react";
 
 type PersonalInfoProps = {
   step: number;
+  setStep: Dispatch<SetStateAction<number>>;
   form: UseFormReturn<
     {
       name: string;
@@ -52,6 +54,7 @@ const formFields = [
 export default function ThePersonalInformation({
   form,
   step,
+  setStep,
 }: PersonalInfoProps) {
   const mappedFormFields = formFields.map((formField) => (
     <FormField
@@ -78,11 +81,18 @@ export default function ThePersonalInformation({
     <Card className="shadow-md min-w-[700px]">
       <CardHeader>
         <CardTitle>Personuppgifter</CardTitle>
-        <CardDescription>Fyll i formuläret för att boka din tid.</CardDescription>
+        <CardDescription>
+          Fyll i formuläret för att boka din tid.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5 w-3/4">{mappedFormFields}</CardContent>
       <CardFooter className="border-t px-6 py-4">
-        <Button type="submit" className="font-normal" >Boka</Button>
+        <Button
+          type="submit"
+          className="font-normal"
+        >
+          Boka
+        </Button>
       </CardFooter>
     </Card>
   );

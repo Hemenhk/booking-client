@@ -1,35 +1,30 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SetStateAction, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { getServicesForSubUser, GetServiceType } from "@/axios/services";
 import { bookAppointment } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheDatePicker from "./TheDatePicker";
 import ThePersonalInformation from "./ThePersonalInformation";
-import { Button } from "@/components/ui/button";
 import { Service } from "@/types/types";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { CheckCircle } from "lucide-react";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
@@ -60,7 +55,12 @@ const formSchema = z.object({
   status: z.string(),
 });
 
-export default function TheBookAppointmentForm({ userId }: { userId: string }) {
+type Props = {
+  storeHandle: string;
+  userId: string;
+};
+
+export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
   const queryClient = useQueryClient();
 
   const { toast, dismiss } = useToast();
@@ -89,13 +89,17 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
 
   const { mutateAsync: bookAppointmentMutation } = useMutation({
     mutationKey: ["booked-appointment"],
-    mutationFn: (data: AppointmentType) => bookAppointment(userId, data),
+    mutationFn: (data: AppointmentType) =>
+      bookAppointment(userId, storeHandle, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["booked-appointment"], data);
       queryClient.invalidateQueries({ queryKey: ["available-data"] });
       queryClient.refetchQueries({ queryKey: ["available-data"] });
     },
   });
+  if (!service) {
+    return <div>Ingen service valdes</div>;
+  }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -103,17 +107,72 @@ export default function TheBookAppointmentForm({ userId }: { userId: string }) {
         title: `Your appointment was booked for ${values.time} on ${values.date}`,
       });
       await bookAppointmentMutation(values);
+      setStep(3);
+
       // console.log(values);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Watch for date and time updates from the form
+  const watchedDate = form.watch("date");
+  const watchedTime = form.watch("time");
+
+  const calculateEndTime = (startTime: string, duration: number) => {
+    const [hours, minutes] = startTime.split(":").map(Number);
+    const totalMinutes = hours * 60 + minutes + duration;
+    const endHours = Math.floor(totalMinutes / 60);
+    const endMinutes = totalMinutes % 60;
+    return `${String(endHours).padStart(2, "0")}:${String(endMinutes).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  // Function to format the time range display
+  const formatTimeRange = (startTime: string, endTime: string) => {
+    return `${startTime} - ${endTime}`;
+  };
+
+  const endTime = calculateEndTime(watchedTime, service.duration);
+
   return (
     <div className="h-screen px-48 py-16 bg-zinc-50 flex flex-col items-center w-full gap-14">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {step === 1 && <TheDatePicker form={form} setStep={setStep} />}
-          {step === 2 && <ThePersonalInformation form={form} step={step}/>}
+          {step === 2 && (
+            <ThePersonalInformation form={form} step={step} setStep={setStep} />
+          )}
+          {step === 3 && (
+            <Card className="shadow-md w-[500px] max-w-[700px] py-8 text-center space-y-8">
+              <CardHeader className="border-b pb-4">
+                <CheckCircle className="mx-auto mb-3" size={50} />
+                <CardTitle className="text-4xl font-medium">Woo hoo!</CardTitle>
+                <CardDescription className="w-4/5 mx-auto text-base pt-4">
+                  {service.name} bokades för den{" "}
+                  <span className="font-medium">
+                    {watchedDate ? watchedDate : "Ej valt datum"}
+                  </span>{" "}
+                  kl.{" "}
+                  <span className="font-medium">
+                    {watchedTime
+                      ? formatTimeRange(watchedTime, endTime)
+                      : "Ej valt tid"}
+                  </span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-600">
+                  <Link href={"/signin"} className="underline">
+                    Logga in
+                  </Link>{" "}
+                  på ditt konto för att se dina bokade tider
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </form>
       </Form>
     </div>

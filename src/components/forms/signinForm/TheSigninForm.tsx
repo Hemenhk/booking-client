@@ -73,7 +73,7 @@ export default function TheSigninForm() {
         if (role === "store_admin") {
           router.push(`dashboard/admin/${store?.handle}`);
         } else if (role === "sub_user") {
-          router.push(`dashboard/user/${store?.handle}/${id}`);
+          router.push(`dashboard/sub-user/${store?.handle}/${id}`);
         } else if (role === "user") {
           router.push("/"); // Redirect to home for user role
         }

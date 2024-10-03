@@ -11,20 +11,28 @@ import {
   isAfter,
 } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react"; // Import useState
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
-
+import { Button } from "../ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Props = {
-  selectedUserId: string ;
+  selectedUserId: string;
 };
+
 export default function TheSubUserAppointments({ selectedUserId }: Props) {
-  // Set up the start of the week and the hours
-  const startOfTheWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as the first day of the week
+  // Manage the state for the currently displayed week
+  const [weekStart, setWeekStart] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  ); // Start with the current week
+
+  // Generate days of the current week
   const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
-    addDays(startOfTheWeek, index)
+    addDays(weekStart, index)
   );
+
   const hours = Array.from({ length: 10 }).map((_, index) => index + 9); // Hours from 9 to 18
 
   const {
@@ -32,7 +40,7 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ["sub-appointments", selectedUserId],
+    queryKey: ["sub-appointments", selectedUserId, weekStart], // Add weekStart to query key
     queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
 
@@ -43,9 +51,13 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  console.log("appointments", bookedData)
-   // Group appointments by day
-   const appointmentsByDay = daysOfWeek.map((day) => {
+  console.log("appointments", bookedData);
+
+  // Get today's date
+  const today = format(new Date(), "yyyy-MM-dd");
+
+  // Group appointments by day
+  const appointmentsByDay = daysOfWeek.map((day) => {
     const formattedDate = format(day, "yyyy-MM-dd");
 
     return {
@@ -60,19 +72,61 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     };
   });
 
+  // Function to go to the next week
+  const goToNextWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, 7)); // Move to the next week
+  };
+
+  // Function to go to the previous week
+  const goToPreviousWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, -7)); // Move to the previous week
+  };
+
   return (
     <div className="flex flex-col h-full m-8 relative">
-      
+      <div className="flex justify-between items-center mb-8">
+        {/* Button to go to the previous week */}
+        <Button
+          onClick={goToPreviousWeek}
+          className="size-12 p-0 rounded-full"
+        >
+          <ArrowLeft />
+        </Button>
+
+        <h1 className="text-2xl font-semibold">
+          {`${format(weekStart, "MMMM yyyy")}`}
+        </h1>
+
+        {/* Button to go to the next week */}
+        <Button
+          onClick={goToNextWeek}
+          className="size-12 p-0 rounded-full"
+        >
+          <ArrowRight />
+        </Button>
+      </div>
+
       <div className="flex">
         {/* First cell is empty */}
         <div className="w-16"></div>
         {/* Render day headers */}
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className="flex-1 text-center p-3 border-gray-100">
-            {format(day, "EEE, MMM d")}
-          </div>
-        ))}
+        {daysOfWeek.map((day, index) => {
+          const formattedDay = format(day, "yyyy-MM-dd");
+          const isToday = formattedDay === today;
+
+          return (
+            <div
+              key={index}
+              className={`flex-1 text-center p-3 m-2 mb-3 border-gray-100 ${
+                isToday ? "bg-gray-800 font-light text-white rounded-full" : ""
+              }`} // Highlight today's day
+            >
+              {format(day, "EEE, MMM d")}
+            </div>
+          );
+        })}
       </div>
+
       {/* Render time slots */}
       {hours.map((hour) => (
         <div key={hour} className="flex">

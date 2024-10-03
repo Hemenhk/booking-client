@@ -30,7 +30,7 @@ export default function TheToolbar() {
   }>();
 
   const adminLinks = [
-    { href: "/", name: "Hem", icon: <Home className="size-5" /> },
+    { href: `/dashboard/admin/${storeHandle}`, name: "Hem", icon: <Home className="size-5" /> },
     {
       href: `/dashboard/admin/${storeHandle}/appointments`,
       name: "Schema",

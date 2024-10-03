@@ -1,4 +1,10 @@
-import { OpeningHours, Store, StoresResponse, SubUser } from "@/types/types";
+import {
+  Appointment,
+  OpeningHours,
+  Store,
+  StoresResponse,
+  SubUser,
+} from "@/types/types";
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { getSession } from "next-auth/react";
@@ -19,8 +25,14 @@ export type CreateSubUser = {
   password: string;
 };
 
+export type StoreData = {
+  store: Store;
+  storeAppointments: Appointment[];
+  monthlyTotalIncome: number
+};
+
 export type StoreByName = {
-  data: Store;
+  data: StoreData;
 };
 
 export const getAllStores = async () => {
@@ -58,10 +70,14 @@ export const getSingleStore = async (storeId: string) => {
   return makeRequest("GET", url);
 };
 
-export const getSingleStoreDetail = async (storeHandle: string) => {
+export const getSingleStoreDetail = async (storeHandle: string, year?: number, month?: number) => {
   try {
+    const params = new URLSearchParams();
+    if (year) params.append('year', year.toString());
+    if (month) params.append('month', month.toString());
+
     const res = await axios.get<StoreByName>(
-      `http://localhost:8001/api/stores/name/${storeHandle}`
+      `http://localhost:8001/api/stores/name/${storeHandle}?${params.toString()}`
     );
     return res.data.data;
   } catch (error) {
@@ -84,7 +100,7 @@ export const createStore = async (formData) => {
   }
 };
 
-export const createSubUSer = async (storeId: string, data: CreateSubUser) => {
+export const createSubUser = async (storeId: string, data: CreateSubUser) => {
   const url = `http://localhost:8001/api/stores/${storeId}/subuser`;
   return makeRequest("POST", url, data);
 };

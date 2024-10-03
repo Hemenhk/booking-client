@@ -87,39 +87,39 @@ export default function TheOpeningHoursForm() {
   const { storeData, isLoading } = useAdminQuery(storeHandle);
 
   // Default values for form (mapping opening hours)
-  const defaultValues = storeData?.opening_hours?.[0]
+  const defaultValues = storeData?.store.opening_hours?.[0]
     ? {
-        monday: storeData.opening_hours[0].monday || {
+        monday: storeData.store.opening_hours[0].monday || {
           open: "",
           close: "",
           closed: false,
         },
-        tuesday: storeData.opening_hours[0].tuesday || {
+        tuesday: storeData.store.opening_hours[0].tuesday || {
           open: "",
           close: "",
           closed: false,
         },
-        wednesday: storeData.opening_hours[0].wednesday || {
+        wednesday: storeData.store.opening_hours[0].wednesday || {
           open: "",
           close: "",
           closed: false,
         },
-        thursday: storeData.opening_hours[0].thursday || {
+        thursday: storeData.store.opening_hours[0].thursday || {
           open: "",
           close: "",
           closed: false,
         },
-        friday: storeData.opening_hours[0].friday || {
+        friday: storeData.store.opening_hours[0].friday || {
           open: "",
           close: "",
           closed: false,
         },
-        saturday: storeData.opening_hours[0].saturday || {
+        saturday: storeData.store.opening_hours[0].saturday || {
           open: "",
           close: "",
           closed: false,
         },
-        sunday: storeData.opening_hours[0].sunday || {
+        sunday: storeData.store.opening_hours[0].sunday || {
           open: "",
           close: "",
           closed: false,
@@ -141,8 +141,8 @@ export default function TheOpeningHoursForm() {
   });
 
   useEffect(() => {
-    if (storeData?.opening_hours?.[0]) {
-      const openingHours = storeData.opening_hours[0];
+    if (storeData?.store.opening_hours?.[0]) {
+      const openingHours = storeData.store.opening_hours[0];
       const newDefaultValues = {
         monday: openingHours.monday || { open: "", close: "", closed: false },
         tuesday: openingHours.tuesday || { open: "", close: "", closed: false },

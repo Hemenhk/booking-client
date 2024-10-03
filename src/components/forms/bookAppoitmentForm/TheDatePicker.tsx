@@ -19,11 +19,11 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Service } from "@/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
@@ -47,6 +47,10 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
   // Set selectedDate to the current date by default
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  
+  // State to track the current week
+  const [weekStart, setWeekStart] = useState<Date>(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
   const savedService = localStorage.getItem("service");
 
   if (!savedService) {
@@ -55,24 +59,21 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
 
   const service: Service = JSON.parse(savedService);
 
-  // Start of the current week (Monday)
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-
   // Fetch available dates data and pass service duration
   const { data: dateData, isLoading: isDateLoading } = useQuery({
-    queryKey: ["available-data", service.duration], // Add duration to the query key for caching
+    queryKey: ["available-data", service.duration, weekStart], // Add weekStart to the query key
     queryFn: () =>
       getAvailableDate(
         service.createdBy._id,
         format(weekStart, "yyyy-MM-dd"),
         service.duration
-      ), // Pass the duration to the function
+      ), // Pass the week start date and duration to the function
     enabled: !!weekStart,
   });
 
   console.log("dates", dateData);
 
-  // Generate days for the week
+  // Generate days for the week based on the weekStart
   const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
     addDays(weekStart, index)
   );
@@ -103,6 +104,16 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
     return isBefore(selectedDateTime, now);
   };
 
+  // Function to go to the next week
+  const goToNextWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, 7)); // Advance by 7 days
+  };
+
+  // Function to go to the previous week
+  const goToPreviousWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, -7)); // Go back by 7 days
+  };
+
   return (
     <FormField
       control={form.control}
@@ -110,11 +121,19 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
       render={({ field }) => (
         <FormItem>
           <Card className="shadow-md min-w-[700px]">
-            <CardHeader className="flex gap-10 justify-center mx-auto text-center border-b w-[90%]">
-              {/* Display dynamic month and year */}
-              <h1 className="text-2xl font-medium">
-                {format(selectedDate, "MMMM yyyy")}
-              </h1>
+            <CardHeader className="flex flex-col gap-10 justify-center mx-auto text-center border-b w-[90%]">
+              <div className="flex items-center justify-between">
+                {/* Button to go to previous week */}
+                <Button onClick={goToPreviousWeek} className="h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"><ArrowLeft /></Button>
+
+                {/* Display dynamic month and year */}
+                <h1 className="text-2xl font-medium">
+                  {format(weekStart, "MMMM yyyy")}
+                </h1>
+
+                {/* Button to go to next week */}
+                <Button onClick={goToNextWeek} className="h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"><ArrowRight /></Button>
+              </div>
               <div className="flex flex-wrap gap-4 mb-6">
                 {/* Render date cards */}
                 {daysOfWeek.map((day) => (
@@ -131,8 +150,10 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                       {format(day, "EEE")}
                     </h3>
                     <p className="text-center">{format(day, "d")}</p>
+                    
                   </Card>
                 ))}
+
               </div>
             </CardHeader>
             <CardContent>
@@ -189,7 +210,9 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                         className="object-cover"
                         src={service?.createdBy?.profileImage}
                       />
-                      <AvatarFallback className="text-3xl">None</AvatarFallback>
+                      <AvatarFallback className="text-xl bg-black text-gray-100">
+                        {service.createdBy.name.charAt(0)}
+                      </AvatarFallback>
                     </Avatar>
 
                     <div className="flex flex-col text-left">

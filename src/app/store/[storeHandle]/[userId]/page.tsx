@@ -1,12 +1,15 @@
+"use client";
 import TheBookAppointmentForm from "@/components/forms/bookAppoitmentForm/TheBookAppointmentForm";
 
 export default function BookUserPage({
   params,
 }: {
-  params: { userId: string };
+  params: { storeHandle: string; userId: string };
 }) {
-
   return (
-    <TheBookAppointmentForm userId={params.userId} />
-  )
+    <TheBookAppointmentForm
+      storeHandle={params.storeHandle}
+      userId={params.userId}
+    />
+  );
 }

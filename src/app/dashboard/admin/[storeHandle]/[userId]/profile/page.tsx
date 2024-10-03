@@ -24,9 +24,9 @@ export default function AdminProfilePage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <ThePhoneCard storeData={storeData} />
+      <ThePhoneCard storeData={storeData.store} />
       {/* Profile image card */}
-      <TheProfileImageCard userId={userId} storeData={storeData} />
+      <TheProfileImageCard userId={userId} storeData={storeData.store} />
       {/* Password Card */}
       <ThePasswordCard userId={userId} />
     </div>

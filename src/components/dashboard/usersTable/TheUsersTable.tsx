@@ -24,8 +24,8 @@ export default function TheUsersTable({
 
   const { mutateAsync: deleteSubUserMutation } = useMutation({
     mutationFn: (userId: string) => {
-      if (storeData?._id) {
-        return deleteSubUser(storeData?._id, userId);
+      if (storeData?.store._id) {
+        return deleteSubUser(storeData?.store._id, userId);
       }
       return Promise.reject(new Error("Store ID is undefined"));
     },
@@ -44,7 +44,7 @@ export default function TheUsersTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {storeData?.sub_users.map((user) => {
+        {storeData?.store.sub_users.map((user) => {
           const userRole = user.role === "sub_user" && "Arbetare";
           return (
             <TableRow key={user._id}>

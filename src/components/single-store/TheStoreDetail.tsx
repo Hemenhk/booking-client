@@ -33,61 +33,61 @@ export default function TheStoreDetail({
     return <div>Ingen data</div>
   }
 
-  console.log("single store", storeData);
+  console.log("single store", storeData.store);
   return (
     <div className="flex h-full mb-20 p-10 px-48">
       <div className="flex flex-col w-2/3 space-y-12">
         <div className="w-3/4">
-          <h2 className="text-4xl pb-5 font-semibold">{storeData?.name} </h2>
+          <h2 className="text-4xl pb-5 font-semibold">{storeData?.store.name} </h2>
           <div className="flex flex-col">
             <div className="flex flex-row gap-2 items-center">
               <h3 className="font-medium text-gray-700">
-                {storeData?.averageRating.toFixed(1)}
+                {storeData?.store.averageRating.toFixed(1)}
               </h3>
               <Rating
                 name="read-only"
                 precision={0.5}
                 size="medium"
-                value={storeData?.averageRating}
+                value={storeData?.store.averageRating}
                 readOnly
                 style={{ color: "black" }}
               />
               <p className="text-gray-500 font-light">
-                ({storeData?.totalReviews} betyg)
+                ({storeData?.store.totalReviews} betyg)
               </p>
             </div>
             <div className="flex flex-row items-center gap-1 font-light text-gray-600 pt-1">
               <HiOutlineLocationMarker />
-              <p>{storeData?.address}</p>
+              <p>{storeData?.store.address}</p>
             </div>
           </div>
         </div>
-        <TheCollageImages collageImages={storeData?.collageImages} />
+        <TheCollageImages collageImages={storeData?.store.collageImages} />
          {/* <div className="relative overflow-hidden h-96 w-3/4 rounded-t-lg brightness-90">
           <Image
-            src={storeData?.collageImages[0]}
+            src={storeData?.store.collageImages[0]}
             alt="store images"
             layout="fill"
             objectFit="cover"
           />
         </div> */}
 
-        <TheAboutStore description={storeData?.description} />
+        <TheAboutStore description={storeData?.store?.description} />
         <TheStoreStaff
           admin={admin}
           subUsers={subUsers}
           storeHandle={storeHandle}
         />
         {/* The Review Section */}
-        <TheReviews storeData={storeData} />
+        <TheReviews storeData={storeData.store} />
       </div>
       <div className="w-1/3 h-full bg-gray-100 rounded-lg">
         <div className="h-56">
-          <TheStoreDetailMap storeData={storeData} />
+          <TheStoreDetailMap storeData={storeData.store} />
         </div>
         {/* <div className="relative overflow-hidden h-80 w-full rounded-t-lg brightness-90">
           <Image
-            src={storeData?.collageImages[0]}
+            src={storeData?.store.collageImages[0]}
             alt="store images"
             layout="fill"
             objectFit="cover"
@@ -99,16 +99,16 @@ export default function TheStoreDetail({
           <div className="flex flex-row items-center gap-2 py-4 border-b">
             <HiOutlineLocationMarker size={15} className="text-gray-600" />
             <p className="text-sm text-gray-600 font-light">
-              {storeData?.address}
+              {storeData?.store.address}
             </p>
           </div>
           <div className="flex flex-row items-center gap-2 py-4 border-b">
             <Smartphone size={15} className="text-gray-600" />
             <p className="text-sm text-gray-600 font-light">
-              {storeData?.phone_number}
+              {storeData?.store.phone_number}
             </p>
           </div>
-          <TheOpeningHours openingHours={storeData?.opening_hours} />
+          <TheOpeningHours openingHours={storeData?.store.opening_hours} />
           <TheSocialMedias />{" "}
         </div>
         {/* <div className="h-56">

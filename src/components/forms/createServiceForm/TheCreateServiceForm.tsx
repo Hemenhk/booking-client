@@ -19,12 +19,21 @@ import { serviceFormFields } from "@/lib/utils";
 import { CreateServiceType, createService } from "@/axios/services";
 import { useSession } from "next-auth/react";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useParams } from "next/navigation";
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+import { tailwindBgColors100 } from "@/lib/bgColors";
 
 const formSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
@@ -46,7 +55,7 @@ export default function TheCreateServiceForm() {
       name: "",
       duration: "",
       price: "",
-      bgColor: "#fff",
+      bgColor: "bg-lime-100",
     },
   });
 
@@ -124,16 +133,26 @@ export default function TheCreateServiceForm() {
             control={form.control}
             name="bgColor"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-1/3">
                 <FormLabel>Bakgrundsfärg</FormLabel>
                 <FormControl>
-                  <Input
-                    className={`h-9 rounded-lg `}
-                    type="color"
-                    {...field}
-                  />
+                  <Select
+                    value={field.value}
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Välj färg" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tailwindBgColors100.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          <div className={`size-6 rounded-full ${color}`} />
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

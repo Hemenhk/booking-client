@@ -25,6 +25,8 @@ export default function AdminCreateServicePage() {
     },
   });
 
+  console.log("services", serviceData)
+
   if (isLoading) {
     return <div>Laddar data...</div>;
   }
@@ -33,9 +35,9 @@ export default function AdminCreateServicePage() {
     return <div>Ett fel uppstod när vi hämtade tjänsterna.</div>;
   }
 
-  if (!serviceData || serviceData.length === 0) {
-    return <div>Inga tjänster tillgängliga.</div>;
-  }
+  // if (!serviceData || serviceData.length === 0) {
+  //   return <div>Inga tjänster tillgängliga.</div>;
+  // }
 
   if (!session?.user.id) {
     return <div>No user ID</div>
@@ -47,7 +49,7 @@ export default function AdminCreateServicePage() {
         <h3 className="text-lg font-medium">
           Alla tjänster:{" "}
           <span className="text-base font-normal pl-2">
-           {serviceData.length}
+           {serviceData?.length}
           </span>
         </h3>
         <div>
