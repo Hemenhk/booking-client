@@ -28,7 +28,7 @@ export default function TheSearchPage() {
 
   useEffect(() => {
     if (storeData && (storeOrServiceQuery || addressQuery)) {
-      let filtered = storeData;
+      let filtered = storeData.filter((store: Store) => store.hasAccess);
 
       if (storeOrServiceQuery) {
         filtered = filtered.filter((store: Store) =>
@@ -56,9 +56,9 @@ export default function TheSearchPage() {
 
 
   return (
-    <main className="flex flex-col px-80 my-10">
+    <main className="flex flex-col mx-auto px-4 lg:px-80 my-10">
       <TheTopRatedStores filteredStores={filteredStores} addressQuery={addressQuery} />
-      <TheFilteredStores filteredStores={filteredStores} />
+      {/* <TheFilteredStores filteredStores={filteredStores} /> */}
     </main>
   );
 }

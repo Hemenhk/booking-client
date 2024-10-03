@@ -89,6 +89,7 @@ export type Store = {
   _id: string;
   name: string;
   handle: string;
+  hasAccess: boolean;
   address: string;
   city: string;
   country: string;
