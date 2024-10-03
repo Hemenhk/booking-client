@@ -32,12 +32,8 @@ export default function AdminCreateServicePage() {
     return <div>Ett fel uppstod när vi hämtade tjänsterna.</div>;
   }
 
-  if (!serviceData || serviceData.length === 0) {
-    return <div>Inga tjänster tillgängliga.</div>;
-  }
-
   if (!session?.user.id) {
-    return <div>No user ID</div>
+    return <div>No user ID</div>;
   }
 
   return (
@@ -46,7 +42,7 @@ export default function AdminCreateServicePage() {
         <h3 className="text-lg font-medium">
           Alla tjänster:{" "}
           <span className="text-base font-normal pl-2">
-           {serviceData.length}
+            {serviceData?.length}
           </span>
         </h3>
         <div>
@@ -61,7 +57,14 @@ export default function AdminCreateServicePage() {
         </div>
       </CardHeader>
       <CardContent>
-        <TheServicesTable serviceData={serviceData} userId={session?.user.id} />
+        {serviceData ? (
+          <TheServicesTable
+            serviceData={serviceData}
+            userId={session?.user.id}
+          />
+        ) : (
+          "Inga tillgängliga tjänster"
+        )}
       </CardContent>
     </Card>
   );

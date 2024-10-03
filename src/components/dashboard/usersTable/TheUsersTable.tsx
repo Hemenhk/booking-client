@@ -34,6 +34,7 @@ export default function TheUsersTable({
       queryClient.refetchQueries({ queryKey: ["single-store"] });
     },
   });
+
   return (
     <Table>
       <TableHeader>
@@ -44,7 +45,7 @@ export default function TheUsersTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {storeData?.store.sub_users.map((user) => {
+        {storeData?.store?.sub_users?.map((user) => {
           const userRole = user.role === "sub_user" && "Arbetare";
           return (
             <TableRow key={user._id}>

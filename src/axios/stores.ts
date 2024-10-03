@@ -28,7 +28,7 @@ export type CreateSubUser = {
 export type StoreData = {
   store: Store;
   storeAppointments: Appointment[];
-  monthlyTotalIncome: number
+  monthlyTotalIncome: number;
 };
 
 export type StoreByName = {
@@ -70,11 +70,15 @@ export const getSingleStore = async (storeId: string) => {
   return makeRequest("GET", url);
 };
 
-export const getSingleStoreDetail = async (storeHandle: string, year?: number, month?: number) => {
+export const getSingleStoreDetail = async (
+  storeHandle: string,
+  year?: number,
+  month?: number
+) => {
   try {
     const params = new URLSearchParams();
-    if (year) params.append('year', year.toString());
-    if (month) params.append('month', month.toString());
+    if (year) params.append("year", year.toString());
+    if (month) params.append("month", month.toString());
 
     const res = await axios.get<StoreByName>(
       `http://localhost:8001/api/stores/name/${storeHandle}?${params.toString()}`
@@ -120,7 +124,7 @@ export const updateOpeningHours = async (
 
 export const updateStore = async (storeId: string, data: Store) => {
   const url = `http://localhost:8001/api/stores/${storeId}`;
-  return makeRequest("PATCH", url, data);
+  return makeRequest("PATCH", url, { data });
 };
 
 export const getSubscriptionCustomer = async (customerId: string) => {

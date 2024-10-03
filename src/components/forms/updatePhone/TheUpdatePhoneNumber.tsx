@@ -65,6 +65,7 @@ export default function TheUpdatePhoneNumber() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { phone_number } = values;
+      console.log("values", values);
       await mutateAsync(phone_number);
       toast({
         title: `Butikens nummer ändrades!`,

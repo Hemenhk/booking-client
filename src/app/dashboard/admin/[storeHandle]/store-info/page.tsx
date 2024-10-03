@@ -19,9 +19,9 @@ export default function TheStoreAddressPage() {
 
   const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
 
-  if (!storeData?.store.country) {
-    return <div>Finns inte något land registrerat.</div>;
-  }
+  // if (!storeData?.store.country) {
+  //   return <div>Finns inte något land registrerat.</div>;
+  // }
 
   if (isLoading) {
     return <div>Laddar data</div>;
@@ -70,16 +70,23 @@ export default function TheStoreAddressPage() {
           <div className="flex flex-row items-center gap-2 p-3 border rounded-lg">
             <MapPin size={18} />
             <p className="flex flex-row items-center gap-5">
-              {storeData?.store.city}{" "}
+              {storeData?.store?.city}{" "}
               <div className="size-1 rounded-full bg-gray-400" />{" "}
-              {getFlagComponent(storeData?.store.country)}
+              {storeData?.store?.country
+                ? getFlagComponent(storeData?.store?.country)
+                : ""}
             </p>
           </div>
         </CardContent>
       </Card>
       <Card className="overflow-hidden max-w-[600px]">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Butiksbilder: <span className="font-normal">{storeData.store.collageImages.length} av 10</span></CardTitle>
+          <CardTitle className="text-lg">
+            Butiksbilder:{" "}
+            <span className="font-normal">
+              {storeData?.store?.collageImages?.length} av 10
+            </span>
+          </CardTitle>
           <Dialog>
             <DialogTrigger asChild>
               <span className="cursor-pointer p-2 rounded-lg transition duration-300 ease-out hover:bg-gray-100">
@@ -91,22 +98,23 @@ export default function TheStoreAddressPage() {
         </CardHeader>
         <CardContent>
           <ul className="grid grid-cols-3">
-          {storeData.store &&
-            storeData?.store.collageImages.map((image, idx) => (
-              <div
-                key={idx}
-                className="p-2 border rounded-lg w-40 flex justify-center "
-              >
-                <div className="relative overflow-hidden size-32 rounded-lg">
-                  <Image
-                    src={image}
-                    alt="butiksbilder"
-                    layout="fill"
-                    objectFit="cover"
-                  />
+            {storeData?.store &&
+              storeData?.store?.collageImages.map((image, idx) => (
+                <div
+                  key={idx}
+                  className="p-2 border rounded-lg w-40 flex justify-center "
+                >
+                  <div className="relative overflow-hidden size-32 rounded-lg">
+                    <Image
+                      src={image}
+                      alt="butiksbilder"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}</ul>
+              ))}
+          </ul>
         </CardContent>
       </Card>
     </div>

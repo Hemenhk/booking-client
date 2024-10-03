@@ -11,8 +11,8 @@ export function useAdminQuery(storeHandle: string, year?: number, month?: number
   });
 
   return {
-    admin: data?.store.admin,
-    subUsers: data?.store.sub_users || [],
+    admin: data?.store?.admin,
+    subUsers: data?.store?.sub_users || [],
     storeData: data,
     isLoading,
     isError,

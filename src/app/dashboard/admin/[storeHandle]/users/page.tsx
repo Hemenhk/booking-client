@@ -25,7 +25,7 @@ export default function StoreUserPage() {
         <h3 className="text-lg font-medium">
           Alla användare:{" "}
           <span className="text-base font-normal pl-2">
-            {subUsers.length} av 5
+            {subUsers?.length} av 5
           </span>
         </h3>
         <div>
