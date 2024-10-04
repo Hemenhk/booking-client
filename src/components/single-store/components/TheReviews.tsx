@@ -33,7 +33,7 @@ export default function TheReviews({ storeData }: Props) {
   const ratingsArray = storeData.totalReviewsArray;
 
   return (
-    <div className="w-3/5 space-y-6">
+    <div className="w-full xl:w-3/4 px-2 mt-10 xl:mt-0 space-y-6">
       <h2 className="text-3xl font-medium">Recensioner</h2>
       <div className="flex gap-2">
         <Rating

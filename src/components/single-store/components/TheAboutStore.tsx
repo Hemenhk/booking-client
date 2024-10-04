@@ -26,9 +26,9 @@ export default function TheAboutStore({
     : description;
 
   return (
-    <div className="border-b w-3/4 pb-8 space-y-3">
+    <div className="border-b xl:w-3/4 px-2 text-sm xl:text-base pb-8 space-y-3">
       <div
-        className={`text-gray-800 font-medium transition-all duration-300 ease-in-out ${
+        className={`text-gray-800 font-normal xl:font-medium transition-all duration-300 ease-in-out ${
           isExpanded ? "max-h-full" : "max-h-[4.5rem]"
         } overflow-hidden`}
         style={{

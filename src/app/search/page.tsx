@@ -56,9 +56,9 @@ export default function TheSearchPage() {
 
 
   return (
-    <main className="flex flex-col mx-auto px-4 lg:px-80 my-10">
+    <main className="flex flex-col mx-auto md:px-16 xl:px-80 my-10">
       <TheTopRatedStores filteredStores={filteredStores} addressQuery={addressQuery} />
-      {/* <TheFilteredStores filteredStores={filteredStores} /> */}
+      <TheFilteredStores filteredStores={filteredStores} />
     </main>
   );
 }

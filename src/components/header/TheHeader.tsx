@@ -29,7 +29,7 @@ export default function TheHeader() {
   const header = (
     <>
       {isAuthenticated ? (
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex md:items-center md:gap-3">
           {(() => {
             switch (session?.user.role) {
               case "store_admin":
@@ -119,7 +119,7 @@ export default function TheHeader() {
         >
           <Link href={"/"}>
             <h2
-              className={`font-bold text-2xl tracking-tight ${
+              className={` font-bold text-2xl tracking-tight ${
                 isHomePage ? "text-white" : "text-black"
               } `}
             >
@@ -130,7 +130,7 @@ export default function TheHeader() {
           {isDashboardPage ? (
             ""
           ) : (
-            <nav>
+            <nav className="hidden md:flex">
               <ul
                 className={`${GeistSans.className} ${
                   isHomePage ? "text-white" : "text-black"

@@ -41,9 +41,9 @@ export default function TheCollageImages({
         <Image
           src={image}
           alt="collage image"
-          width={600}
-          height={600}
-          className="rounded-md"
+          width={1000}
+          height={1000}
+          className="rounded-sm md:rounded-md"
         />
       </CarouselItem>
     ));
@@ -53,7 +53,7 @@ export default function TheCollageImages({
   return (
     <div className="flex flex-col">
       <Carousel
-        className="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px]"
+        className="w-full xl:w-[800px]"
         setApi={setApi}
       >
         <CarouselContent>{mappedImages}</CarouselContent>
@@ -78,13 +78,6 @@ export default function TheCollageImages({
         ))}
       </div>
     </div>
-    // <div className="relative overflow-hidden h-96 w-3/4 rounded-t-lg brightness-90">
-    //   <Image
-    //     src={collageImages[0]}
-    //     alt="store images"
-    //     layout="fill"
-    //     objectFit="cover"
-    //   />
-    // </div>
+   
   );
 }
