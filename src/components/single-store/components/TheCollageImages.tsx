@@ -53,7 +53,7 @@ export default function TheCollageImages({
   return (
     <div className="flex flex-col">
       <Carousel
-        className="w-full xl:w-[800px]"
+        className="w-full xl:w-[600px]"
         setApi={setApi}
       >
         <CarouselContent>{mappedImages}</CarouselContent>

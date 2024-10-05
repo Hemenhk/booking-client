@@ -13,29 +13,33 @@ export default function StoreUserPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
   const router = useRouter();
 
-  const { storeData, subUsers } = useAdminQuery(storeHandle);
+  const { subUsers } = useAdminQuery(storeHandle);
 
   const handleRedirect = () => {
     router.push(`/dashboard/admin/${storeHandle}/create-user`);
   };
 
   return (
-    <Card className="max-w-[1200px]">
-      <CardHeader className="flex flex-row justify-between">
-        <h3 className="text-lg font-medium">
+    <Card className="mx-2 bg-transparent md:bg-white shadow-none md:shadow-sm border-none md:border md:mx-0 max-w-[800px]">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <h3 className="text-base md:text-lg font-medium">
           Alla användare:{" "}
           <span className="text-base font-normal pl-2">
             {subUsers?.length} av 5
           </span>
         </h3>
-        <div>
-          <Button
-            className="tracking-wide rounded-[10px]"
-            onClick={handleRedirect}
-          >
-            <span className="pr-2 text-lg">+</span>Lägg till
-          </Button>
-        </div>
+        <Button
+          className="md:hidden flex justify-center items-center rounded-full size-10 "
+          onClick={handleRedirect}
+        >
+          <span className="text-2xl font-light">+</span>
+        </Button>
+        <Button
+          className="hidden md:flex tracking-wide rounded-[10px]"
+          onClick={handleRedirect}
+        >
+          <span className="pr-2 text-lg">+</span>Lägg till
+        </Button>
       </CardHeader>
       <CardContent>
         <TheUsersTable storeHandle={storeHandle} />

@@ -32,7 +32,7 @@ export default function TheUserAvatar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="size-8 md:size-10">
           <AvatarImage src={session?.user.profileImage || ""} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>

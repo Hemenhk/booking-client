@@ -250,7 +250,7 @@ export default function TheOpeningHoursForm() {
 
   return (
     <Form {...form}>
-      <Card className="overflow-hidden max-w-[700px]">
+      <Card className="overflow-hidden max-w-[700px] mx-2 md:mx-0">
         <CardHeader>
           <CardTitle>Lägg till Öppettider</CardTitle>
         </CardHeader>

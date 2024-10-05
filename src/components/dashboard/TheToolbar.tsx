@@ -15,6 +15,7 @@ import {
   Store,
   User,
 } from "lucide-react";
+import TheUserAvatar from "./TheUserAvatar";
 
 export interface LinkProps {
   href: string;
@@ -30,7 +31,11 @@ export default function TheToolbar() {
   }>();
 
   const adminLinks = [
-    { href: `/dashboard/admin/${storeHandle}`, name: "Hem", icon: <Home className="size-5" /> },
+    {
+      href: `/dashboard/admin/${storeHandle}`,
+      name: "Hem",
+      icon: <Home className="size-5" />,
+    },
     {
       href: `/dashboard/admin/${storeHandle}/appointments`,
       name: "Schema",
@@ -105,14 +110,15 @@ export default function TheToolbar() {
   const linksToRender = getLinks(session?.user.role || "");
 
   return (
-    <ul className="hidden border-r bg-muted/40 md:block">
+    <ul className="hidden md:block border-r bg-muted/40 w-14 md:w-full">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link
             href="/"
             className="flex items-center gap-2 font-bold text-2xl tracking-tight"
           >
-            Booksy.
+            <span className="hidden md:flex">Booksy.</span>{" "}
+            <span className="flex md:hidden">B.</span>
           </Link>
         </div>
         <div className="flex-1 pt-5">
@@ -124,10 +130,13 @@ export default function TheToolbar() {
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 {link.icon}
-                {link.name}
+                <span className="hidden md:flex">{link.name}</span>
               </Link>
             ))}
           </nav>
+          <div className="flex justify-center pt-20 px-3 md:hidden ">
+            <TheUserAvatar />
+          </div>
         </div>
       </div>
     </ul>

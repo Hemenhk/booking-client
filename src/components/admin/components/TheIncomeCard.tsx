@@ -12,6 +12,9 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
   const [incomePercentageDifference, setIncomePercentageDifference] = useState<
     number | null
   >(null);
+  const [incomeDifference, setIncomeDifference] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     if (storeData && previousStoreData) {
@@ -22,7 +25,9 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
         const incomePercentageDiff =
           ((currentMonthIncome - previousMonthIncome) / previousMonthIncome) *
           100;
+        const incomeDifference = currentMonthIncome - previousMonthIncome
         setIncomePercentageDifference(incomePercentageDiff);
+        setIncomeDifference(incomeDifference)
       } else {
         setIncomePercentageDifference(null);
       }
@@ -30,7 +35,7 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
   }, [storeData, previousStoreData]);
   return (
     <>
-      <Card className="w-80 max-w-[350px]">
+      <Card className="w-full max-w-[350px]">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total inkomst inkl. moms
@@ -54,7 +59,7 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
               ) : (
                 <ArrowDownRight size={18} />
               )}
-              {incomePercentageDifference.toFixed(2)}% från förra månaden
+             {incomeDifference}kr | {incomePercentageDifference.toFixed(2)}% från förra månaden
             </div>
           ) : (
             <div className="text-sm font-medium mt-2 text-gray-500">
@@ -63,7 +68,7 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
           )}
         </CardContent>
       </Card>
-      <Card className="w-80 max-w-[350px]">
+      <Card className="w-full max-w-[350px]">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total inkomst exkl. moms
@@ -87,7 +92,7 @@ export default function TheIncomeCard({ storeData, previousStoreData }: Props) {
               ) : (
                 <ArrowDownRight size={18} />
               )}
-              {incomePercentageDifference.toFixed(2)}% från förra månaden
+             {incomeDifference}kr | {incomePercentageDifference.toFixed(2)}% från förra månaden
             </div>
           ) : (
             <div className="text-sm font-medium mt-2 text-gray-500">

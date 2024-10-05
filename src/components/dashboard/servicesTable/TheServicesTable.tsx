@@ -44,7 +44,7 @@ export default function TheServicesTable({ serviceData, userId }: Props) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Namn</TableHead>
+          <TableHead className=" md:w-[100px]">Namn</TableHead>
           <TableHead>Pris</TableHead>
           <TableHead>Tid</TableHead>
           <TableHead className="text-right">Bakgrundsfärg</TableHead>

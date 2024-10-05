@@ -12,30 +12,34 @@ export default function TheBookingsCard({
   storeData,
   previousStoreData,
 }: Props) {
-
   const [percentageDifference, setPercentageDifference] = useState<
-  number | null
->(null);
+    number | null
+  >(null);
+  const [bookingDifference, setBookingDifference] = useState<number | null>(
+    null
+  );
 
-    useEffect(() => {
-        if (storeData && previousStoreData) {
-          const currentMonthBookings = storeData.storeAppointments.length;
-          const previousMonthBookings = previousStoreData.storeAppointments.length;
-    
-          if (previousMonthBookings > 0) {
-            const percentageDiff =
-              ((currentMonthBookings - previousMonthBookings) /
-                previousMonthBookings) *
-              100;
-            setPercentageDifference(percentageDiff);
-          } else {
-            setPercentageDifference(null);
-          }
-        }
-      }, [storeData, previousStoreData]);
-      
+  useEffect(() => {
+    if (storeData && previousStoreData) {
+      const currentMonthBookings = storeData.storeAppointments.length;
+      const previousMonthBookings = previousStoreData.storeAppointments.length;
+
+      if (previousMonthBookings > 0) {
+        const percentageDiff =
+          ((currentMonthBookings - previousMonthBookings) /
+            previousMonthBookings) *
+          100;
+        const difference = currentMonthBookings - previousMonthBookings;
+        setPercentageDifference(percentageDiff);
+        setBookingDifference(difference)
+      } else {
+        setPercentageDifference(null);
+      }
+    }
+  }, [storeData, previousStoreData]);
+
   return (
-    <Card className="w-80 max-w-[350px]">
+    <Card className="w-full max-w-[350px]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Totala bokningar</CardTitle>
       </CardHeader>
@@ -55,7 +59,7 @@ export default function TheBookingsCard({
             ) : (
               <ArrowDownRight size={18} />
             )}
-            {percentageDifference.toFixed(2)}% från förra månaden
+            {bookingDifference}st | {percentageDifference.toFixed(2)}% från förra månaden
           </div>
         ) : (
           <div className="text-sm font-medium mt-2 text-gray-500">

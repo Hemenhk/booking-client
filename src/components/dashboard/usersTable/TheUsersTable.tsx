@@ -7,9 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Store } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import TheDeleteUser from "./TheDeleteDialog";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import TheDeleteDialog from "./TheDeleteDialog";
 
@@ -38,7 +36,7 @@ export default function TheUsersTable({
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="text-xs md:text-sm">
           <TableHead className="w-[100px]">Användare</TableHead>
           <TableHead className="text-right">Roll</TableHead>
           <TableHead className="text-right">Ta bort</TableHead>

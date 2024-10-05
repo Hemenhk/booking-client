@@ -64,14 +64,14 @@ export default function TheAdminDashboard({
     return <div>Finns ingen data för butiken</div>;
   }
   return (
-    <div className="space-y-8">
-      <h2 className="text-2xl font-semibold">Analyser</h2>
-      <div className="flex flex-row gap-4 ">
+    <div className="space-y-8 px-2 md:px-0">
+      <h2 className="text-2xl justify-center font-semibold">Analyser</h2>
+      <div className="flex flex-row justify-center md:justify-start gap-2 md:gap-4">
         <Select
           defaultValue={selectedYear}
           onValueChange={(value) => setSelectedYear(Number(value))}
         >
-          <SelectTrigger className="w-[120px]">
+          <SelectTrigger className="w-full md:w-[120px]">
             <SelectValue placeholder="Välj år" />
           </SelectTrigger>
           <SelectContent>
@@ -90,7 +90,7 @@ export default function TheAdminDashboard({
           defaultValue={selectedMonth}
           onValueChange={(value) => setSelectedMonth(Number(value))}
         >
-          <SelectTrigger className="w-[120px]">
+          <SelectTrigger className="w-full md:w-[120px]">
             <SelectValue placeholder="Välj månad" />
           </SelectTrigger>
           <SelectContent>
@@ -118,7 +118,7 @@ export default function TheAdminDashboard({
         </Select>
       </div>
 
-      <div className="flex flex-row gap-3 w-full">
+      <div className="flex flex-col items-center md:flex-row gap-3 w-full">
         <TheIncomeCard
           storeData={storeData}
           previousStoreData={previousStoreData}

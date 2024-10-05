@@ -14,22 +14,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { CardContent } from "@mui/material";
+import { Card, CardContent } from "@/components/ui/card";
 import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useSession } from "next-auth/react";
+import TheSubUserAppointmentsMobile from "@/components/appointments/components/TheSubUserAppointmentsMobile";
 
 export default function TheAdminAppointmentPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
-  const {data: session} = useSession()
-  const { isError, isLoading, subUsers, storeData, admin } = useAdminQuery(storeHandle);
+  const { data: session } = useSession();
+  const { isError, isLoading, subUsers, storeData, admin } =
+    useAdminQuery(storeHandle);
 
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     session?.user?.id || subUsers?.[0]?._id
   );
 
-  console.log("store data:", storeData)
+  console.log("store data:", storeData);
   console.log("selected value: ", selectedValue);
 
   if (isLoading) {
@@ -45,9 +46,9 @@ export default function TheAdminAppointmentPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-row justify-between items-center">
-        <h2 className="text-2xl font-semibold tracking-tight">
+    <div className="flex flex-col gap-5 h-full mb-20">
+      <div className="flex flex-row justify-between items-center px-2 md:px-0">
+        <h2 className="text-lg md:text-2xl font-semibold tracking-tight">
           Anställdas schema:
         </h2>
         <Select value={selectedValue} onValueChange={handleProductSelect}>
@@ -70,11 +71,17 @@ export default function TheAdminAppointmentPage() {
           </SelectContent>
         </Select>
       </div>
+      {selectedValue ? (
+        <TheSubUserAppointmentsMobile selectedUserId={selectedValue} />
+      ) : (
+        ""
+      )}
 
-      <Card>
+      <Card className="hidden md:block">
         <CardContent>
           {selectedValue ? (
-            <TheSubUserAppointments selectedUserId={selectedValue} />
+              
+                <TheSubUserAppointments selectedUserId={selectedValue} />
           ) : (
             <p>Välj en anställd för att se schemat.</p>
           )}

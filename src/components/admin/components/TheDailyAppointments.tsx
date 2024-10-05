@@ -62,11 +62,11 @@ export default function TheDailyAppointments() {
   }
 
   return (
-    <div>
+    <div className="h-full flex flex-col pl-3 w-full">
       <h2 className="font-semibold text-2xl tracking-tight mb-8">
         Kommande bokningar idag
       </h2>
-      <ul className="flex flex-row items-center gap-3">
+      <ul className="flex flex-col md:flex-row md:items-center gap-3">
         {nextThreeAppointments.map((appointment) => {
           // Function to calculate the end time of the appointment
           const calculateEndTime = (startTime: string, duration: number) => {
@@ -113,7 +113,7 @@ export default function TheDailyAppointments() {
           ];
 
           return (
-            <Card key={appointment._id} className={`appointment-item w-80 max-w-[350px] p-2 ${appointment.service.bgColor}`}>
+            <Card key={appointment._id} className={`w-full flex flow-row max-w-[350px] p-2 ${appointment.service.bgColor}`}>
               <div className="h-full w-0.5 bg-blue-600" />
               <CardContent className="p-2">
                 {appointmentDetails.map((detail, index) => (

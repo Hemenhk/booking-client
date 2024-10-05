@@ -23,7 +23,7 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 mx-2 md:px-0">
       <ThePhoneCard storeData={storeData.store} />
       {/* Profile image card */}
       <TheProfileImageCard userId={userId} storeData={storeData.store} />

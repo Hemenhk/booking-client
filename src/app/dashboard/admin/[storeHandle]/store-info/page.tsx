@@ -53,7 +53,7 @@ export default function TheStoreAddressPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 mx-2 md:mx-0">
       <Card className="overflow-hidden max-w-[600px]">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Butiksadressen</CardTitle>

@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import TheSideNav from "./TheSideNav";
 
 const links = [
   { handle: "Home", href: "/" },
@@ -29,7 +30,7 @@ export default function TheHeader() {
   const header = (
     <>
       {isAuthenticated ? (
-        <div className="hidden md:flex md:items-center md:gap-3">
+        <div className="flex md:items-center md:gap-3">
           {(() => {
             switch (session?.user.role) {
               case "store_admin":
@@ -71,7 +72,7 @@ export default function TheHeader() {
             ""
           ) : (
             <Button
-              className={`rounded-lg px-8 h-8 font-medium ${
+              className={`hidden md:flex rounded-lg px-8 h-8 font-medium ${
                 isHomePage
                   ? "bg-white text-black transition ease-out duration-500 hover:bg-gray-200"
                   : ""
@@ -117,6 +118,11 @@ export default function TheHeader() {
             isHomePage ? "absolute z-50 w-full" : "bg-white border-b-[0.6px]"
           } h-[8vh] px-8`}
         >
+          <div className="flex md:hidden">
+
+          <TheSideNav links={links}/>
+          </div>
+
           <Link href={"/"}>
             <h2
               className={` font-bold text-2xl tracking-tight ${

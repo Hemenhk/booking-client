@@ -130,13 +130,19 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
       <DialogTrigger asChild>
         <Card
           key={appointment._id}
-          className={`shadow-sm rounded-none p-0 m-0 cursor-pointer ${appointment?.service?.bgColor} transition duration-300 ease-out hover:brightness-90`}
+          className={`shadow-sm rounded-lg p-0 m-0 cursor-pointer ${appointment?.service?.bgColor} transition duration-300 ease-out hover:brightness-90`}
           style={{ height: `${cardHeight}px` }}
         >
           <CardHeader className="flex gap-1 h-full flex-row space-y-0 p-0 m-0 items-center">
             <div className="h-full w-0.5 bg-blue-700" />
-            <CardTitle className="text-sm font-light text-blue-900 p-0 flex justify-center items-center">
-              {appointment.name} {appointment.last_name}
+            <CardTitle className="text-xs md:text-sm font-normal text-gray-800 p-0 flex justify-center items-center">
+              <span className="hidden md:flex">
+                {appointment.name} {appointment.last_name}
+              </span>
+              <span className="md:hidden">
+                {formatTimeRange(appointment.time, endTime)}
+                {"  "} {appointment.name} {appointment.last_name}
+              </span>
             </CardTitle>
           </CardHeader>
         </Card>
