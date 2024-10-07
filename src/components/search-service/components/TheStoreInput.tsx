@@ -60,7 +60,7 @@ export default function TheStoreInput({
             <Search />
             <Input
               type="text"
-              className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="w-full border-none font-medium focus-visible:ring-0 focus-visible:ring-offset-0"
               placeholder="Sök efter butik eller tjänst"
               value={storeOrService}
               onChange={(e) => setStoreOrService(e.target.value)}

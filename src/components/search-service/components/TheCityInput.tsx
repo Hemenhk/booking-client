@@ -70,8 +70,8 @@ export default function TheCityInput({
             <MapPin />
             <Input
               type="text"
-              className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-              placeholder="Sök efter plats (stad)"
+              className="w-full font-medium border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Sök efter stad"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />

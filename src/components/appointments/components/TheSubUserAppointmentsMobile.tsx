@@ -1,24 +1,43 @@
 "use client";
-import { format, parse, addMinutes, isAfter, isBefore, getHours, getMinutes, addDays, startOfWeek } from "date-fns";
+import {
+  format,
+  parse,
+  addMinutes,
+  isAfter,
+  isBefore,
+  getHours,
+  getMinutes,
+  addDays,
+  startOfWeek,
+} from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheAppointments from "../TheAppointments";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Props = {
   selectedUserId: string;
 };
 
-export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) {
+export default function TheSubUserAppointmentsMobile({
+  selectedUserId,
+}: Props) {
+  const [weekStart, setWeekStart] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  ); // Start with the current week
   // State to manage the current date
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   // Calculate the start of the current week
-  const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday is the start of the week
+  // const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday is the start of the week
 
   // Get an array of 7 days starting from the start of the week
-  const daysOfWeek = Array.from({ length: 7 }).map((_, index) => addDays(startOfCurrentWeek, index));
+  const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
+    addDays(weekStart, index)
+  );
 
   // Hours range (9 AM to 6 PM)
   const hours = Array.from({ length: 10 }).map((_, index) => index + 9);
@@ -44,13 +63,49 @@ export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) 
   const formattedToday = format(currentDate, "yyyy-MM-dd");
 
   // Filter appointments for the selected day
-  const appointmentsForToday = bookedData?.filter((appointment: AppointmentType) => {
-    const appointmentDate = format(parse(appointment.date, "dd/MM/yyyy", new Date()), "yyyy-MM-dd");
-    return appointmentDate === formattedToday;
-  });
+  const appointmentsForToday = bookedData?.filter(
+    (appointment: AppointmentType) => {
+      const appointmentDate = format(
+        parse(appointment.date, "dd/MM/yyyy", new Date()),
+        "yyyy-MM-dd"
+      );
+      return appointmentDate === formattedToday;
+    }
+  );
+
+  // Function to go to the next week
+  const goToNextWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, 7)); // Move to the next week
+  };
+
+  // Function to go to the previous week
+  const goToPreviousWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, -7)); // Move to the previous week
+  };
 
   return (
     <div className="py-2 mx-4 space-y-4 md:hidden">
+      <div className="flex justify-center gap-5  items-center mb-8">
+        {/* Button to go to the previous week */}
+        <Button
+          onClick={goToPreviousWeek}
+          className="size-6 bg-gray-50 border text-black p-0 hover:bg-gray-50"
+        >
+          <ArrowLeft size={15} />
+        </Button>
+
+        <h1 className="text-xl font-medium">
+          {`${format(weekStart, "MMMM yyyy")}`}
+        </h1>
+
+        {/* Button to go to the next week */}
+        <Button
+          onClick={goToNextWeek}
+          className="size-6 bg-gray-50 border text-black p-0 hover:bg-gray-50"
+        >
+          <ArrowRight size={15} />
+        </Button>
+      </div>
       {/* Day Picker */}
       <div className="flex justify-center gap-2 border-b pb-2 w-full">
         {daysOfWeek.map((day, index) => (
@@ -59,8 +114,20 @@ export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) 
             onClick={() => setCurrentDate(day)}
             className={`px-1.5 py-2 flex flex-col items-center gap-1.5 font-medium `}
           >
-            <span className="text-gray-400 font-light uppercase text-xs">{format(day, "EEE")}</span> {/* Example: Mon */}
-            <span className={`text-gray-700 ${ format(day, "yyyy-MM-dd") ===formattedToday ? "size-8 flex justify-center items-center bg-black text-white rounded-full":"flex justify-center items-center size-8"}`}>{format(day, "d")}</span> {/* Example: 30 */}
+            <span className="text-gray-400 font-light uppercase text-xs">
+              {format(day, "EEE")}
+            </span>{" "}
+            {/* Example: Mon */}
+            <span
+              className={`text-gray-700 ${
+                format(day, "yyyy-MM-dd") === formattedToday
+                  ? "size-8 flex justify-center items-center bg-black text-white rounded-full"
+                  : "flex justify-center items-center size-8"
+              }`}
+            >
+              {format(day, "d")}
+            </span>{" "}
+            {/* Example: 30 */}
           </button>
         ))}
       </div>
@@ -70,16 +137,27 @@ export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) 
         {/* Render time slots */}
         {hours.map((hour) => {
           // Filter appointments for the current hour
-          const appointmentsForHour = appointmentsForToday?.filter((appointment: AppointmentType) => {
-            const appointmentStartTime = parse(`${appointment.date} ${appointment.time}`, "dd/MM/yyyy HH:mm", new Date());
-            const appointmentEndTime = addMinutes(appointmentStartTime, appointment.service.duration);
-            const slotStartTime = currentDate.setHours(hour, 0, 0, 0);
-            const slotEndTime = currentDate.setHours(hour + 1, 0, 0, 0);
-            return (
-              (isAfter(appointmentEndTime, slotStartTime) && isBefore(appointmentStartTime, slotEndTime)) ||
-              (getHours(appointmentStartTime) === hour && getMinutes(appointmentStartTime) === 0)
-            );
-          });
+          const appointmentsForHour = appointmentsForToday?.filter(
+            (appointment: AppointmentType) => {
+              const appointmentStartTime = parse(
+                `${appointment.date} ${appointment.time}`,
+                "dd/MM/yyyy HH:mm",
+                new Date()
+              );
+              const appointmentEndTime = addMinutes(
+                appointmentStartTime,
+                appointment.service.duration
+              );
+              const slotStartTime = currentDate.setHours(hour, 0, 0, 0);
+              const slotEndTime = currentDate.setHours(hour + 1, 0, 0, 0);
+              return (
+                (isAfter(appointmentEndTime, slotStartTime) &&
+                  isBefore(appointmentStartTime, slotEndTime)) ||
+                (getHours(appointmentStartTime) === hour &&
+                  getMinutes(appointmentStartTime) === 0)
+              );
+            }
+          );
 
           return (
             <>
@@ -89,7 +167,10 @@ export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) 
               </div>
 
               {/* Appointments or Empty slots in the second column */}
-              <div key={`slot-${hour}`} className="border-t border-b border-gray-200 h-28">
+              <div
+                key={`slot-${hour}`}
+                className="border-t border-b border-gray-200 h-28"
+              >
                 {appointmentsForHour && appointmentsForHour.length > 0 ? (
                   appointmentsForHour.map((appointment: AppointmentType) => (
                     <div key={appointment._id} className="my-2">
@@ -97,7 +178,9 @@ export default function TheSubUserAppointmentsMobile({ selectedUserId }: Props) 
                     </div>
                   ))
                 ) : (
-                  <div className="text-xs text-gray-400 mt-2">Inga bokningar</div>
+                  <div className="text-xs text-gray-400 mt-2">
+                    Inga bokningar
+                  </div>
                 )}
               </div>
             </>

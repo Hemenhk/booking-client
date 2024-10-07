@@ -45,7 +45,7 @@ export default function TheSearchService() {
   }
 
   return (
-    <div className="flex flex-row items-center w-2/4 justify-center bg-white h-20 px-5 rounded-full shadow-md">
+    <div className="hidden md:flex flex-row items-center w-2/4 justify-center bg-white h-20 px-5 rounded-full shadow-md">
       {/* Store/Service search input */}
 
       <TheStoreInput

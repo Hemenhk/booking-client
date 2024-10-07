@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import TheSignoutBtn from "./TheSignoutBtn";
 import { useSession } from "next-auth/react";
+import { LogOut, Megaphone, ReceiptText, User } from "lucide-react";
+import { Separator } from "../ui/separator";
 
 export default function TheUserAvatar() {
   const { data: session, status } = useSession();
@@ -37,15 +39,17 @@ export default function TheUserAvatar() {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="mr-10">
+      <DropdownMenuContent className="mr-10 px-0">
         <DropdownMenuLabel>Mitt konto</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-2">
           {/* This link */}
+          <User size={18} />
           <Link href={profileLink()}>Profil</Link>
         </DropdownMenuItem>
         {isAdmin && status === "authenticated" && session?.user.store ? (
-          <DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2">
+            <ReceiptText size={16} />
             <Link
               href={`/dashboard/admin/${session?.user.store.handle}/subscription-portal`}
             >
@@ -54,7 +58,19 @@ export default function TheUserAvatar() {
           </DropdownMenuItem>
         ) : null}
 
-        <DropdownMenuItem>
+        {isAdmin && status === "authenticated" && session?.user.store ? (
+          <DropdownMenuItem className="flex items-center gap-2">
+            <Megaphone size={18} />
+            <Link
+              href={`/dashboard/admin/${session?.user.store.handle}/feedback`}
+            >
+              Feedback
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+<Separator />
+        <DropdownMenuItem className="flex items-center gap-2 text-red-400 cursor-pointer hover:text-red-400">
+          <LogOut size={18}/>
           <TheSignoutBtn />
         </DropdownMenuItem>
       </DropdownMenuContent>
