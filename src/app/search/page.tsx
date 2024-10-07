@@ -1,64 +1,37 @@
-"use client"; // This must be placed at the very top of the file
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { getAllStores } from "@/axios/stores";
-import { Store } from "@/types/types";
+import TheSearch from "@/components/search-service/TheSearch";
+import type { Metadata } from "next";
 
-import TheTopRatedStores from "@/components/search-service/components/TheTopRatedStores";
-import TheFilteredStores from "@/components/search-service/components/TheFilteredStores";
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { city?: string; storeOrService?: string };
+}): Promise<Metadata> {
+  const city = searchParams.city ? decodeURIComponent(searchParams.city) : "";
+  const service = searchParams.storeOrService
+    ? decodeURIComponent(searchParams.storeOrService)
+    : "";
+
+  // Create a dynamic title and description based on search parameters
+  const title = `Search Results for ${service || "Services"} in ${
+    city || "Your Area"
+  } | Bookely`;
+  const description = `Find top-rated services${
+    service ? ` like ${service}` : ""
+  } in ${
+    city || "your area"
+  }. Bookely helps you discover the best businesses around you.`;
+
+  return {
+    title,
+    description,
+  };
+}
 
 export default function TheSearchPage() {
-  const searchParams = useSearchParams();
-  const [filteredStores, setFilteredStores] = useState<Store[]>([]);
-
-  const {
-    data: storeData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["all-stores"],
-    queryFn: getAllStores,
-  });
-
-  // Get the storeOrService or address query from the URL
-  const storeOrServiceQuery = searchParams.get("storeOrService")?.toLowerCase();
-  const addressQuery = searchParams.get("city")?.toLowerCase();
-
-  useEffect(() => {
-    if (storeData && (storeOrServiceQuery || addressQuery)) {
-      let filtered = storeData.filter((store: Store) => store.hasAccess);
-
-      if (storeOrServiceQuery) {
-        filtered = filtered.filter((store: Store) =>
-          store.name.toLowerCase().includes(storeOrServiceQuery)
-        );
-      }
-
-      if (addressQuery) {
-        filtered = filtered.filter((store: Store) =>
-          store.city?.toLowerCase().includes(addressQuery)
-        );
-      }
-
-      setFilteredStores(filtered);
-    }
-  }, [storeData, storeOrServiceQuery, addressQuery]);
-
-  if (isLoading) {
-    return <p>Loading stores...</p>;
-  }
-
-  if (isError) {
-    return <p>Failed to load stores. Please try again later.</p>;
-  }
-
-
   return (
-    <main className="flex flex-col mx-auto md:px-16 xl:px-80 my-10">
-      <TheTopRatedStores filteredStores={filteredStores} addressQuery={addressQuery} />
-      <TheFilteredStores filteredStores={filteredStores} />
-    </main>
+    <>
+      <TheSearch />
+    </>
   );
 }

@@ -17,13 +17,13 @@ export default function TheFilteredStores({ filteredStores }: Props) {
   const maxWordsToShow = 15;
 
   return (
-    <div className="h-[80vh] w-full p-4">
+    <div className="h-[80vh] w-full p-4 pt-10">
       {filteredStores.length === 0 ? (
         <p>No stores found matching your search criteria.</p>
       ) : (
         <>
           <TheFilteredStoresMobile filteredStores={filteredStores} />
-          <div className="hidden md:grid md:grid-cols-1 md:gap-4 ">
+          <div className="hidden md:grid md:grid-cols-1 md:gap-12">
             {filteredStores.map((store) => {
               const description = store.description || ""; // Ensure description is defined
               const wordsArray = description.split(" "); // Now we can safely split
@@ -36,13 +36,14 @@ export default function TheFilteredStores({ filteredStores }: Props) {
               return (
                 <Link
                   href={`/store/${store.handle}`}
+                  className="border-b pb-12"
                   key={store._id}
                 >
                   <Card
                     key={store._id}
-                    className="flex flex-row bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition"
+                    className="flex flex-row bg-white border-none shadow-none hover:brightness-95 ease-out duration-300 cursor-pointer transition"
                   >
-                    <div className="size-64 rounded-lg relative overflow-hidden">
+                    <div className="h-64 w-96 rounded-lg relative overflow-hidden">
                       <Image
                         src={store.collageImages[0]}
                         alt="store image"
@@ -52,13 +53,13 @@ export default function TheFilteredStores({ filteredStores }: Props) {
                     </div>
                     <div className="w-2/4">
                       <CardHeader>
-                        <CardTitle>{store.name}</CardTitle>
+                        <CardTitle className="text-3xl">{store.name}</CardTitle>
                         <div className="flex flex-row gap-3">
                           <div className="flex flex-col gap-2">
-                            <p className="flex flex-row items-center gap-1 text-gray-500 text-sm">
-                              <MapPin size={15} /> {store.address}
+                            <p className="text-gray-500">
+                              {store.address}
                             </p>
-                            <div className="flex flex-row items-center gap-1 text-sm">
+                            <div className="flex flex-row items-center gap-1 text-base">
                               <span className="font-semibold">
                                 {store.averageRating.toFixed(1)}
                               </span>
@@ -76,7 +77,7 @@ export default function TheFilteredStores({ filteredStores }: Props) {
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="tracking-tight text-sm text-gray-600">
+                      <CardContent className="tracking-tight text-gray-600">
                         {isLongDescription && <p>{collapsedText}</p>}
                       </CardContent>
                     </div>

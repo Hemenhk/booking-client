@@ -26,10 +26,11 @@ export default function TheTopRatedStores({
     .slice(0, 4); // Get the top 4
 
   return (
-    <div className="border-b pb-10 px-0">
-      <h2 className="text-3xl px-4 tracking-wide font-semibold text-gray-700 pb-10">
+    <div className="border-b pb-4 px-0">
+      <h2 className="text-3xl tracking-wide font-semibold text-gray-700 pb-10">
         Populära verksamheter i{" "}
-        <span className="capitalize">{addressQuery}</span>
+        <span className="capitalize">{addressQuery}</span>{" "}
+        <span className="tracking-tight">({filteredStores.length})</span>
       </h2>
       {/* Render the first 4 stores in the city based on the highest average rating */}
       {topRatedStores.length === 0 ? (
@@ -41,14 +42,19 @@ export default function TheTopRatedStores({
             {topRatedStores.map((store) => (
               <Link href={`/store/${store.handle}`} key={store._id}>
                 <Card className="flex flex-col bg-white border-none shadow-none rounded-lg hover:brightness-95 transition ease-out duration-300 cursor-pointer">
-                  <div className="h-40 w-72 relative rounded-lg overflow-hidden">
-                    <Image
-                      src={store.collageImages[0]}
-                      alt="store image"
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
+                  {store.collageImages[0] ? (
+                    <div className="h-40 w-72 relative rounded-lg overflow-hidden">
+                      <Image
+                        src={store.collageImages[0]}
+                        alt="store image"
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
                   <CardHeader className="space-y-0.5 p-2">
                     <CardTitle className="text-lg font-medium">
                       {store.name}

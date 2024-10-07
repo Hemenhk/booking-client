@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useEffect, useState } from "react";
 
 export const plans = [
   {
@@ -69,6 +70,14 @@ type PlanSelectionProps = {
 };
 
 export default function ThePaymentCards() {
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const adminEmail = localStorage.getItem("adminEmail");
+
+    setEmail(adminEmail);
+  }, []);
+
   return (
     <ul className="flex flex-row gap-5">
       {plans.map((plan) => (
@@ -125,14 +134,7 @@ export default function ThePaymentCards() {
                   : ""
               }`}
             >
-              <a
-                href={
-                  plan.link +
-                  "?prefilled_email=" +
-                  localStorage.getItem("adminEmail")
-                }
-                target="_blank"
-              >
+              <a href={plan.link + "?prefilled_email=" + email} target="_blank">
                 Kom igång
               </a>
             </Button>

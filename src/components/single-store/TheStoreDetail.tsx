@@ -10,9 +10,13 @@ import TheReviews from "./components/TheReviews";
 import TheAboutStore from "./components/TheAboutStore";
 import TheStoreStaff from "./components/TheStoreStaff";
 import TheSocialMedias from "./components/TheSocialMedias";
-import TheStoreDetailMap from "../maps/TheStoreDetailMap";
+// import TheStoreDetailMap from "../maps/TheStoreDetailMap";
 import Image from "next/image";
 import TheCollageImages from "./components/TheCollageImages";
+import dynamic from "next/dynamic";
+const TheStoreDetailMap = dynamic(() => import("../maps/TheStoreDetailMap"), {
+  ssr: false, // Disable server-side rendering
+});
 
 export default function TheStoreDetail({
   storeHandle,

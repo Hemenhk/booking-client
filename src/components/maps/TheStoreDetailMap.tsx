@@ -1,4 +1,5 @@
 "use client";
+
 import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -14,6 +15,11 @@ export default function TheStoreDetailMap({
   storeData: Store | undefined;
 }) {
   const [mapCenter, setMapCenter] = useState<[number, number]>([51.505, -0.09]); // Default center: London
+  // const [isClient, setIsClient] = useState(false); // State to track client-side rendering
+
+  // useEffect(() => {
+  //   setIsClient(true); // Set the flag when component is mounted (client-side)
+  // }, []);
 
   useEffect(() => {
     if (storeData?.address_coordinates) {
@@ -37,6 +43,11 @@ export default function TheStoreDetailMap({
       iconAnchor: [15, 30], // Adjust anchor point for positioning
     });
   };
+
+  // Only render the MapContainer when running on the client
+  // if (!isClient) {
+  //   return null;
+  // }
 
   return (
     <MapContainer

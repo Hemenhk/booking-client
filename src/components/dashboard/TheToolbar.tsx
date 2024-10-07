@@ -117,7 +117,7 @@ export default function TheToolbar() {
             href="/"
             className="flex items-center gap-2 font-bold text-2xl tracking-tight"
           >
-            <span className="hidden md:flex">Booksy.</span>{" "}
+            <span className="hidden md:flex">Bookely.</span>{" "}
             <span className="flex md:hidden">B.</span>
           </Link>
         </div>

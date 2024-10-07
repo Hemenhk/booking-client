@@ -1,4 +1,11 @@
 import ThePaymentCards from "@/components/payments/ThePaymentCards";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Registrera ditt företag",
+  description:
+    "Välj en av våra planer för att registrera ditt företag och kunna ta emot bokningar idag!",
+};
 
 export default function TheRegisterPage() {
   return (

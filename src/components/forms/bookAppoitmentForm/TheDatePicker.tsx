@@ -47,9 +47,11 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
   // Set selectedDate to the current date by default
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  
+
   // State to track the current week
-  const [weekStart, setWeekStart] = useState<Date>(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [weekStart, setWeekStart] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
 
   const savedService = localStorage.getItem("service");
 
@@ -120,21 +122,31 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
       name="date"
       render={({ field }) => (
         <FormItem>
-          <Card className="shadow-md min-w-[700px]">
-            <CardHeader className="flex flex-col gap-10 justify-center mx-auto text-center border-b w-[90%]">
+          <Card className="shadow-md min-w-[370px] md:min-w-[700px]">
+            <CardHeader className="flex flex-col gap-10 justify-center mx-auto text-center border-b md:w-[90%]">
               <div className="flex items-center justify-between">
                 {/* Button to go to previous week */}
-                <Button onClick={goToPreviousWeek} className="h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"><ArrowLeft /></Button>
+                <Button
+                  onClick={goToPreviousWeek}
+                  className="h-7 md:h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"
+                >
+                  <ArrowLeft />
+                </Button>
 
                 {/* Display dynamic month and year */}
-                <h1 className="text-2xl font-medium">
+                <h1 className="text-xl md:text-2xl font-medium">
                   {format(weekStart, "MMMM yyyy")}
                 </h1>
 
                 {/* Button to go to next week */}
-                <Button onClick={goToNextWeek} className="h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"><ArrowRight /></Button>
+                <Button
+                  onClick={goToNextWeek}
+                  className="h-7 md:h-9 bg-white transition duration-300 ease-out hover:bg-white hover:brightness-95 shadow-sm text-gray-800 border"
+                >
+                  <ArrowRight />
+                </Button>
               </div>
-              <div className="flex flex-wrap gap-4 mb-6">
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
                 {/* Render date cards */}
                 {daysOfWeek.map((day) => (
                   <Card
@@ -150,16 +162,14 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                       {format(day, "EEE")}
                     </h3>
                     <p className="text-center">{format(day, "d")}</p>
-                    
                   </Card>
                 ))}
-
               </div>
             </CardHeader>
             <CardContent>
               {/* Render time slots for the selected date */}
               {selectedDate && (
-                <ul className="grid grid-cols-6 gap-3 pt-8 px-10">
+                <ul className="grid grid-cols-2 md:grid-cols-6 gap-3 pt-8 px-10">
                   {dateData?.availableTimesByDay[
                     format(selectedDate, "yyyy-MM-dd")
                   ]
@@ -207,6 +217,7 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                   <div className="flex flex-row items-center gap-3">
                     <Avatar className="size-10">
                       <AvatarImage
+                        alt="worker profile image"
                         className="object-cover"
                         src={service?.createdBy?.profileImage}
                       />
@@ -225,7 +236,10 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
               </div>
             </CardContent>
             <CardFooter className="w-full flex justify-center border-t pt-6">
-              <Button className="w-[90%] font-light" onClick={handleNextStep}>
+              <Button
+                className="w-[90%] h-12 rounded-lg font-light"
+                onClick={handleNextStep}
+              >
                 Gå vidare
               </Button>
             </CardFooter>

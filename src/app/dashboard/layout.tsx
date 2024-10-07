@@ -16,7 +16,7 @@ export default function DashboardLayout({
   if (status === "loading") {
     return (
       <h2 className="flex justify-center items-center text-3xl font-bold h-[80vh] tracking-tight">
-        Booksy.
+        Bookely.
       </h2>
     );
   }

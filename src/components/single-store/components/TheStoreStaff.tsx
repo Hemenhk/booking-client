@@ -48,6 +48,7 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
                     <AvatarImage
                       className="object-cover"
                       src={admin?.profileImage}
+                      alt="user profile image"
                     />
                     <AvatarFallback className="text-3xl">
                       {admin?.name.charAt(0)}
@@ -107,6 +108,7 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
                         <AvatarImage
                           className="object-cover"
                           src={user.profileImage}
+                          alt="user profile image"
                         />
                         <AvatarFallback className="text-3xl">
                           {user.name.charAt(0)}

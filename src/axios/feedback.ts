@@ -9,6 +9,6 @@ export type Feedback = {
 };
 
 export const createFeedback = async (storeId: string, data: Feedback) => {
-  const url = `http://localhost:8001/api/feedback/${storeId}/create-feedback`;
+  const url = `http://localhost:8001/api/feedback/${storeId}/feedback`;
   return makeRequest("POST", url, data);
 };

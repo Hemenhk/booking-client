@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -62,17 +62,25 @@ type Props = {
 
 export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
   const queryClient = useQueryClient();
-
+  const [service, setService] = useState<Service | null>(null);
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);
 
-  const savedService = localStorage.getItem("service");
 
-  if (!savedService) {
-    return <p>No saved service in local storage.</p>;
-  }
+  useEffect(() => {
+    const serviceString = localStorage.getItem("service");
+    
+    if (serviceString) {
+      try {
+        const serviceObject: Service = JSON.parse(serviceString);
+        setService(serviceObject);
+      } catch (error) {
+        console.error("Failed to parse service from localStorage", error);
+      }
+    }
+  }, []);
+ 
 
-  const service: Service = JSON.parse(savedService);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,7 +89,7 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
       last_name: "",
       email: "",
       phone_number: "",
-      service: service._id,
+      service: service?._id,
       time: "",
       status: "active",
     },
@@ -138,7 +146,7 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
   const endTime = calculateEndTime(watchedTime, service.duration);
 
   return (
-    <div className="h-screen px-48 py-16 bg-zinc-50 flex flex-col items-center w-full gap-14">
+    <div className="h-screen px-48 py-6 bg-zinc-50 flex flex-col items-center w-full gap-14">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {step === 1 && <TheDatePicker form={form} setStep={setStep} />}
@@ -146,7 +154,7 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
             <ThePersonalInformation form={form} step={step} setStep={setStep} />
           )}
           {step === 3 && (
-            <Card className="shadow-md w-[500px] max-w-[700px] py-8 text-center space-y-8">
+            <Card className="shadow-md w-[370px] md:w-[500px] max-w-[700px] py-8 text-center space-y-8">
               <CardHeader className="border-b pb-4">
                 <CheckCircle className="mx-auto mb-3" size={50} />
                 <CardTitle className="text-4xl font-medium">Woo hoo!</CardTitle>

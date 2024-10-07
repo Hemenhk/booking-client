@@ -129,7 +129,7 @@ export default function TheHeader() {
                 isHomePage ? "text-white" : "text-black"
               } `}
             >
-              Booksy.
+              Bookely.
             </h2>
           </Link>
 

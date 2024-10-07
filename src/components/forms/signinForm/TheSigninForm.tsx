@@ -113,7 +113,7 @@ export default function TheSigninForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-3 mx-auto flex flex-col justify-center w-3/5"
+        className="gap-3 mx-auto flex flex-col justify-center md:w-3/5"
       >
         <h2 className="text-center text-3xl font-semibold tracking-tight">
           Logga in
@@ -122,7 +122,7 @@ export default function TheSigninForm() {
           Fyll i formuläret för att logga in på ditt konto
         </p>
         {mappedFormFields}
-        <Button type="submit" className="font-normal">
+        <Button type="submit" className="font-normal mt-5">
           {status === "loading" ? "Loggar in..." : "Logga in"}
         </Button>
         <p className="text-center text-sm text-muted-foreground font-light pt-3">

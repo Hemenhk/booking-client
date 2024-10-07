@@ -1,5 +1,5 @@
 import Image from "next/image";
-import bgImage from "../../../public/booksy-bg.png";
+import bgImage from "../../../public/bookely-bg.png";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import dottedSquare from "../../../public/dotted-square.png";

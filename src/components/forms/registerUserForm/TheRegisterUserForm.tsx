@@ -121,7 +121,7 @@ export default function TheRegisterUserForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-3 mx-auto flex flex-col justify-center w-3/5"
+        className="gap-3 mx-auto flex flex-col justify-center md:w-3/5"
       >
         <h2 className="text-center text-3xl font-semibold tracking-tight">
           Skapa konto
@@ -130,7 +130,7 @@ export default function TheRegisterUserForm() {
           Fyll i formuläret för att skapa ditt konto
         </p>
         {mappedFormFields}
-        <Button type="submit" className="font-normal">
+        <Button type="submit" className="font-normal mt-5">
           {isPending ? "Skapar konto..." : "Skapa konto"}
         </Button>
         <p className="text-center text-sm text-muted-foreground font-light pt-3">

@@ -78,18 +78,21 @@ export default function ThePersonalInformation({
     />
   ));
   return (
-    <Card className="shadow-md min-w-[700px]">
+    <Card className="shadow-md min-w-[370px] md:min-w-[700px]">
       <CardHeader>
         <CardTitle>Personuppgifter</CardTitle>
         <CardDescription>
           Fyll i formuläret för att boka din tid.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-5 w-3/4">{mappedFormFields}</CardContent>
+      <CardContent className="space-y-5 md:w-3/4">
+        {mappedFormFields}
+      </CardContent>
       <CardFooter className="border-t px-6 py-4">
         <Button
           type="submit"
-          className="font-normal"
+          className="font-normal w-full md:w-32"
+          onClick={() => setStep((prevstep) => prevstep + 1)}
         >
           Boka
         </Button>
