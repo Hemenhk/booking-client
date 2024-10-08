@@ -124,7 +124,7 @@ export const updateOpeningHours = async (
 
 export const updateStore = async (storeId: string, data: Store) => {
   const url = `http://localhost:8001/api/stores/${storeId}`;
-  return makeRequest("PATCH", url, { data });
+  return makeRequest("PATCH", url, data);
 };
 
 export const getSubscriptionCustomer = async (customerId: string) => {

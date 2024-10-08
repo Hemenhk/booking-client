@@ -4,56 +4,40 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
+import { categories, categoriesList } from "../../../lib/services";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
-import { US, SE, NO, DK, GB, DE, CA } from "country-flag-icons/react/3x2";
-
-import { Input } from "@/components/ui/input";
-
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+
+import { useAdminQuery } from "@/hooks/useAdminQuery";
+import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStore } from "@/axios/stores";
 import { Store } from "@/types/types";
-import { useSession } from "next-auth/react";
-import { useAdminQuery } from "@/hooks/useAdminQuery";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { MultiSelect } from "@/components/ui/multi-selector";
 
 const formSchema = z.object({
-  city: z.string().min(1),
-  country: z.string(),
+  categories: z
+    .array(z.string().min(1))
+    .min(1)
+    .nonempty("Please select at least one category."),
 });
 
-const flags = [
-  { name: "SE", flag: <SE className="size-6" /> },
-  { name: "NO", flag: <NO className="size-6" /> },
-  { name: "DK", flag: <DK className="size-6" /> },
-  { name: "GB", flag: <GB className="size-6" /> },
-  { name: "DE", flag: <DE className="size-6" /> },
-  { name: "CA", flag: <CA className="size-6" /> },
-  { name: "US", flag: <US className="size-6" /> },
-];
-
-export default function TheUpdateAddressForm() {
+export default function TheUpdateCategoriesForm() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
@@ -62,9 +46,8 @@ export default function TheUpdateAddressForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    values: {
-      city: storeData?.store.city || "",
-      country: storeData?.store.country || "",
+    defaultValues: {
+      categories: storeData?.store?.categories || [],
     },
   });
 
@@ -85,15 +68,14 @@ export default function TheUpdateAddressForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log("Submitted values:", values);
       const res = await mutateAsync(values);
       toast({
-        title: `Butikens adress ändrades!`,
+        title: `Kategorier uppdaterades!`, // Updated toast message
       });
       setTimeout(() => {
         dismiss();
       }, 2000);
-      toast;
-      console.log(values);
       console.log("res", res);
     } catch (error) {
       console.log(error);
@@ -106,55 +88,35 @@ export default function TheUpdateAddressForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <DialogHeader>
             <h2 className="text-2xl font-semibold tracking-tight">
-              Ändra Adress
+              Ändra kategorier
             </h2>
-            <p className="mb-5 text-sm text-muted-foreground">
-              Fyll i fälten för att ändra din adress
-            </p>
           </DialogHeader>
+
           <FormField
             control={form.control}
-            name="city"
+            name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Stad</FormLabel>
+                <FormLabel>Kategorier</FormLabel>
                 <FormControl>
-                  <Input type="text" value={field.value} {...field} />
+                  <MultiSelect
+                    options={categoriesList}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    placeholder="Select options"
+                    variant="inverted"
+                    animation={2}
+                    maxCount={3}
+                  />
                 </FormControl>
-
+                <FormDescription>
+                  Välj de kategorier som bäst passar din verksamhet.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem className="w-1/3">
-                <FormLabel>Land</FormLabel>
-                <FormControl>
-                  <Select
-                    value={field.value}
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Välj land" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {flags.map((flag) => (
-                        <SelectItem key={flag.name} value={flag.name}>
-                          <div className="flex flex-row items-center gap-3">
-                            {flag.flag} {flag.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+
           <DialogFooter className="px-6 py-4">
             <Button type="submit" className="font-normal">
               Spara

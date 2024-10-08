@@ -29,26 +29,26 @@ export type Appointment = {
 };
 
 export type Categories =
-  | "Frisör"
-  | "Barberare"
-  | "Massage"
-  | "Hudvård"
-  | "Nagelsalong"
-  | "Makeup & Styling"
-  | "Fransar & Bryn"
-  | "Spa & Avkoppling"
-  | "Hårborttagning"
-  | "Sjukgymnastik"
-  | "Kiropraktor"
-  | "Akupunktur"
-  | "Zonterapi"
-  | "Tandblekning"
-  | "Personlig träning"
-  | "Kostrådgivning"
-  | "Manikyr & Pedikyr"
-  | "Ansiktsbehandling"
-  | "Botox & Fillers"
-  | "Alternativ medicin";
+  | "frisör"
+  | "barberare"
+  | "massage"
+  | "hudvård"
+  | "nagelsalong"
+  | "makeup & styling"
+  | "fransar & bryn"
+  | "spa & avkoppling"
+  | "hårborttagning"
+  | "sjukgymnastik"
+  | "kiropraktor"
+  | "akupunktur"
+  | "zonterapi"
+  | "tandblekning"
+  | "personlig träning"
+  | "kostrådgivning"
+  | "manikyr & pedikyr"
+  | "ansiktsbehandling"
+  | "botox & fillers"
+  | "alternativ medicin";
 
 export type UserAppointments = {
   appointments: Appointment[];

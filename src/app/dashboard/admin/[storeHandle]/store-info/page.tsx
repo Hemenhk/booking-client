@@ -3,13 +3,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { KeyRound, MapPin, Pencil, Smartphone } from "lucide-react";
+import { Briefcase, MapPin, Pencil } from "lucide-react";
 import { useParams } from "next/navigation";
 import { US, SE, NO, DK, GB, DE, CA } from "country-flag-icons/react/3x2";
 import TheUpdateAddressForm from "@/components/forms/updateAddress/TheUpdateAddressForm";
 import TheUpdateImagesForm from "@/components/forms/updateImages/TheUpdateImagesForm";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import TheUpdateCategoriesForm from "@/components/forms/updateCategories/TheUpdateCategoriesForm";
 
 export default function TheStoreAddressPage() {
   const { data: session } = useSession();
@@ -19,9 +20,7 @@ export default function TheStoreAddressPage() {
 
   const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
 
-  // if (!storeData?.store.country) {
-  //   return <div>Finns inte något land registrerat.</div>;
-  // }
+  console.log("stoer info", storeData?.store.categories);
 
   if (isLoading) {
     return <div>Laddar data</div>;
@@ -81,6 +80,32 @@ export default function TheStoreAddressPage() {
       </Card>
       <Card className="overflow-hidden max-w-[600px]">
         <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg">Verksamhetskategorier</CardTitle>
+          <Dialog>
+            <DialogTrigger asChild>
+              <span className="cursor-pointer p-2 rounded-lg transition duration-300 ease-out hover:bg-gray-100">
+                <Pencil size={15} />
+              </span>
+            </DialogTrigger>
+            <TheUpdateCategoriesForm />
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-row items-center gap-2 p-3 border rounded-lg">
+            <Briefcase size={18} />
+            <p className="flex flex-row items-center gap-5 capitalize">
+              {storeData?.store?.categories.map((category) => (
+                <>
+                  <p key={category}>{category}</p>
+                  <div className="size-1 rounded-full bg-gray-400" />
+                </>
+              ))}{" "}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="overflow-hidden max-w-[600px]">
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">
             Butiksbilder:{" "}
             <span className="font-normal">
@@ -117,7 +142,6 @@ export default function TheStoreAddressPage() {
           </ul>
         </CardContent>
       </Card>
-      
     </div>
   );
 }
