@@ -28,6 +28,28 @@ export type Appointment = {
   createdBy: User;
 };
 
+export type Categories =
+  | "Frisör"
+  | "Barberare"
+  | "Massage"
+  | "Hudvård"
+  | "Nagelsalong"
+  | "Makeup & Styling"
+  | "Fransar & Bryn"
+  | "Spa & Avkoppling"
+  | "Hårborttagning"
+  | "Sjukgymnastik"
+  | "Kiropraktor"
+  | "Akupunktur"
+  | "Zonterapi"
+  | "Tandblekning"
+  | "Personlig träning"
+  | "Kostrådgivning"
+  | "Manikyr & Pedikyr"
+  | "Ansiktsbehandling"
+  | "Botox & Fillers"
+  | "Alternativ medicin";
+
 export type UserAppointments = {
   appointments: Appointment[];
 };
@@ -93,6 +115,7 @@ export type Store = {
   address: string;
   city: string;
   country: string;
+  categories: Categories[];
   address_coordinates: Coordinates;
   service: "hår" | "skönhet" | "massage" | "tandvård" | "sjukvård";
   phone_number: string;

@@ -133,7 +133,7 @@ export default function TheHeader() {
             </h2>
           </Link>
 
-          {isDashboardPage ? (
+          {/* {isDashboardPage ? (
             ""
           ) : (
             <nav className="hidden md:flex">
@@ -154,7 +154,7 @@ export default function TheHeader() {
                 ))}
               </ul>
             </nav>
-          )}
+          )} */}
 
           {!isDashboardPage && header}
         </div>

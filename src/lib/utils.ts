@@ -91,3 +91,24 @@ export const serviceFormFields = [
     placeholder: "Pris",
   },
 ];
+
+export const contactFormFields = [
+  {
+    name: "title",
+    type: "text",
+    label: "Ämne",
+    placeholder: "Ämne",
+  },
+  {
+    name: "name",
+    type: "text",
+    label: "Namn",
+    placeholder: "Namn",
+  },
+  {
+    name: "email",
+    type: "email",
+    label: "Email",
+    placeholder: "Email",
+  },
+];
