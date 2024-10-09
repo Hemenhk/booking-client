@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { Briefcase, MapPin, Pencil } from "lucide-react";
+import { Briefcase, MapPin, Pencil, TriangleAlert } from "lucide-react";
 import { useParams } from "next/navigation";
 import { US, SE, NO, DK, GB, DE, CA } from "country-flag-icons/react/3x2";
 import TheUpdateAddressForm from "@/components/forms/updateAddress/TheUpdateAddressForm";
@@ -11,6 +11,9 @@ import TheUpdateImagesForm from "@/components/forms/updateImages/TheUpdateImages
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import TheUpdateCategoriesForm from "@/components/forms/updateCategories/TheUpdateCategoriesForm";
+import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import TheUpdateMediaForm from "@/components/forms/updateMediaForm/TheUpdateMediaForm";
 
 export default function TheStoreAddressPage() {
   const { data: session } = useSession();
@@ -18,7 +21,12 @@ export default function TheStoreAddressPage() {
     storeHandle: string;
   }>();
 
+  // const hasCategories = session?.user?.store?.categories;
+
   const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
+
+  const hasCategories = storeData && storeData?.store?.categories?.length > 0;
+  const hasPhonenumber = storeData && storeData?.store?.phone_number;
 
   console.log("stoer info", storeData?.store.categories);
 
@@ -29,6 +37,13 @@ export default function TheStoreAddressPage() {
   if (!session?.user.store._id) {
     return <div>Inget användarID</div>;
   }
+  const iconMapping = {
+    instagram: <FaInstagram size={18} />,
+    facebook: <FaFacebookF size={18} />,
+    tiktok: <FaTiktok size={18} />,
+    x: <FaXTwitter size={18} />,
+    youtube: <FaYoutube size={18} />,
+  };
 
   const getFlagComponent = (countryCode: string) => {
     switch (countryCode) {
@@ -53,6 +68,27 @@ export default function TheStoreAddressPage() {
 
   return (
     <div className="flex flex-col gap-5 mx-2 md:mx-0">
+      {!hasCategories && (
+        <Card className="overflow-hidden max-w-[600px] border-red-700">
+          <CardContent className="flex flex-row items-center gap-3 py-2">
+            <TriangleAlert size={18} className="text-red-700" />
+            <p className="flex flex-row items-center gap-5 text-sm">
+              Lägg till åtminstone en kategori för att synas i sökmotorn
+            </p>
+          </CardContent>
+        </Card>
+      )}
+      {!hasPhonenumber && (
+        <Card className="overflow-hidden max-w-[600px] border-red-700">
+          <CardContent className="flex flex-row items-center gap-3 py-2">
+            <TriangleAlert size={18} className="text-red-700" />
+            <p className="flex flex-row items-center gap-5 text-sm">
+              Lägg till ett telefonnummer för att synas i sökmotorn
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="overflow-hidden max-w-[600px]">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Butiksadressen</CardTitle>
@@ -140,6 +176,38 @@ export default function TheStoreAddressPage() {
                 </div>
               ))}
           </ul>
+        </CardContent>
+      </Card>
+      <Card className="overflow-hidden max-w-[600px]">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg">Sociala medier</CardTitle>
+          <Dialog>
+            <DialogTrigger asChild>
+              <span className="cursor-pointer p-2 rounded-lg transition duration-300 ease-out hover:bg-gray-100">
+                <Pencil size={15} />
+              </span>
+            </DialogTrigger>
+            <TheUpdateMediaForm storeHandle={storeData?.store?.handle} />
+          </Dialog>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {Object.entries(storeData?.store?.social_media).map(
+            ([platform, link]) => (
+              <div
+                key={platform}
+                className="flex flex-row items-center gap-2 p-3 border rounded-lg"
+              >
+                {iconMapping[platform]}
+                {link !== "" ? (
+                  <p className="flex flex-row w-full bg-neutral-100 p-1 rounded-md items-center gap-5 text-sm text-neutral-700">
+                    {link}
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+            )
+          )}
         </CardContent>
       </Card>
     </div>

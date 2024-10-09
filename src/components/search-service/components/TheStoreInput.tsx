@@ -9,25 +9,29 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Store } from "@/types/types";
+import { Categories, Store } from "@/types/types";
 
 type Props = {
   storeData: Store[];
   storeOrService: string;
   setStoreOrService: Dispatch<SetStateAction<string>>;
+  categoriesData: Categories[];
 };
 
 export default function TheStoreInput({
   setStoreOrService,
   storeData,
   storeOrService,
+  categoriesData,
 }: Props) {
   const router = useRouter();
 
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
   const [storeSearchTimeout, setStoreSearchTimeout] =
     useState<NodeJS.Timeout | null>(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
+  // Filter the store data
   useEffect(() => {
     if (storeSearchTimeout) {
       clearTimeout(storeSearchTimeout);
@@ -35,8 +39,9 @@ export default function TheStoreInput({
 
     const timeout = setTimeout(() => {
       if (storeOrService) {
-        const filtered = storeData?.filter((store: Store) =>
-          store.name.toLowerCase().includes(storeOrService.toLowerCase())
+        const filtered = storeData?.filter((store: Store) => 
+          store.name.toLowerCase().includes(storeOrService.toLowerCase()) || 
+          store.categories.map(category => category.toLowerCase()).includes(storeOrService.toLowerCase())
         );
         setFilteredStores(filtered || []);
       } else {
@@ -47,16 +52,19 @@ export default function TheStoreInput({
     setStoreSearchTimeout(timeout);
   }, [storeOrService, storeData]);
 
-  const handleLinkStoreClick = (storeName: string) => {
-    const searchQuery = new URLSearchParams();
-    searchQuery.append("storeOrService", storeName);
-    router.push(`/search?${searchQuery.toString()}`);
+  const handleCategorySelect = (category: string) => {
+    console.log('Selected category:', category); // Debugging
+    setStoreOrService(category); 
+    setPopoverOpen(false); 
   };
   return (
     <div className="flex flex-row items-center text-gray-600 w-full">
-      <Popover>
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger asChild>
-          <div className="flex flex-row items-center w-full">
+          <div
+            className="flex flex-row items-center w-full cursor-pointer"
+            onClick={() => setPopoverOpen(true)}
+          >
             <Search />
             <Input
               type="text"
@@ -67,18 +75,19 @@ export default function TheStoreInput({
             />
           </div>
         </PopoverTrigger>
-        {/* Display suggestions based on filtered stores by name */}
-        {filteredStores.length > 0 && (
+
+        {/* Display first 5 entries from categoriesData */}
+        {popoverOpen && categoriesData.length > 0 && (
           <PopoverContent className="w-96 relative top-3">
             <ul>
-              {filteredStores.map((store) => (
+              {categoriesData.slice(0, 5).map((category, index) => (
                 <li
-                  key={store._id}
-                  onClick={() => handleLinkStoreClick(store.name)} // Redirect to /search with store name
+                  key={index}
+                  onClick={() => handleCategorySelect(category)} // Fill the input with selected category
                   className="flex flex-row gap-2 items-center px-4 py-2 cursor-pointer lowercase font-medium hover:bg-gray-100 hover:rounded-xl"
                 >
                   <Search className="text-gray-400" size={15} />
-                  {store.name}
+                  {category}
                 </li>
               ))}
             </ul>

@@ -107,8 +107,17 @@ export type TotalReviewArray = {
   count: number;
 };
 
+export type Media = {
+  tiktok: string;
+  youtube: string;
+  instagram: string;
+  facebook: string;
+  x: string;
+};
+
 export type Store = {
   _id: string;
+  social_media: Media;
   name: string;
   handle: string;
   hasAccess: boolean;

@@ -111,4 +111,40 @@ export const contactFormFields = [
     label: "Email",
     placeholder: "Email",
   },
+  {
+    name: "phone_number",
+    type: "text",
+    label: "Telefonnummer",
+    placeholder: "123 456789",
+  },
+];
+
+
+export const mediaFormFields = [
+  {
+    name: "tiktok",
+    type: "text",
+    label: "Tiktok",
+  },
+  {
+    name: "youtube",
+    type: "text",
+    label: "Youtube",
+  },
+  {
+    name: "instagram",
+    type: "text",
+    label: "Instagram",
+  },
+  {
+    name: "facebook",
+    type: "text",
+    label: "Facebook",
+  },
+  {
+    name: "x",
+    type: "text",
+    label: "X",
+  },
+
 ];

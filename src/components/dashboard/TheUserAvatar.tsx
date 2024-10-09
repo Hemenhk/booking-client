@@ -34,7 +34,7 @@ export default function TheUserAvatar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="size-8 md:size-10">
+        <Avatar className="size-8 relative md:size-10">
           <AvatarImage src={session?.user.profileImage || ""} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -68,9 +68,9 @@ export default function TheUserAvatar() {
             </Link>
           </DropdownMenuItem>
         ) : null}
-<Separator />
+        <Separator />
         <DropdownMenuItem className="flex items-center gap-2 text-red-400 cursor-pointer hover:text-red-400">
-          <LogOut size={18}/>
+          <LogOut size={18} />
           <TheSignoutBtn />
         </DropdownMenuItem>
       </DropdownMenuContent>

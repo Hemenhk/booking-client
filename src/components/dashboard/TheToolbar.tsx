@@ -1,21 +1,10 @@
 import Link from "next/link";
 import { ReactElement } from "react";
-import { FaCalendar, FaHome, FaUser } from "react-icons/fa";
-import { IoCreate } from "react-icons/io5";
-import { HiCog6Tooth } from "react-icons/hi2";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {
-  Calendar,
-  Clock3,
-  Cog,
-  Factory,
-  Home,
-  SquarePen,
-  Store,
-  User,
-} from "lucide-react";
+import { Calendar, Clock3, Home, SquarePen, Store, User } from "lucide-react";
 import TheUserAvatar from "./TheUserAvatar";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 export interface LinkProps {
   href: string;
@@ -29,6 +18,16 @@ export default function TheToolbar() {
     storeHandle: string;
     userId: string;
   }>();
+
+  console.log("session", session);
+
+  const { storeData } = useAdminQuery(storeHandle);
+
+  const hasOpeningHours = storeData && storeData?.store?.opening_hours.length > 0;
+
+  const hasServices = storeData && storeData?.store?.admin.services.length > 0;
+
+  const hasCategories = storeData && storeData?.store?.categories?.length > 0;
 
   const adminLinks = [
     {
@@ -45,6 +44,7 @@ export default function TheToolbar() {
       href: `/dashboard/admin/${storeHandle}/${session?.user.id}/service`,
       name: "Tjänster",
       icon: <SquarePen className="size-5" />,
+      showRedIndicator: !hasServices,
     },
     {
       href: `/dashboard/admin/${storeHandle}/users`,
@@ -55,11 +55,13 @@ export default function TheToolbar() {
       href: `/dashboard/admin/${storeHandle}/opening-hours`,
       name: "Öppettider",
       icon: <Clock3 className="size-5" />,
+      showRedIndicator: !hasOpeningHours,
     },
     {
       href: `/dashboard/admin/${storeHandle}/store-info`,
       name: "Butik",
       icon: <Store className="size-5" />,
+      showRedIndicator: !hasCategories,
     },
   ];
 
@@ -129,8 +131,15 @@ export default function TheToolbar() {
                 href={link.href}
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                {link.icon}
-                <span className="hidden md:flex">{link.name}</span>
+                <div className="relative">
+                  {link.icon}
+
+                  {link.showRedIndicator && (
+                    <span className="absolute size-3 -top-1 -right-1 rounded-full bg-red-600" />
+                  )}
+                </div>
+
+                <span className="flex items-center">{link.name}</span>
               </Link>
             ))}
           </nav>

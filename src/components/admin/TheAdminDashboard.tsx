@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react"; // Import useState and useEffect
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useState } from "react"; // Import useState and useEffect
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { useParams } from "next/navigation";
 
 import {
   Select,
@@ -13,13 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import TheIncomeCard from "./components/TheIncomeCard";
 import TheBookingsCard from "./components/TheBookingsCard";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
+
 import TheDailyAppointments from "./components/TheDailyAppointments";
+import { TriangleAlert } from "lucide-react";
 
 export default function TheAdminDashboard({
   storeHandle,
@@ -45,6 +43,9 @@ export default function TheAdminDashboard({
     selectedMonth
   );
 
+  const hasPhonenumber = storeData && storeData?.store?.phone_number;
+
+
   // Fetch data for the previous month
   const { storeData: previousStoreData, isLoading: isPreviousLoading } =
     useAdminQuery(storeHandle, previousYear, previousMonth);
@@ -65,6 +66,16 @@ export default function TheAdminDashboard({
   }
   return (
     <div className="space-y-8 px-2 md:px-0">
+       {!hasPhonenumber && (
+        <Card className="overflow-hidden max-w-[600px] border-red-700">
+          <CardContent className="flex flex-row items-center gap-3 py-2">
+            <TriangleAlert size={18} className="text-red-700" />
+            <p className="flex flex-row items-center gap-5 text-sm">
+              Lägg till ett telefonnummer för att synas i sökmotorn
+            </p>
+          </CardContent>
+        </Card>
+      )}
       <h2 className="text-2xl justify-center font-semibold">Analyser</h2>
       <div className="flex flex-row justify-center md:justify-start gap-2 md:gap-4">
         <Select

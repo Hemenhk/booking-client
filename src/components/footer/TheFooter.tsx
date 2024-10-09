@@ -3,8 +3,16 @@ import React from "react";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
 const links = [
-  { name: "Instagram", icon: <FaInstagram size={25} /> },
-  { name: "Facebook", icon: <FaFacebookF size={22} /> },
+  {
+    name: "Instagram",
+    icon: <FaInstagram size={25} />,
+    href: "https://www.instagram.com/",
+  },
+  {
+    name: "Facebook",
+    icon: <FaFacebookF size={22} />,
+    href: "https://www.facebook.com/",
+  },
 ];
 
 const pages = [
@@ -42,7 +50,7 @@ export default function TheFooter() {
         </div>
         <ul className="flex flex-row items-center justify-end gap-3 size-10">
           {links.map((link) => (
-            <a href="/" target="_blank" key={link.name}>
+            <a href={link.href} target="_blank" key={link.name}>
               <div className="bg-neutral-300 text-neutral-900 flex justify-center items-center size-10 rounded-full relative group">
                 <div className="absolute inset-0  rounded-full border-2 border-transparent group-hover:border-neutral-300 group-hover:animate-ping-once"></div>
                 {link.icon}

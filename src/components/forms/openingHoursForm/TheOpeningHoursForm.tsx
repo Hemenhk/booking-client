@@ -178,6 +178,7 @@ export default function TheOpeningHoursForm() {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["store"], data);
+      queryClient.refetchQueries({queryKey: ["single-store"]});
     },
   });
 

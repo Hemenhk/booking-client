@@ -1,10 +1,11 @@
 import axios from "axios";
 
 export type Contact = {
-  title: string;
-  message: string;
+  title?: string;
+  message?: string;
   name: string;
   email: string;
+  phone_number?: string;
 };
 
 export type AllContact = {

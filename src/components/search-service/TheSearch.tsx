@@ -24,25 +24,58 @@ export default function TheSearch() {
 
   // Get the storeOrService or address query from the URL
   const storeOrServiceQuery = searchParams.get("storeOrService")?.toLowerCase();
-  const addressQuery = searchParams.get("city")?.toLowerCase();
+  let addressQuery = searchParams.get("city")?.toLowerCase();
+
+  console.log("storeOrServiceQuery");
+
+  // If no city is selected, use the default country "SE"
+  if (!addressQuery) {
+    addressQuery = "SE";
+  }
 
   useEffect(() => {
-    if (storeData && (storeOrServiceQuery || addressQuery)) {
-      let filtered = storeData.filter((store: Store) => store.hasAccess);
+    if (storeData) {
+      // Initial filtering based on access
+      let filtered = storeData.filter(
+        (store) =>
+          store.hasAccess &&
+          store.categories.length > 0 &&
+          store.admin.services.length > 0 &&
+          store.phone_number &&
+          store.opening_hours.length > 0 
+      );
 
-      if (storeOrServiceQuery) {
-        filtered = filtered.filter((store: Store) =>
-          store.name.toLowerCase().includes(storeOrServiceQuery)
-        );
+      // If no address is given, default to "SE"
+      if (!addressQuery) {
+        addressQuery = "SE";
       }
 
-      if (addressQuery) {
-        filtered = filtered.filter((store: Store) =>
+      // Address filtering
+      if (addressQuery === "SE") {
+        filtered = filtered.filter(
+          (store) => store.country?.toLowerCase() === "se"
+        );
+      } else {
+        filtered = filtered.filter((store) =>
           store.city?.toLowerCase().includes(addressQuery)
         );
       }
 
+      // Combined filtering for store/service and categories
+      if (storeOrServiceQuery) {
+        filtered = filtered.filter((store) => {
+          const nameMatch = store.name
+            .toLowerCase()
+            .includes(storeOrServiceQuery);
+          const categoryMatch = store.categories
+            .map((category) => category.toLowerCase())
+            .includes(storeOrServiceQuery);
+          return nameMatch || categoryMatch; // Use OR logic here
+        });
+      }
+
       setFilteredStores(filtered);
+      console.log("Filtered Stores:", filtered);
     }
   }, [storeData, storeOrServiceQuery, addressQuery]);
 
@@ -58,7 +91,7 @@ export default function TheSearch() {
     <main className="flex flex-col mx-auto md:px-16 xl:px-32 my-10">
       <TheTopRatedStores
         filteredStores={filteredStores}
-        addressQuery={addressQuery}
+        addressQuery={addressQuery === "SE" ? "Sverige" : addressQuery} // Display "Sverige" for SE
       />
       <TheFilteredStores filteredStores={filteredStores} />
     </main>

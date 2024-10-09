@@ -19,17 +19,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { Textarea } from "@/components/ui/textarea";
 import { Contact, createQuestion } from "@/axios/contact";
+import { usePathname } from "next/navigation";
 
 const formSchema = z.object({
-  title: z.string().min(1, "Ämnet får inte vara tomt"),
   email: z.string().min(1, "Mejladdressen får inte vara tomt"),
   name: z.string().min(1, "Namnet får inte vara tomt"),
-  message: z.string().min(1, "Meddelandet får inte vara tomt"),
+  phone_number: z.string().min(1, "Telefonnumret får inte vara tomt"),
 });
 
-export default function TheContactForm() {
+export default function ThePaymentCardContactForm() {
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
   const pathname = usePathname();
@@ -37,10 +36,9 @@ export default function TheContactForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      phone_number: "",
       email: "",
       name: "",
-      message: "",
     },
   });
 
@@ -72,30 +70,12 @@ export default function TheContactForm() {
       console.log("Error submitting feedback:", error);
     }
   };
-
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-[450px] space-y-4"
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ämne</FormLabel>
-              <FormControl>
-                <Input
-                  className="h-10 rounded-md"
-                  placeholder="Ange ämne"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         {/* Name field */}
         <FormField
           control={form.control}
@@ -149,30 +129,7 @@ export default function TheContactForm() {
             </FormItem>
           )}
         />
-        {/* Conditionally render the message field based on isPaymentCardsPage */}
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Meddelande</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Berätta vad vi kan hjälpa er med"
-                  className="resize-none rounded-md"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Submit button */}
-        <Button
-          type="submit"
-          className="w-full font-light text-base"
-          disabled={isPending}
-        >
+        <Button type="submit" className="font-light" disabled={isPending}>
           {isPending ? "Skickar..." : "Skicka fråga"}
         </Button>
       </form>

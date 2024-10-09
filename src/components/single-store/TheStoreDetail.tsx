@@ -104,12 +104,17 @@ export default function TheStoreDetail({
             </p>
           </div>
           <TheOpeningHours openingHours={storeData?.store.opening_hours} />
-          <TheSocialMedias />{" "}
+          {!storeData?.store?.social_media ||
+          Object.keys(storeData?.store?.social_media).length === 0 ? (
+            ""
+          ) : (
+            <TheSocialMedias social_media={storeData?.store.social_media} />
+          )}
         </div>
       </div>
       <div className="flex flex-col w-full md:hidden">
-          <TheReviews storeData={storeData.store} />
-        </div>
+        <TheReviews storeData={storeData.store} />
+      </div>
     </div>
   );
 }
