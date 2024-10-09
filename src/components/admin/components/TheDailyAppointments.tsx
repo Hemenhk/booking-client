@@ -15,7 +15,13 @@ export default function TheDailyAppointments() {
     isLoading,
   } = useQuery({
     queryKey: ["sub-appointments", session?.user.id],
-    queryFn: () => getBookedAppointmentsForSubuser(session?.user.id),
+
+    queryFn: () => {
+      if (session?.user.id) {
+        return getBookedAppointmentsForSubuser(session?.user.id);
+      }
+      return Promise.reject(new Error("User ID is undefined"));
+    },
   });
 
   // Get today's date and current time
@@ -113,7 +119,10 @@ export default function TheDailyAppointments() {
           ];
 
           return (
-            <Card key={appointment._id} className={`w-full flex flow-row max-w-[350px] p-2 ${appointment.service.bgColor}`}>
+            <Card
+              key={appointment._id}
+              className={`w-full flex flow-row max-w-[350px] p-2 ${appointment.service.bgColor}`}
+            >
               <div className="h-full w-0.5 bg-blue-600" />
               <CardContent className="p-2">
                 {appointmentDetails.map((detail, index) => (

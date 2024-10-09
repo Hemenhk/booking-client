@@ -1,6 +1,8 @@
 import axios, { Method } from "axios";
 import { getSession } from "next-auth/react";
 
+export const URL = "https://bookely-api-917a3e0193c9.herokuapp.com/"
+
 // Define a generic request function
 export const makeRequest = async<T = any, R = any> (
   method: Method,
