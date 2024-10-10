@@ -27,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useParams } from "next/navigation";
 import {
   DialogContent,
   DialogFooter,
@@ -44,7 +43,6 @@ const formSchema = z.object({
 
 export default function TheCreateServiceForm() {
   const queryClient = useQueryClient();
-  const { userId } = useParams<{ userId: string }>();
 
   const { data: session } = useSession();
   const { toast, dismiss } = useToast();
@@ -76,9 +74,10 @@ export default function TheCreateServiceForm() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const data: CreateServiceType = {
-        ...values,
-        duration: Number(values.duration),
-        price: Number(values.price),
+        name: values.name, // Make sure name is included
+        bgColor: values.bgColor, // Ensure bgColor is also mandatory
+        duration: Number(values.duration), // Convert duration to number
+        price: Number(values.price), // Convert price to number
       };
 
       console.log("data", data);

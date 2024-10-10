@@ -27,16 +27,37 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStore } from "@/axios/stores";
-import { Store } from "@/types/types";
+import { Categories, Store } from "@/types/types";
 import { MultiSelect } from "@/components/ui/multi-selector";
 
 const formSchema = z.object({
   categories: z
-    .array(z.string().min(1))
-    .min(1)
-    .nonempty("Please select at least one category."),
+    .array(
+      z.enum([
+        "frisör",
+        "barberare",
+        "massage",
+        "hudvård",
+        "nagelsalong",
+        "makeup & styling",
+        "fransar & bryn",
+        "spa & avkoppling",
+        "hårborttagning",
+        "sjukgymnastik",
+        "kiropraktor",
+        "akupunktur",
+        "zonterapi",
+        "tandblekning",
+        "personlig träning",
+        "kostrådgivning",
+        "manikyr & pedikyr",
+        "ansiktsbehandling",
+        "botox & fillers",
+        "alternativ medicin",
+      ])
+    )
+    .min(1, "Please select at least one category."),
 });
-
 export default function TheUpdateCategoriesForm() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -47,7 +68,7 @@ export default function TheUpdateCategoriesForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categories: storeData?.store?.categories || [],
+      categories: storeData?.store?.categories || [], // Ensure this is a Categories array
     },
   });
 
@@ -68,8 +89,12 @@ export default function TheUpdateCategoriesForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const updatedStoreData: Store = {
+        ...storeData.store, // Spread existing store data
+        categories: values.categories as Categories[], // Cast to Categories[]
+      };
+      const res = await mutateAsync(updatedStoreData);
       console.log("Submitted values:", values);
-      const res = await mutateAsync(values);
       toast({
         title: `Kategorier uppdaterades!`, // Updated toast message
       });

@@ -2,6 +2,7 @@
 
 import { getSingleStore } from "@/axios/stores";
 import TheUsersTable from "@/components/dashboard/usersTable/TheUsersTable";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
@@ -13,11 +14,19 @@ export default function StoreUserPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
   const router = useRouter();
 
-  const { subUsers } = useAdminQuery(storeHandle);
+  const { subUsers, isLoading, isError } = useAdminQuery(storeHandle);
 
   const handleRedirect = () => {
     router.push(`/dashboard/admin/${storeHandle}/create-user`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
+  }
 
   return (
     <Card className="mx-2 bg-transparent md:bg-white shadow-none md:shadow-sm border-none md:border md:mx-0 max-w-[800px]">

@@ -7,6 +7,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import TheCreateServiceForm from "@/components/forms/createServiceForm/TheCreateServiceForm";
 import { useQuery } from "@tanstack/react-query";
 import { getServicesForSubUser } from "@/axios/services";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 
 export default function AdminCreateServicePage() {
   const { data: session } = useSession();
@@ -25,22 +26,22 @@ export default function AdminCreateServicePage() {
     },
   });
 
-  console.log("services", serviceData)
+  console.log("services", serviceData);
 
   if (isLoading) {
-    return <div>Laddar data...</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
 
   if (isError) {
     return <div>Ett fel uppstod när vi hämtade tjänsterna.</div>;
   }
 
-  // if (!serviceData || serviceData.length === 0) {
-  //   return <div>Inga tjänster tillgängliga.</div>;
-  // }
-
   if (!session?.user.id) {
-    return <div>No user ID</div>
+    return <div>No user ID</div>;
   }
 
   return (
@@ -49,7 +50,7 @@ export default function AdminCreateServicePage() {
         <h3 className="text-lg font-medium">
           Alla tjänster:{" "}
           <span className="text-base font-normal pl-2">
-           {serviceData?.length}
+            {serviceData?.length}
           </span>
         </h3>
         <div>

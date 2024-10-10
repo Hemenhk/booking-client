@@ -54,6 +54,7 @@ export default function TheRegisterUserForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      name: "",
       password: "",
       confirmPassword: "",
     },
@@ -73,7 +74,13 @@ export default function TheRegisterUserForm() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { confirmPassword, ...userData } = values;
-      const res = await createUserMutation(userData);
+
+      const newUserData: CreateUser = {
+        email: userData.email, // Ensure email is present
+        name: userData.name, // Ensure name is present
+        password: userData.password, // Ensure password is present
+      };
+      await createUserMutation(newUserData);
 
       // Handle success (e.g., show a success toast, redirect, etc.)
       toast({

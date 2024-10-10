@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { updateAppointmentPrice } from "@/axios/bookAppointment";
 
 const formSchema = z.object({

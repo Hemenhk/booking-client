@@ -1,6 +1,7 @@
 "use client";
 
 import { getSubscriptionCustomer } from "@/axios/stores";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
@@ -96,9 +97,12 @@ export default function TheSubscriptionPortalPage() {
   };
 
   if (isLoading) {
-    return <div>Laddar abonnemanget</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
-
   if (!subscriptionData || isError) {
     return <div>No subscription data or an error occurred</div>;
   }

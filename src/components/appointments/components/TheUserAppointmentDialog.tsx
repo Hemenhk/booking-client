@@ -5,13 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AppointmentType } from "@/lib/types";
+import { Appointment } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CircleDollarSign, Clipboard, Clock, Phone, User } from "lucide-react";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 
 type Props = {
-  appointment: AppointmentType;
+  appointment: Appointment;
 };
 
 export default function TheUserAppointmentDialog({ appointment }: Props) {

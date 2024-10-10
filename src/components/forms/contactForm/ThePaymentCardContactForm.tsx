@@ -28,6 +28,12 @@ const formSchema = z.object({
   phone_number: z.string().min(1, "Telefonnumret får inte vara tomt"),
 });
 
+type CreateContact = {
+  email: string;
+  name: string;
+  phone_number: string;
+};
+
 export default function ThePaymentCardContactForm() {
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
@@ -43,7 +49,7 @@ export default function ThePaymentCardContactForm() {
   });
 
   const { mutateAsync, isError, isPending, isSuccess } = useMutation({
-    mutationFn: (data: Contact) => createQuestion(data),
+    mutationFn: (data: CreateContact) => createQuestion(data),
     onSuccess: (data) => {
       queryClient.setQueryData(["contact-form"], data);
       queryClient.refetchQueries({ queryKey: ["contact-form"] });
@@ -54,7 +60,12 @@ export default function ThePaymentCardContactForm() {
     try {
       console.log("Submitting contact data:", values);
 
-      const res = await mutateAsync(values);
+      const contactData: CreateContact = {
+        name: values.name,
+        email: values.email,
+        phone_number: values.phone_number,
+      };
+      const res = await mutateAsync(contactData);
 
       // Show toast notification on success
       toast({

@@ -15,12 +15,12 @@ import { sv } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
-import { AppointmentType } from "@/lib/types";
 import TheAppointments from "../TheAppointments";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { StoreData } from "@/axios/stores";
-import TheTimeLine from "./TheTimeLine";
+import { Appointment } from "@/types/types";
+
 
 type Props = {
   selectedUserId: string;
@@ -89,7 +89,7 @@ export default function TheSubUserAppointmentsMobile({
 
   // Filter appointments for the selected day
   const appointmentsForToday = bookedData?.filter(
-    (appointment: AppointmentType) => {
+    (appointment: Appointment) => {
       const appointmentDate = format(
         parse(appointment.date, "dd/MM/yyyy", new Date()),
         "yyyy-MM-dd"
@@ -165,7 +165,7 @@ export default function TheSubUserAppointmentsMobile({
         {hours.map((hour) => {
           // Filter appointments for the current hour
           const appointmentsForHour = appointmentsForToday?.filter(
-            (appointment: AppointmentType) => {
+            (appointment: Appointment) => {
               const appointmentStartTime = parse(
                 `${appointment.date} ${appointment.time}`,
                 "dd/MM/yyyy HH:mm",
@@ -199,7 +199,7 @@ export default function TheSubUserAppointmentsMobile({
                 className="border-t border-b border-gray-200 h-28"
               >
                 {appointmentsForHour && appointmentsForHour.length > 0 ? (
-                  appointmentsForHour.map((appointment: AppointmentType) => (
+                  appointmentsForHour.map((appointment: Appointment) => (
                     <div key={appointment._id} className="my-2">
                       <TheAppointments appointment={appointment} />
                     </div>

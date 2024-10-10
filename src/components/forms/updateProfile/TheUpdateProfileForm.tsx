@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { updateUser } from "@/axios/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const formSchema = z.object({
   profileImage: z.instanceof(File).optional(),
@@ -62,7 +62,7 @@ export default function TheUpdateProfileForm({ userId, profileImage }: Props) {
   };
 
   const { mutateAsync } = useMutation({
-    mutationFn: (data: Data) => updateUser(userId, data),
+    mutationFn: (data: FormData) => updateUser(userId, data), // Expect FormData instead of Data
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data);
       queryClient.refetchQueries({ queryKey: ["single-store"] });
@@ -72,9 +72,11 @@ export default function TheUpdateProfileForm({ userId, profileImage }: Props) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const formData = new FormData();
-      formData.append("profileImage", values.profileImage); // Append profile image to FormData
+      if (values.profileImage) {
+        formData.append("profileImage", values.profileImage); // Append profile image to FormData
+      }
 
-      await mutateAsync(formData); // Assuming mutateAsync handles the API call
+      await mutateAsync(formData); // Pass FormData directly
       toast({
         title: `Din profilbild uppdaterades`,
       });

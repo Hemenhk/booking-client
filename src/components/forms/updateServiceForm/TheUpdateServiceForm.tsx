@@ -17,8 +17,6 @@ import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
 import {
   CreateServiceType,
-  createService,
-  getServicesForSubUser,
   getSingleService,
   updateService,
 } from "@/axios/services";
@@ -69,11 +67,11 @@ export default function TheUpdateServiceForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    values: {
-      name: serviceData?.data?.name || "",
-      duration: serviceData?.data?.duration?.toString() || "",
-      price: serviceData?.data?.price?.toString() || "",
-      bgColor: serviceData?.data?.bgColor || "bg-lime-100",
+    defaultValues: {
+      name: serviceData?.name || "",
+      duration: serviceData?.duration?.toString() || "0",
+      price: serviceData?.price?.toString() || "0",
+      bgColor: serviceData?.bgColor || "bg-lime-100",
     },
   });
 
@@ -94,10 +92,11 @@ export default function TheUpdateServiceForm({
     try {
       const data: CreateServiceType = {
         ...values,
-        duration: Number(values.duration),
-        price: Number(values.price),
+        duration: Number(values.duration), // Ensure duration is a number
+        price: Number(values.price), // Ensure price is a number
+        name: values.name || "", // Ensure name is included
+        bgColor: values.bgColor || "bg-lime-100", // Ensure bgColor is included
       };
-
       console.log("data", data);
 
       const res = await updateServiceMutation(data);

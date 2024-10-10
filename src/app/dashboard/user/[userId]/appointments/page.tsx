@@ -1,6 +1,7 @@
 "use client";
 import { getAllUSerBookedAppointments } from "@/axios/standardUserAppointments";
 import TheAppointmentsTable from "@/components/dashboard/appointmentsTable/TheAppointmentsTable";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAppointments } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
@@ -28,8 +29,12 @@ export default function UserAppointmentPage() {
     return <div>Finns ingen data</div>
   }
 
-  if(isLoading){
-    return <div>Laddar bokningar</div>
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
 
   if (isError){

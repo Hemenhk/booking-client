@@ -1,6 +1,7 @@
 
 import TheSearch from "@/components/search-service/TheSearch";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export async function generateMetadata({
   searchParams,
@@ -30,8 +31,8 @@ export async function generateMetadata({
 
 export default function TheSearchPage() {
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <TheSearch />
-    </>
+    </Suspense>
   );
 }

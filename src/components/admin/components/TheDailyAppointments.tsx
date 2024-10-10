@@ -57,7 +57,7 @@ export default function TheDailyAppointments() {
       // Sort appointments by time (ascending order)
       const timeA = parse(a.time, "HH:mm", new Date());
       const timeB = parse(b.time, "HH:mm", new Date());
-      return timeA - timeB;
+      return timeA.getTime() - timeB.getTime();
     });
 
   // Get the next three appointments

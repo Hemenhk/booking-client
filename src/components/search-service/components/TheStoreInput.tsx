@@ -15,7 +15,7 @@ type Props = {
   storeData: Store[];
   storeOrService: string;
   setStoreOrService: Dispatch<SetStateAction<string>>;
-  categoriesData: Categories[];
+  categoriesData?: Categories[];
 };
 
 export default function TheStoreInput({

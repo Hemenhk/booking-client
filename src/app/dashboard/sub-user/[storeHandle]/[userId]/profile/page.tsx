@@ -2,6 +2,7 @@
 import ThePasswordCard from "@/components/dashboard/profile/ThePasswordCard";
 import ThePhoneCard from "@/components/dashboard/profile/ThePhoneCard";
 import TheProfileImageCard from "@/components/dashboard/profile/TheProfileImageCard";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useSession } from "next-auth/react";
@@ -17,7 +18,11 @@ export default function ProfilePage() {
   const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
 
   if (isLoading) {
-    return <div>Laddar data</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
 
   if (!storeData) {
@@ -39,7 +44,6 @@ export default function ProfilePage() {
       {/* Profile image card */}
       <TheProfileImageCard
         userId={userId}
-        // storeData={storeData.store}
       />
       {/* Password Card */}
       <ThePasswordCard userId={userId} />

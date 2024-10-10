@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { AppointmentType } from "@/lib/types";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
   Dialog,
   DialogContent,
@@ -14,22 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import {
-  Clock,
-  Phone,
-  Clipboard,
-  User,
-  CircleDollarSign,
-  Pen,
-} from "lucide-react";
+import { Clock, Phone, Clipboard, User, CircleDollarSign } from "lucide-react";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelBookedAppointment } from "@/axios/bookAppointment";
-import TheUpdateAppointmentPriceForm from "../forms/updateServiceForm/TheUpdateAppointmentPriceForm";
+import { Appointment } from "@/types/types";
 
 type AppointmentCardProps = {
-  appointment: AppointmentType;
+  appointment: Appointment;
 };
 
 export default function TheAppointments({ appointment }: AppointmentCardProps) {
@@ -68,7 +56,7 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
       id: 2,
       icon: <User className="text-blue-600" />,
       title: "Utövare",
-      content: appointment.createdBy.name,
+      content: appointment.service.createdBy.name,
     },
     {
       id: 3,

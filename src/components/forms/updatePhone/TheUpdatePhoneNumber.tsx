@@ -65,9 +65,12 @@ export default function TheUpdatePhoneNumber() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { phone_number } = values;
+      const updatedStoreData: Store = {
+        ...storeData.store, // Spread existing store data
+        phone_number: values.phone_number, // Update country
+      };
       console.log("values", values);
-      await mutateAsync({phone_number});
+      await mutateAsync(updatedStoreData);
       toast({
         title: `Butikens nummer ändrades!`,
       });

@@ -29,10 +29,16 @@ const formSchema = z.object({
   message: z.string().min(1, "Meddelandet får inte vara tomt"),
 });
 
+type CreateContact = {
+  title: string
+  email: string
+  name: string
+  message: string
+}
+
 export default function TheContactForm() {
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
-  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +51,7 @@ export default function TheContactForm() {
   });
 
   const { mutateAsync, isError, isPending, isSuccess } = useMutation({
-    mutationFn: (data: Contact) => createQuestion(data),
+    mutationFn: (data: CreateContact) => createQuestion(data),
     onSuccess: (data) => {
       queryClient.setQueryData(["contact-form"], data);
       queryClient.refetchQueries({ queryKey: ["contact-form"] });
@@ -56,7 +62,14 @@ export default function TheContactForm() {
     try {
       console.log("Submitting contact data:", values);
 
-      const res = await mutateAsync(values);
+      const contactData: CreateContact = {
+        name: values.name,
+        email: values.email,
+        message: values.message,
+        title: values.title
+      
+      };
+      const res = await mutateAsync(contactData);
 
       // Show toast notification on success
       toast({
@@ -132,7 +145,7 @@ export default function TheContactForm() {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="phone_number"
           render={({ field }) => (
@@ -148,7 +161,7 @@ export default function TheContactForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         {/* Conditionally render the message field based on isPaymentCardsPage */}
         <FormField
           control={form.control}

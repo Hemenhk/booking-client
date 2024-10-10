@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 
 type Props = {
   userId: string;
-  storeData: Store;
+  storeData?: Store;
 };
 
 export default function TheProfileImageCard({ userId, storeData }: Props) {

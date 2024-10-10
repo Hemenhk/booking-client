@@ -42,7 +42,7 @@ export default function TheReviews({ storeData }: Props) {
           sx={{
             fontSize: "4rem",
           }}
-          value={storeData.averageRating.toFixed(1)}
+          value={storeData.averageRating}
           readOnly
           style={{ color: "goldenrod" }}
         />

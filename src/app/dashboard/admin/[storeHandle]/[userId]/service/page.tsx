@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { getServicesForSubUser } from "@/axios/services";
 import { TriangleAlert } from "lucide-react";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 
 export default function AdminCreateServicePage() {
   const { data: session } = useSession();
@@ -29,9 +30,12 @@ export default function AdminCreateServicePage() {
 
 
   if (isLoading) {
-    return <div>Laddar data...</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
-
   if (isError) {
     return <div>Ett fel uppstod när vi hämtade tjänsterna.</div>;
   }

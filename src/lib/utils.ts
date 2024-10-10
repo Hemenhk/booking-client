@@ -11,7 +11,12 @@ export async function verifyPassword(password: string, hashedPassword: string) {
   return passwordIsValid;
 }
 
-export const signinFormFields = [
+export const signinFormFields: Array<{
+  name: "email" | "password";
+  label: string;
+  type: string;
+  placeholder?: string;
+}> = [
   {
     name: "email",
     type: "email",
@@ -25,7 +30,12 @@ export const signinFormFields = [
   },
 ];
 
-export const registerFormFields = [
+export const registerFormFields: Array<{
+  name: "name" | "email" | "password" | "confirmPassword";
+  label: string;
+  type: string;
+  placeholder?: string;
+}> = [
   {
     name: "email",
     type: "email",
@@ -50,7 +60,12 @@ export const registerFormFields = [
   },
 ];
 
-export const subUserFormFields = [
+export const subUserFormFields: Array<{
+  name: "name" | "email" | "password";
+  label: string;
+  type: string;
+  placeholder: string;
+}> = [
   {
     name: "name",
     type: "text",
@@ -71,7 +86,12 @@ export const subUserFormFields = [
   },
 ];
 
-export const serviceFormFields = [
+export const serviceFormFields: Array<{
+  name: "name" | "duration" | "price" | "bgColor";
+  label: string;
+  type: string;
+  placeholder: string;
+}> = [
   {
     name: "name",
     type: "text",
@@ -92,7 +112,12 @@ export const serviceFormFields = [
   },
 ];
 
-export const contactFormFields = [
+export const contactFormFields: Array<{
+  name: "title" | "name" | "email" | "phone_number";
+  label: string;
+  type: string;
+  placeholder: string;
+}> = [
   {
     name: "title",
     type: "text",
@@ -119,8 +144,11 @@ export const contactFormFields = [
   },
 ];
 
-
-export const mediaFormFields = [
+export const mediaFormFields: Array<{
+  name: "tiktok" | "youtube" | "instagram" | "facebook" | "x";
+  label: string;
+  type: string;
+}> = [
   {
     name: "tiktok",
     type: "text",
@@ -146,5 +174,4 @@ export const mediaFormFields = [
     type: "text",
     label: "X",
   },
-
 ];

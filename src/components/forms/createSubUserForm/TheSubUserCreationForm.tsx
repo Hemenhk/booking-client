@@ -63,10 +63,16 @@ export default function TheSubUserCreationForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const data: CreateSubUser = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
+
       toast({
         title: `Ett konto med namnet ${values.name} skapades`,
       });
-      await createSubUserMutation(values);
+      await createSubUserMutation(data);
       setTimeout(() => {
         dismiss();
       }, 2000);

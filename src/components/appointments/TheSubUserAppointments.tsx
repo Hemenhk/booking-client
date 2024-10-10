@@ -15,16 +15,17 @@ import { sv } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react"; // Import useState
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
-import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
 import { Button } from "../ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { StoreData } from "@/axios/stores";
 import TheTimeLine from "./components/TheTimeLine";
+import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
+import { Appointment } from "@/types/types";
 
 type Props = {
   selectedUserId: string;
-  storeData: StoreData;
+  storeData?: StoreData;
 };
 
 export default function TheSubUserAppointments({
@@ -51,9 +52,12 @@ export default function TheSubUserAppointments({
     queryKey: ["sub-appointments", selectedUserId, weekStart], // Add weekStart to query key
     queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
-
   if (isLoading) {
-    return <div>Laddar data...</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
   if (isError) {
     return <div>Ett fel uppstod när datan hämtades</div>;
@@ -86,7 +90,7 @@ export default function TheSubUserAppointments({
 
     return {
       date: formattedDate,
-      appointments: bookedData?.filter((appointment: AppointmentType) => {
+      appointments: bookedData?.filter((appointment: Appointment) => {
         const appointmentDate = format(
           parse(appointment.date, "dd/MM/yyyy", new Date()),
           "yyyy-MM-dd"
@@ -172,7 +176,7 @@ export default function TheSubUserAppointments({
             // Find appointments that either start or overlap with the current hour
             const appointments = appointmentsByDay[
               dayIndex
-            ].appointments?.filter((appointment: AppointmentType) => {
+            ].appointments?.filter((appointment: Appointment) => {
               const appointmentStartTime = parse(
                 `${appointment.date} ${appointment.time}`,
                 "dd/MM/yyyy HH:mm",
@@ -209,7 +213,7 @@ export default function TheSubUserAppointments({
                 className="flex-1 border-[0.4px] border-gray-300 relative"
               >
                 {/* Render multiple appointments if available */}
-                {appointments?.map((appointment: AppointmentType) => (
+                {appointments?.map((appointment: Appointment) => (
                   <div key={appointment._id} className="mb-1">
                     <TheAppointments appointment={appointment} />
                   </div>

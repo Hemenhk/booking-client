@@ -85,7 +85,12 @@ export default function TheUpdateAddressForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await mutateAsync(values);
+      const updatedStoreData: Store = {
+        ...storeData.store, // Spread existing store data
+        city: values.city,  // Update city
+        country: values.country, // Update country
+      };
+      const res = await mutateAsync(updatedStoreData);
       toast({
         title: `Butikens adress ändrades!`,
       });

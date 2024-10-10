@@ -1,24 +1,21 @@
 "use client";
-
-import { getSingleStoreDetail } from "@/axios/stores";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
+import { useSession } from "next-auth/react";
+
+import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
+import TheSubUserAppointmentsMobile from "@/components/appointments/components/TheSubUserAppointmentsMobile";
 
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import TheSubUserAppointments from "@/components/appointments/TheSubUserAppointments";
-import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { useSession } from "next-auth/react";
-import TheSubUserAppointmentsMobile from "@/components/appointments/components/TheSubUserAppointmentsMobile";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 
 export default function TheAdminAppointmentPage() {
   const { storeHandle } = useParams<{ storeHandle: string }>();
@@ -34,9 +31,12 @@ export default function TheAdminAppointmentPage() {
   console.log("selected value: ", selectedValue);
 
   if (isLoading) {
-    return <p>Laddar anställda</p>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
-
   if (isError) {
     return <p>Ett fel uppstod!</p>;
   }
@@ -72,7 +72,10 @@ export default function TheAdminAppointmentPage() {
         </Select>
       </div>
       {selectedValue ? (
-        <TheSubUserAppointmentsMobile selectedUserId={selectedValue} storeData={storeData}  />
+        <TheSubUserAppointmentsMobile
+          selectedUserId={selectedValue}
+          storeData={storeData}
+        />
       ) : (
         ""
       )}
@@ -80,8 +83,10 @@ export default function TheAdminAppointmentPage() {
       <Card className="hidden md:block">
         <CardContent>
           {selectedValue ? (
-              
-                <TheSubUserAppointments selectedUserId={selectedValue} storeData={storeData} />
+            <TheSubUserAppointments
+              selectedUserId={selectedValue}
+              storeData={storeData}
+            />
           ) : (
             <p>Välj en anställd för att se schemat.</p>
           )}

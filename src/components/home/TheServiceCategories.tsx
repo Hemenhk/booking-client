@@ -1,9 +1,9 @@
 "use client";
 
-import { services } from "@/lib/services";
+import { categories } from "@/lib/services";
 
 export default function TheServiceCategories() {
-  const featuredServices = services.slice(0, 7);
+  const featuredServices = categories.slice(0, 7);
   return (
     <div className="w-3/4 m-auto">
       <h2 className="text-3xl font-bold pb-5">

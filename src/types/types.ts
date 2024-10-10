@@ -8,11 +8,11 @@ export type User = {
 
 export type Service = {
   _id: string;
-  name: string;
-  duration: number;
-  price: number;
-  createdBy: User;
-  bgColor: string;
+  name?: string;
+  duration?: number;
+  price?: number;
+  createdBy?: User;
+  bgColor?: string;
 };
 
 export type Appointment = {
@@ -108,11 +108,11 @@ export type TotalReviewArray = {
 };
 
 export type Media = {
-  tiktok: string;
-  youtube: string;
-  instagram: string;
-  facebook: string;
-  x: string;
+  tiktok?: string;
+  youtube?: string;
+  instagram?: string;
+  facebook?: string;
+  x?: string;
 };
 
 export type Store = {

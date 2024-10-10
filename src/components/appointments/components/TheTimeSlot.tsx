@@ -1,5 +1,4 @@
 "use client";
-import { AppointmentType } from "@/lib/types";
 import TheAppointments from "../TheAppointments";
 import {
   addMinutes,
@@ -10,11 +9,12 @@ import {
   isBefore,
   parse,
 } from "date-fns";
+import { Appointment } from "@/types/types";
 
 type Props = {
   hour: number;
   daysOfWeek: Date[];
-  appointmentsByDay: { date: string; appointments: AppointmentType[] }[];
+  appointmentsByDay: { date: string; appointments: Appointment[] }[];
 };
 
 export default function TheTimeSlot({
@@ -34,7 +34,7 @@ export default function TheTimeSlot({
         const formattedDate = format(day, "yyyy-MM-dd");
 
         const appointments = appointmentsByDay[dayIndex]?.appointments?.filter(
-          (appointment: AppointmentType) => {
+          (appointment: Appointment) => {
             const appointmentStartTime = parse(
               `${appointment.date} ${appointment.time}`,
               "dd/MM/yyyy HH:mm",
@@ -68,7 +68,7 @@ export default function TheTimeSlot({
         return (
           <div key={dayIndex} className="flex-1 border-[0.4px] border-gray-300">
             {/* Render multiple appointments if available */}
-            {appointments?.map((appointment: AppointmentType) => (
+            {appointments?.map((appointment: Appointment) => (
               <div key={appointment._id} className="mb-1">
                 <TheAppointments appointment={appointment} />
               </div>

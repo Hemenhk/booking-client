@@ -21,6 +21,7 @@ export default function TheTopRatedStores({
   if (!addressQuery) {
     return <div>Ingen adress valdes</div>;
   }
+
   const topRatedStores = filteredStores
     .sort((a, b) => b.averageRating - a.averageRating) // Sort in descending order
     .slice(0, 4); // Get the top 4

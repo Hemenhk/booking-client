@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getAllStores } from "@/axios/stores";
 import { Store } from "@/types/types";
+import { MoonLoader } from "react-spinners";
 
 import TheTopRatedStores from "@/components/search-service/components/TheTopRatedStores";
 import TheFilteredStores from "@/components/search-service/components/TheFilteredStores";
@@ -42,7 +43,7 @@ export default function TheSearch() {
           store.categories.length > 0 &&
           store.admin.services.length > 0 &&
           store.phone_number &&
-          store.opening_hours.length > 0 
+          store.opening_hours.length > 0
       );
 
       // If no address is given, default to "SE"
@@ -80,7 +81,11 @@ export default function TheSearch() {
   }, [storeData, storeOrServiceQuery, addressQuery]);
 
   if (isLoading) {
-    return <p>Loading stores...</p>;
+    return (
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <MoonLoader size={30} />
+      </div>
+    );
   }
 
   if (isError) {

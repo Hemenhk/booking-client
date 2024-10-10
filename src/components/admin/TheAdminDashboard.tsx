@@ -18,6 +18,7 @@ import TheBookingsCard from "./components/TheBookingsCard";
 
 import TheDailyAppointments from "./components/TheDailyAppointments";
 import { TriangleAlert } from "lucide-react";
+import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
 
 export default function TheAdminDashboard({
   storeHandle,
@@ -45,15 +46,17 @@ export default function TheAdminDashboard({
 
   const hasPhonenumber = storeData && storeData?.store?.phone_number;
 
-
   // Fetch data for the previous month
   const { storeData: previousStoreData, isLoading: isPreviousLoading } =
     useAdminQuery(storeHandle, previousYear, previousMonth);
 
   if (isLoading || isPreviousLoading) {
-    return <div>Laddar butikens data...</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        <TheSkeletonCard />
+      </div>
+    );
   }
-
   if (isError) {
     return <div>Ett fel uppstod!</div>;
   }
@@ -66,7 +69,7 @@ export default function TheAdminDashboard({
   }
   return (
     <div className="space-y-8 px-2 md:px-0">
-       {!hasPhonenumber && (
+      {!hasPhonenumber && (
         <Card className="overflow-hidden max-w-[600px] border-red-700">
           <CardContent className="flex flex-row items-center gap-3 py-2">
             <TriangleAlert size={18} className="text-red-700" />
@@ -79,7 +82,7 @@ export default function TheAdminDashboard({
       <h2 className="text-2xl justify-center font-semibold">Analyser</h2>
       <div className="flex flex-row justify-center md:justify-start gap-2 md:gap-4">
         <Select
-          defaultValue={selectedYear}
+          defaultValue={selectedYear.toString()}
           onValueChange={(value) => setSelectedYear(Number(value))}
         >
           <SelectTrigger className="w-full md:w-[120px]">
@@ -89,7 +92,7 @@ export default function TheAdminDashboard({
             <SelectGroup>
               {Array.from({ length: 5 }, (_, i) => currentYear - i).map(
                 (year, idx) => (
-                  <SelectItem key={idx} value={year}>
+                  <SelectItem key={idx} value={year.toString()}>
                     {year}
                   </SelectItem>
                 )
@@ -98,7 +101,7 @@ export default function TheAdminDashboard({
           </SelectContent>
         </Select>
         <Select
-          defaultValue={selectedMonth}
+          defaultValue={selectedMonth.toString()}
           onValueChange={(value) => setSelectedMonth(Number(value))}
         >
           <SelectTrigger className="w-full md:w-[120px]">
@@ -120,7 +123,7 @@ export default function TheAdminDashboard({
                 "Nov",
                 "Dec",
               ].map((monthName, idx) => (
-                <SelectItem key={idx} value={idx + 1}>
+                <SelectItem key={idx} value={(idx + 1).toString()}>
                   {monthName}
                 </SelectItem>
               ))}

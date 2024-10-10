@@ -1,5 +1,4 @@
 import { makeRequest } from "@/utils/makeRequest";
-import axios from "axios";
 import { API_URL } from "./availableDate";
 
 export type Feedback = {

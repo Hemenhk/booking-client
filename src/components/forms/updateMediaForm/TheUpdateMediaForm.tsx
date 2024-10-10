@@ -30,11 +30,11 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { mediaFormFields } from "@/lib/utils";
 
 const formSchema = z.object({
-  tiktok: z.string(),
-  youtube: z.string(),
-  instagram: z.string(),
-  facebook: z.string(),
-  x: z.string(),
+  tiktok: z.string().optional(),
+  youtube: z.string().optional(),
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
+  x: z.string().optional(),
 });
 
 export default function TheUpdateMediaForm({
@@ -49,7 +49,7 @@ export default function TheUpdateMediaForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    values: {
+    defaultValues: {
       tiktok: storeData?.store?.social_media?.tiktok || "",
       youtube: storeData?.store?.social_media?.youtube || "",
       instagram: storeData?.store?.social_media?.instagram || "",
@@ -75,7 +75,12 @@ export default function TheUpdateMediaForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-        const payload = { social_media: values };
+      const payload: Store = {
+        ...storeData.store, // Include existing store data
+        social_media: {
+          ...values, // Spread the new social media values
+        },
+      };
 
         console.log("Payload being sent to API", payload);
   

@@ -71,7 +71,11 @@ export default function TheUpdatePasswordForm({ userId }: Props) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await mutateAsync(values);
+      const payload: PasswordsType = {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      };
+      await mutateAsync(payload);
       toast({
         title: `Lösenorden ändrades!`,
       });

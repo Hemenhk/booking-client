@@ -10,6 +10,7 @@ export interface LinkProps {
   href: string;
   name: string;
   icon?: ReactElement;
+  showRedIndicator?: boolean;
 }
 
 export default function TheToolbar() {
@@ -23,7 +24,8 @@ export default function TheToolbar() {
 
   const { storeData } = useAdminQuery(storeHandle);
 
-  const hasOpeningHours = storeData && storeData?.store?.opening_hours.length > 0;
+  const hasOpeningHours =
+    storeData && storeData?.store?.opening_hours.length > 0;
 
   const hasServices = storeData && storeData?.store?.admin.services.length > 0;
 
@@ -70,16 +72,19 @@ export default function TheToolbar() {
       href: `/dashboard/sub-user/${storeHandle}/${userId}`,
       name: "Hem",
       icon: <Home className="size-5" />,
+      showRedIndicator: false,
     },
     {
       href: `/dashboard/sub-user/${storeHandle}/${userId}/appointments`,
       name: "Schema",
       icon: <Calendar className="size-5" />,
+      showRedIndicator: false,
     },
     {
       href: `/dashboard/sub-user/${storeHandle}/${userId}/service`,
       name: "Tjänster",
       icon: <SquarePen className="size-5" />,
+      showRedIndicator: false,
     },
   ];
 
@@ -88,11 +93,13 @@ export default function TheToolbar() {
       href: `/dashboard/user/${userId}`,
       name: "Hem",
       icon: <Home className="size-5" />,
+      showRedIndicator: false,
     },
     {
       href: `/dashboard/user/${userId}/appointments`,
       name: "Mina Bokningar",
       icon: <Calendar className="size-5" />,
+      showRedIndicator: false,
     },
   ];
 

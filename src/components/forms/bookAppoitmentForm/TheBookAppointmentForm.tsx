@@ -9,11 +9,11 @@ import { Form } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 
 import { useToast } from "@/components/ui/use-toast";
-import { bookAppointment } from "@/axios/bookAppointment";
+import { bookAppointment, CreateAppointment } from "@/axios/bookAppointment";
 import { AppointmentType } from "@/lib/types";
 import TheDatePicker from "./TheDatePicker";
 import ThePersonalInformation from "./ThePersonalInformation";
-import { Service } from "@/types/types";
+import { Appointment, Service } from "@/types/types";
 import {
   Card,
   CardHeader,
@@ -37,7 +37,6 @@ type DatePickerProps = {
       service: string;
       date: string;
       time: string;
-      status: "active" | "cancelled";
     },
     any,
     undefined
@@ -49,10 +48,9 @@ const formSchema = z.object({
   last_name: z.string().min(1).max(50),
   email: z.string().min(1).email(),
   phone_number: z.string().min(1),
-  service: z.string().min(1).max(50),
+  service: z.string().min(1).max(100),
   date: z.string(),
   time: z.string(),
-  status: z.string(),
 });
 
 type Props = {
@@ -62,25 +60,13 @@ type Props = {
 
 export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
   const queryClient = useQueryClient();
-  const [service, setService] = useState<Service | null>(null);
   const { toast, dismiss } = useToast();
   const [step, setStep] = useState(1);
 
+  const savedService = localStorage.getItem("service");
 
-  useEffect(() => {
-    const serviceString = localStorage.getItem("service");
-    
-    if (serviceString) {
-      try {
-        const serviceObject: Service = JSON.parse(serviceString);
-        setService(serviceObject);
-      } catch (error) {
-        console.error("Failed to parse service from localStorage", error);
-      }
-    }
-  }, []);
  
-
+  const service: Service = JSON.parse(savedService);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,13 +77,12 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
       phone_number: "",
       service: service?._id,
       time: "",
-      status: "active",
     },
   });
 
   const { mutateAsync: bookAppointmentMutation } = useMutation({
     mutationKey: ["booked-appointment"],
-    mutationFn: (data: AppointmentType) =>
+    mutationFn: (data: CreateAppointment) =>
       bookAppointment(userId, storeHandle, data),
     onSuccess: (data) => {
       queryClient.setQueryData(["booked-appointment"], data);
@@ -111,13 +96,26 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (!service) {
+        throw new Error("Service is not defined");
+      }
+
+      const appointmentData: CreateAppointment = {
+        name: values.name,
+        last_name: values.last_name,
+        email: values.email,
+        phone_number: values.phone_number,
+        service: service._id, // Use the complete service object here
+        time: values.time,
+        date: values.date,
+      };
+
       toast({
         title: `Your appointment was booked for ${values.time} on ${values.date}`,
       });
-      await bookAppointmentMutation(values);
-      setStep(3);
 
-      // console.log(values);
+      await bookAppointmentMutation(appointmentData);
+      setStep(3);
     } catch (error) {
       console.log(error);
     }

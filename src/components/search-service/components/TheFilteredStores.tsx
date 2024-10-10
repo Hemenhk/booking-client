@@ -4,7 +4,6 @@ import { Store } from "@/types/types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Rating } from "@mui/material";
-import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import TheFilteredStoresMobile from "./TheFilteredStoresMobile";
@@ -71,7 +70,7 @@ export default function TheFilteredStores({ filteredStores }: Props) {
                               <Rating
                                 name="read-only"
                                 max={1}
-                                value={store.averageRating.toFixed(1)}
+                                value={store.averageRating}
                                 readOnly
                                 style={{ color: "goldenrod" }}
                               />

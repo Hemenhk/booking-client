@@ -10,10 +10,9 @@ import TheReviews from "./components/TheReviews";
 import TheAboutStore from "./components/TheAboutStore";
 import TheStoreStaff from "./components/TheStoreStaff";
 import TheSocialMedias from "./components/TheSocialMedias";
-// import TheStoreDetailMap from "../maps/TheStoreDetailMap";
-import Image from "next/image";
 import TheCollageImages from "./components/TheCollageImages";
 import dynamic from "next/dynamic";
+import { MoonLoader } from "react-spinners";
 const TheStoreDetailMap = dynamic(() => import("../maps/TheStoreDetailMap"), {
   ssr: false, // Disable server-side rendering
 });
@@ -30,7 +29,11 @@ export default function TheStoreDetail({
   }
 
   if (isLoading) {
-    return <div>Laddar data</div>;
+    return (
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <MoonLoader size={30} />
+      </div>
+    );
   }
 
   if (!storeData) {

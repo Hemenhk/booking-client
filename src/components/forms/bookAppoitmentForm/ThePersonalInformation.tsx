@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -23,23 +22,23 @@ import { Dispatch, SetStateAction } from "react";
 type PersonalInfoProps = {
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
-  form: UseFormReturn<
-    {
-      name: string;
-      last_name: string;
-      email: string;
-      phone_number: string;
-      service: string;
-      date: string;
-      time: string;
-      status: string;
-    },
-    any,
-    undefined
-  >;
+  form: UseFormReturn<{
+    name?: string;
+    last_name?: string;
+    email?: string;
+    phone_number?: string;
+    service?: string;
+    date?: string;
+    time?: string;
+}, any, undefined>
 };
 
-const formFields = [
+const formFields: Array<{
+  name: "name" | "last_name" | "email" | "phone_number";
+  label: string;
+  type: string;
+  placeholder: string;
+}> = [
   { name: "name", type: "text", label: "Name", placeholder: "Name" },
   {
     name: "last_name",
@@ -92,7 +91,6 @@ export default function ThePersonalInformation({
         <Button
           type="submit"
           className="font-normal w-full md:w-32"
-          onClick={() => setStep((prevstep) => prevstep + 1)}
         >
           Boka
         </Button>

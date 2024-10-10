@@ -1,18 +1,29 @@
-import { AppointmentType } from "@/lib/types";
-import { Appointments } from "@/types/types";
+
+import { Appointment, Appointments } from "@/types/types";
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { addDays, format, startOfWeek } from "date-fns";
 import { API_URL } from "./availableDate";
+import { AppointmentType } from "@/lib/types";
+
+export type CreateAppointment = {
+  name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  service: string;
+  time: string;
+  date: string
+};
 
 export const bookAppointment = async (
   userId: string,
   storeHandle: string,
-  data: AppointmentType
+  data: CreateAppointment
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api//appointments/sub-users/${userId}/appointments/${storeHandle}`,
+      `${API_URL}/api/appointments/sub-users/${userId}/appointments/${storeHandle}`,
       data
     );
     console.log("booked appointment", response);
@@ -22,9 +33,10 @@ export const bookAppointment = async (
   }
 };
 
+
 export const getAllBookedAppointments = async () => {
   try {
-    const response = await axios.get<AppointmentType[]>(
+    const response = await axios.get<Appointment[]>(
       `${API_URL}/api/appointments`
     );
     return response.data;

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -178,13 +178,12 @@ export default function TheOpeningHoursForm() {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["store"], data);
-      queryClient.refetchQueries({queryKey: ["single-store"]});
+      queryClient.refetchQueries({ queryKey: ["single-store"] });
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Map the values to the expected format for each day
       const formattedValues: OpeningHours = {
         monday: {
           open: values.monday.open || "",
@@ -223,10 +222,7 @@ export default function TheOpeningHoursForm() {
         },
       };
 
-      // Log the formatted values to verify
       console.log("formatted values:", formattedValues);
-
-      // Update the opening hours
       const res = await updateOpeningHoursMutation(formattedValues);
       console.log("Updated Opening Hours: ", res);
     } catch (error) {
@@ -234,11 +230,6 @@ export default function TheOpeningHoursForm() {
     }
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  // Array of days for rendering
   const daysOfWeek = [
     "monday",
     "tuesday",
@@ -249,6 +240,16 @@ export default function TheOpeningHoursForm() {
     "sunday",
   ];
 
+  // Call `useWatch` for each day outside of the map
+  const watchedFields = useWatch({
+    control: form.control,
+    name: daysOfWeek.map((day) => `${day}.closed`) as any,
+  });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Form {...form}>
       <Card className="overflow-hidden max-w-[700px] mx-2 md:mx-0">
@@ -257,125 +258,128 @@ export default function TheOpeningHoursForm() {
         </CardHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <CardContent>
-            {daysOfWeek.map((day) => (
-              <div key={day} className="flex flex-col gap-3 pb-6">
-                <h3 className="capitalize font-medium">{day}</h3>
-                <div className="flex flex-row gap-4">
-                  {!form.watch(`${day}.closed`) && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name={`${day}.open`}
-                        render={({ field }) => (
-                          <FormItem className="w-1/3">
-                            <FormControl>
-                              <Select
-                                key={field.value}
-                                value={field.value}
-                                defaultValue={field.value}
-                                onValueChange={field.onChange}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Öppnar" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {timeSlots.map((time) => (
-                                    <SelectItem key={time} value={time}>
-                                      {time}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`${day}.close`}
-                        render={({ field }) => (
-                          <FormItem className="w-1/3">
-                            <FormControl>
-                              <Select
-                                key={field.value}
-                                value={field.value}
-                                defaultValue={field.value}
-                                onValueChange={field.onChange}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Stänger" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {timeSlots.map((time) => (
-                                    <SelectItem key={time} value={time}>
-                                      {time}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </>
-                  )}
-                  {form.watch(`${day}.closed`) && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name={`${day}.open`}
-                        render={() => (
-                          <FormItem className="w-1/3">
-                            <FormControl>
-                              <Select disabled value="">
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Stängt" />
-                                </SelectTrigger>
-                              </Select>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`${day}.close`}
-                        render={() => (
-                          <FormItem className="w-1/3">
-                            <FormControl>
-                              <Select disabled value="">
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Stängt" />
-                                </SelectTrigger>
-                              </Select>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </>
-                  )}
+            {daysOfWeek.map((day, index) => {
+              const isClosed = watchedFields[index];
 
-                  <FormField
-                    control={form.control}
-                    name={`${day}.closed`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked)
-                            }
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">Stängd</FormLabel>
-                      </FormItem>
+              return (
+                <div key={day} className="flex flex-col gap-3 pb-6">
+                  <h3 className="capitalize font-medium">{day}</h3>
+                  <div className="flex flex-row gap-4">
+                    {!isClosed && (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name={`${day}.open` as any}
+                          render={({ field }) => (
+                            <FormItem className="w-1/3">
+                              <FormControl>
+                                <Select
+                                  key={field.value}
+                                  value={field.value}
+                                  defaultValue={field.value}
+                                  onValueChange={field.onChange}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Öppnar" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {timeSlots.map((time) => (
+                                      <SelectItem key={time} value={time}>
+                                        {time}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`${day}.close` as any}
+                          render={({ field }) => (
+                            <FormItem className="w-1/3">
+                              <FormControl>
+                                <Select
+                                  key={field.value}
+                                  value={field.value}
+                                  defaultValue={field.value}
+                                  onValueChange={field.onChange}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Stänger" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {timeSlots.map((time) => (
+                                      <SelectItem key={time} value={time}>
+                                        {time}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
                     )}
-                  />
+                    {isClosed && (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name={`${day}.open` as any}
+                          render={() => (
+                            <FormItem className="w-1/3">
+                              <FormControl>
+                                <Select disabled value="">
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Stängt" />
+                                  </SelectTrigger>
+                                </Select>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`${day}.close` as any}
+                          render={() => (
+                            <FormItem className="w-1/3">
+                              <FormControl>
+                                <Select disabled value="">
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Stängt" />
+                                  </SelectTrigger>
+                                </Select>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </>
+                    )}
+                    <FormField
+                      control={form.control}
+                      name={`${day}.closed` as any}
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={(checked) =>
+                                field.onChange(checked)
+                              }
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">Stängd</FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">

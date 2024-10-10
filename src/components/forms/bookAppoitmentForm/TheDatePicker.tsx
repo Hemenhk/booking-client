@@ -27,20 +27,15 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
-  form: UseFormReturn<
-    {
-      name: string;
-      last_name: string;
-      email: string;
-      phone_number: string;
-      service: string;
-      date: string;
-      time: string;
-      status: string;
-    },
-    any,
-    undefined
-  >;
+  form: UseFormReturn<{
+    name?: string;
+    last_name?: string;
+    email?: string;
+    phone_number?: string;
+    service?: string;
+    date?: string;
+    time?: string;
+}, any, undefined>
 };
 
 export default function TheDatePicker({ form, setStep }: DatePickerProps) {

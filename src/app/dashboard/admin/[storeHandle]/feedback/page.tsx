@@ -73,11 +73,11 @@ export default function TheFeedbackPage() {
     try {
       // Add storeId and adminId to the request body manually
       const data: Feedback = {
-        ...values,
         store: session?.user.store._id, // add storeId from the router params
         adminId: session?.user.id || "", // add adminId from session
+        title: values.title, // explicitly add title
+        message: values.message, // explicitly add message
       };
-
       // Log data for debugging
       console.log("Submitting feedback data:", data);
 

@@ -14,6 +14,7 @@ import TheUpdateCategoriesForm from "@/components/forms/updateCategories/TheUpda
 import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import TheUpdateMediaForm from "@/components/forms/updateMediaForm/TheUpdateMediaForm";
+import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 
 export default function TheStoreAddressPage() {
   const { data: session } = useSession();
@@ -31,7 +32,16 @@ export default function TheStoreAddressPage() {
   console.log("stoer info", storeData?.store.categories);
 
   if (isLoading) {
-    return <div>Laddar data</div>;
+    return (
+      <div className="h-[80vh] w-full p-4 pt-10">
+        {/* Render multiple skeleton cards as a placeholder while loading */}
+        <div className="grid md:grid-cols-1 md:gap-12">
+          {[...Array(4)].map((_, index) => (
+            <TheSkeletonCard key={index} /> // Render 4 skeleton cards as a placeholder
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (!session?.user.store._id) {

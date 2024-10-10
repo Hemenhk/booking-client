@@ -48,7 +48,7 @@ export default function TheFilteredStoresMobile( {filteredStores} : Props) {
                     <Rating
                       name="read-only"
                       max={1}
-                      value={store?.averageRating.toFixed(1)}
+                      value={store?.averageRating}
                       readOnly
                       style={{ color: "goldenrod" }}
                     />
