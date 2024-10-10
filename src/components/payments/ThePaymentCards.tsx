@@ -57,7 +57,7 @@ export const plans = [
 
 const benefits = [
   { icon: <Check />, text: "Tillgång till alla våra tjänster" },
-  { icon: <Check />, text: "En extra användare utan extra kostnad" },
+  { icon: <Check size={33}/>, text: "1st extra användare utan extra kostnad till värde av 199kr/månaden" },
   { icon: <Check />, text: "Upp till 5 användare" },
   { icon: <Check />, text: "Ingen bokningsavgift" },
   { icon: <Check />, text: "Ingen startavgift" },
@@ -78,7 +78,7 @@ export default function ThePaymentCards() {
       {plans.map((plan) => (
         <Card
           key={plan.priceId}
-          className={`w-[380px] h-[625x] rounded-3xl shadow-lg overflow-hidden relative ${
+          className={`w-[400px] h-[625x] rounded-3xl shadow-lg overflow-hidden relative ${
             plan.title === "Årsvis"
               ? "bg-gradient-to-br from-purple-600 via-pink-500 to-purple-600"
               : "bg-white"

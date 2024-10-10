@@ -13,13 +13,15 @@ import TheSignoutBtn from "./TheSignoutBtn";
 import { useSession } from "next-auth/react";
 import { LogOut, Megaphone, ReceiptText, User } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 export default function TheUserAvatar() {
   const { data: session, status } = useSession();
 
+  const { storeData, isLoading, isError } = useAdminQuery(session?.user.store.handle);
+
   const isAdmin = session?.user.role === "store_admin";
   const isSubUser = session?.user.role === "sub_user";
-  const isUser = session?.user.role === "user";
 
   const profileLink = () => {
     if (isAdmin && session?.user.store) {
@@ -35,7 +37,7 @@ export default function TheUserAvatar() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="size-8 relative md:size-10">
-          <AvatarImage src={session?.user.profileImage || ""} />
+          <AvatarImage src={storeData?.store.admin.profileImage || ""} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

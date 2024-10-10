@@ -26,6 +26,7 @@ export default function TheStoreCards({ data }: Props) {
         const remainingLetters = store.name.slice(1);
         return (
           <Card
+          key={store._id}
             className="border-none shadow-md cursor-pointer"
             onClick={() => handleRedirect(store.handle)}
           >

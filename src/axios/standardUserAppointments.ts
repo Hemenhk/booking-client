@@ -1,7 +1,8 @@
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
+import { API_URL } from "./availableDate";
 
 export const getAllUSerBookedAppointments = async (email: string) => {
-  const url = `http://localhost:8001/api/appointments/user/${email}`;
+  const url = `${API_URL}/api/appointments/user/${email}`;
   return makeRequest("GET", url);
 };

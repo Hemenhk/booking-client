@@ -8,10 +8,10 @@ import { useSession } from "next-auth/react";
 
 type Props = {
   userId: string;
-  // storeData: Store;
+  storeData: Store;
 };
 
-export default function TheProfileImageCard({ userId }: Props) {
+export default function TheProfileImageCard({ userId, storeData }: Props) {
   const { data: session } = useSession();
 
   if (!session?.user) {
@@ -28,14 +28,17 @@ export default function TheProfileImageCard({ userId }: Props) {
               <Pencil size={15} />
             </span>
           </DialogTrigger>
-          <TheUpdateProfileForm userId={userId} />
+          <TheUpdateProfileForm
+            userId={userId}
+            profileImage={session.user.profileImage}
+          />
         </Dialog>
       </CardHeader>
       <CardContent>
         <div className="p-3 border rounded-lg w-40 flex justify-center ">
           <div className="relative overflow-hidden size-32 rounded-lg">
             <Image
-              src={session.user.profileImage || ""}
+              src={storeData.admin.profileImage || ""}
               alt="profile image"
               layout="fill"
               objectFit="cover"

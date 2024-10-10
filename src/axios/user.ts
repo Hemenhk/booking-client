@@ -1,6 +1,7 @@
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { getSession } from "next-auth/react";
+import { API_URL } from "./availableDate";
 
 export type PasswordsType = {
   oldPassword: string;
@@ -20,7 +21,8 @@ export const updateUser = async (userId: string, data: any) => {
       throw new Error("User is not authenticated");
     }
     const res = await axios.patch(
-      `http://localhost:8001/api/auth/${userId}/profile`,
+      `${API_URL}/api/auth/${userId}/profile`,
+
       data,
       {
         headers: {
@@ -41,7 +43,7 @@ export const updateStandardUserPassword = async (
   userId: string,
   data: PasswordsType
 ) => {
-  const url = `http://localhost:8001/api/auth/${userId}/standard-user/profile/change-password`;
+  const url = `${API_URL}/api/auth/${userId}/standard-user/profile/change-password`;
   return makeRequest("PATCH", url, data);
 };
 
@@ -49,14 +51,14 @@ export const updateUserPassword = async (
   userId: string,
   data: PasswordsType
 ) => {
-  const url = `http://localhost:8001/api/auth/${userId}/profile/change-password`;
+  const url = `${API_URL}/api/auth/${userId}/profile/change-password`;
   return makeRequest("PATCH", url, data);
 };
 
 export const createUser = async (data: CreateUser) => {
   try {
     const res = await axios.post(
-      "http://localhost:8001/api/auth/register",
+      `${API_URL}/api/auth/register`,
       data
     );
     return res.data;

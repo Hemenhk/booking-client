@@ -27,7 +27,6 @@ import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelBookedAppointment } from "@/axios/bookAppointment";
 import TheUpdateAppointmentPriceForm from "../forms/updateServiceForm/TheUpdateAppointmentPriceForm";
-import { useEffect, useState } from "react";
 
 type AppointmentCardProps = {
   appointment: AppointmentType;
@@ -81,7 +80,7 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
       id: 4,
       icon: <CircleDollarSign className="text-blue-600" />,
       title: "Pris",
-      content: appointment.service.price,
+      content: `${appointment.service.price} kr`,
     },
   ];
 
@@ -90,22 +89,7 @@ export default function TheAppointments({ appointment }: AppointmentCardProps) {
       {con.icon}
       <div className="flex flex-col">
         <h3 className="text-gray-500 text-xs">{con.title}</h3>
-        {con.id !== 4 ? (
-          <p className="text-sm">{con.content}</p>
-        ) : (
-          <Dialog>
-            <DialogTrigger asChild>
-              <div className="flex flex-row gap-2 items-center">
-                <p>{con.content}kr</p>
-                <Pen size={13} className="cursor-pointer" />
-              </div>
-            </DialogTrigger>
-            <TheUpdateAppointmentPriceForm
-              appointmentId={appointment._id}
-              appointmentPrice={appointment.service.price}
-            />
-          </Dialog>
-        )}
+        <p className="text-sm">{con.content}</p>
       </div>
     </div>
   ));

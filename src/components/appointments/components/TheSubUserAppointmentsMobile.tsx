@@ -5,11 +5,13 @@ import {
   addMinutes,
   isAfter,
   isBefore,
+  getWeek,
   getHours,
   getMinutes,
   addDays,
   startOfWeek,
 } from "date-fns";
+import { sv } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
@@ -17,19 +19,24 @@ import { AppointmentType } from "@/lib/types";
 import TheAppointments from "../TheAppointments";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { StoreData } from "@/axios/stores";
+import TheTimeLine from "./TheTimeLine";
 
 type Props = {
   selectedUserId: string;
+  storeData: StoreData;
 };
 
 export default function TheSubUserAppointmentsMobile({
   selectedUserId,
+  storeData,
 }: Props) {
   const [weekStart, setWeekStart] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
   ); // Start with the current week
   // State to manage the current date
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const currentWeek = getWeek(weekStart, { locale: sv });
 
   // Calculate the start of the current week
   // const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday is the start of the week
@@ -39,8 +46,26 @@ export default function TheSubUserAppointmentsMobile({
     addDays(weekStart, index)
   );
 
+  const openingHours = storeData?.store?.opening_hours[0];
+
+  const openingTimes = Object.values(openingHours)
+    .filter((day) => !day.closed)
+    .map((day) => parse(day.open, "HH:mm", new Date()));
+
+  const closingTimes = Object.values(openingHours)
+    .filter((day) => !day.closed)
+    .map((day) => parse(day.close, "HH:mm", new Date()));
+
+  const earliestOpen = Math.min(...openingTimes.map((time) => getHours(time)));
+  const latestClose = Math.max(...closingTimes.map((time) => getHours(time)));
+
+  // Generate consistent hours for the week (from earliest open to latest close)
+  const hours = Array.from({ length: latestClose - earliestOpen }).map(
+    (_, index) => earliestOpen + index
+  );
+
   // Hours range (9 AM to 6 PM)
-  const hours = Array.from({ length: 10 }).map((_, index) => index + 9);
+  // const hours = Array.from({ length: 10 }).map((_, index) => index + 9);
 
   const {
     data: bookedData,
@@ -94,8 +119,10 @@ export default function TheSubUserAppointmentsMobile({
           <ArrowLeft size={15} />
         </Button>
 
-        <h1 className="text-xl font-medium">
-          {`${format(weekStart, "MMMM yyyy")}`}
+        <h1 className="text-xl font-medium capitalize">
+          {`Vecka ${currentWeek}, ${format(weekStart, "MMMM yyyy", {
+            locale: sv,
+          })}`}
         </h1>
 
         {/* Button to go to the next week */}
@@ -115,12 +142,12 @@ export default function TheSubUserAppointmentsMobile({
             className={`px-1.5 py-2 flex flex-col items-center gap-1.5 font-medium `}
           >
             <span className="text-gray-400 font-light uppercase text-xs">
-              {format(day, "EEE")}
+              {format(day, "EEE", { locale: sv })}
             </span>{" "}
             {/* Example: Mon */}
             <span
               className={`text-gray-700 ${
-                format(day, "yyyy-MM-dd") === formattedToday
+                format(day, "yyyy-MM-dd", { locale: sv }) === formattedToday
                   ? "size-8 flex justify-center items-center bg-black text-white rounded-full"
                   : "flex justify-center items-center size-8"
               }`}

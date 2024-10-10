@@ -55,10 +55,6 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
 
   const savedService = localStorage.getItem("service");
 
-  if (!savedService) {
-    return <p>No service saved in local storage.</p>;
-  }
-
   const service: Service = JSON.parse(savedService);
 
   // Fetch available dates data and pass service duration

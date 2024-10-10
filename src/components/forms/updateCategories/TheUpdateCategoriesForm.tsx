@@ -84,7 +84,7 @@ export default function TheUpdateCategoriesForm() {
 
   return (
     <Form {...form}>
-      <DialogContent className="overflow-hidden max-w-[600px]">
+      <DialogContent className="max-w-[600px]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <DialogHeader>
             <h2 className="text-2xl font-semibold tracking-tight">

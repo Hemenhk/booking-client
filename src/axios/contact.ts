@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "./availableDate";
 
 export type Contact = {
   title?: string;
@@ -15,7 +16,7 @@ export type AllContact = {
 export const getAllQuestions = async () => {
   try {
     const res = await axios.get<AllContact>(
-      "http://localhost:8001/api/contact"
+      `${API_URL}/api/contact`
     );
     return res.data.data;
   } catch (error) {
@@ -25,7 +26,7 @@ export const getAllQuestions = async () => {
 
 export const createQuestion = async (data: Contact) => {
   try {
-    const res = await axios.post("http://localhost:8001/api/contact", data);
+    const res = await axios.post(`${API_URL}/api/contact`, data);
     return res.data;
   } catch (error) {
     console.log(error);

@@ -8,6 +8,7 @@ import {
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
 import { getSession } from "next-auth/react";
+import { API_URL } from "./availableDate";
 
 export type CreateStore = {
   storeName: string;
@@ -38,7 +39,7 @@ export type StoreByName = {
 export const getAllStores = async () => {
   try {
     const res = await axios.get<StoresResponse>(
-      "http://localhost:8001/api/stores/"
+      `${API_URL}/api/stores/`
     );
     return res.data.stores;
   } catch (error) {
@@ -66,7 +67,7 @@ export const getAllStores = async () => {
 // };
 
 export const getSingleStore = async (storeId: string) => {
-  const url = `http://localhost:8001/api/stores/${storeId}`;
+  const url = `${API_URL}/api/stores/${storeId}`;
   return makeRequest("GET", url);
 };
 
@@ -81,7 +82,7 @@ export const getSingleStoreDetail = async (
     if (month) params.append("month", month.toString());
 
     const res = await axios.get<StoreByName>(
-      `http://localhost:8001/api/stores/name/${storeHandle}?${params.toString()}`
+      `${API_URL}/api/stores/name/${storeHandle}?${params.toString()}`
     );
     return res.data.data;
   } catch (error) {
@@ -91,7 +92,7 @@ export const getSingleStoreDetail = async (
 
 export const createStore = async (formData) => {
   try {
-    const res = await axios.post("http://localhost:8001/api/stores", formData, {
+    const res = await axios.post(`${API_URL}/api/stores`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -105,12 +106,12 @@ export const createStore = async (formData) => {
 };
 
 export const createSubUser = async (storeId: string, data: CreateSubUser) => {
-  const url = `http://localhost:8001/api/stores/${storeId}/subuser`;
+  const url = `${API_URL}/api/stores/${storeId}/subuser`;
   return makeRequest("POST", url, data);
 };
 
 export const deleteSubUser = async (storeId: string, userId: string) => {
-  const url = `http://localhost:8001/api/stores/${storeId}/subuser/${userId}`;
+  const url = `${API_URL}/api/stores/${storeId}/subuser/${userId}`;
   return makeRequest("DELETE", url);
 };
 
@@ -118,17 +119,17 @@ export const updateOpeningHours = async (
   storeId: string,
   openingHours: OpeningHours
 ) => {
-  const url = `http://localhost:8001/api/stores/${storeId}/opening-hours`;
+  const url = `${API_URL}/api/stores/${storeId}/opening-hours`;
   return makeRequest("PATCH", url, { opening_hours: openingHours });
 };
 
 export const updateStore = async (storeId: string, data: Store) => {
-  const url = `http://localhost:8001/api/stores/${storeId}`;
+  const url = `${API_URL}/api/stores/${storeId}`;
   return makeRequest("PATCH", url, data);
 };
 
 export const getSubscriptionCustomer = async (customerId: string) => {
-  const url = `http://localhost:8001/api/stores/subscription/${customerId}`;
+  const url = `${API_URL}/api/stores/subscription/${customerId}`;
   return makeRequest("GET", url);
 };
 
@@ -140,7 +141,7 @@ export const updateStoreImages = async (storeId: string, data: any) => {
       throw new Error("User is not authenticated");
     }
     const res = await axios.patch(
-      `http://localhost:8001/api/stores/${storeId}`,
+      `${API_URL}/api/stores/${storeId}`,
       data,
       {
         headers: {

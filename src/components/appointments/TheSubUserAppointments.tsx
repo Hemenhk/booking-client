@@ -4,12 +4,14 @@ import {
   addDays,
   startOfWeek,
   parse,
+  getWeek,
   getHours,
   getMinutes,
   addMinutes,
   isBefore,
   isAfter,
 } from "date-fns";
+import { sv } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react"; // Import useState
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
@@ -17,12 +19,18 @@ import { AppointmentType } from "@/lib/types";
 import TheAppointments from "./TheAppointments";
 import { Button } from "../ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { StoreData } from "@/axios/stores";
+import TheTimeLine from "./components/TheTimeLine";
 
 type Props = {
   selectedUserId: string;
+  storeData: StoreData;
 };
 
-export default function TheSubUserAppointments({ selectedUserId }: Props) {
+export default function TheSubUserAppointments({
+  selectedUserId,
+  storeData,
+}: Props) {
   // Manage the state for the currently displayed week
   const [weekStart, setWeekStart] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
@@ -33,7 +41,7 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     addDays(weekStart, index)
   );
 
-  const hours = Array.from({ length: 10 }).map((_, index) => index + 9); // Hours from 9 to 18
+  const currentWeek = getWeek(weekStart, { locale: sv });
 
   const {
     data: bookedData,
@@ -51,7 +59,23 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  console.log("appointments", bookedData);
+  const openingHours = storeData?.store?.opening_hours[0];
+
+  const openingTimes = Object.values(openingHours)
+    .filter((day) => !day.closed)
+    .map((day) => parse(day.open, "HH:mm", new Date()));
+
+  const closingTimes = Object.values(openingHours)
+    .filter((day) => !day.closed)
+    .map((day) => parse(day.close, "HH:mm", new Date()));
+
+  const earliestOpen = Math.min(...openingTimes.map((time) => getHours(time)));
+  const latestClose = Math.max(...closingTimes.map((time) => getHours(time)));
+
+  // Generate consistent hours for the week (from earliest open to latest close)
+  const hours = Array.from({ length: latestClose - earliestOpen }).map(
+    (_, index) => earliestOpen + index
+  );
 
   // Get today's date
   const today = format(new Date(), "yyyy-MM-dd");
@@ -82,27 +106,34 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
     setWeekStart((prevWeek) => addDays(prevWeek, -7)); // Move to the previous week
   };
 
+  // Get the current time
+  const now = new Date();
+  const currentHour = getHours(now);
+  const currentMinute = getMinutes(now);
+
   return (
     <div className="flex flex-col h-full m-8 relative">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex gap-6 justify-center items-center mb-8">
         {/* Button to go to the previous week */}
         <Button
           onClick={goToPreviousWeek}
-          className="size-12 p-0 rounded-full"
+          className="size-8 bg-gray-50 border text-black p-0 hover:bg-gray-50"
         >
-          <ArrowLeft />
+          <ArrowLeft size={18} />
         </Button>
 
         <h1 className="text-2xl font-semibold">
-          {`${format(weekStart, "MMMM yyyy")}`}
+          {`Vecka ${currentWeek}, ${format(weekStart, "MMMM yyyy", {
+            locale: sv,
+          })}`}
         </h1>
 
         {/* Button to go to the next week */}
         <Button
           onClick={goToNextWeek}
-          className="size-12 p-0 rounded-full"
+          className="size-8 bg-gray-50 border text-black p-0 hover:bg-gray-50"
         >
-          <ArrowRight />
+          <ArrowRight size={18} />
         </Button>
       </div>
 
@@ -117,11 +148,11 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
           return (
             <div
               key={index}
-              className={`flex-1 text-center p-3 m-2 mb-3 border-gray-100 ${
+              className={`flex-1 text-center p-3 m-2 mb-3 capitalize border-gray-100 ${
                 isToday ? "bg-gray-800 font-light text-white rounded-full" : ""
               }`} // Highlight today's day
             >
-              {format(day, "EEE, MMM d")}
+              {format(day, "EEE, d MMM ", { locale: sv })}
             </div>
           );
         })}
@@ -175,7 +206,7 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
             return (
               <div
                 key={dayIndex}
-                className="flex-1 border-[0.4px] border-gray-300"
+                className="flex-1 border-[0.4px] border-gray-300 relative"
               >
                 {/* Render multiple appointments if available */}
                 {appointments?.map((appointment: AppointmentType) => (
@@ -183,11 +214,27 @@ export default function TheSubUserAppointments({ selectedUserId }: Props) {
                     <TheAppointments appointment={appointment} />
                   </div>
                 ))}
+                {/* Timeline indicator */}
+                {/* Calculate the position of the timeline */}
+                <TheTimeLine
+                  currentHour={currentHour}
+                  currentMinute={currentMinute}
+                  dayIndex={dayIndex}
+                  hour={hour}
+                />
               </div>
             );
           })}
         </div>
       ))}
+
+      {/* Add the current time box next to the timeline */}
+      {/* Add closing time at the bottom without a time slot */}
+      <div className="flex">
+        <div className="w-16 h-20 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
+          {`${latestClose}:00`} {/* Display the closing time */}
+        </div>
+      </div>
     </div>
   );
 }

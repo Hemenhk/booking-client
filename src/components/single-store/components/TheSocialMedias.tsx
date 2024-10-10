@@ -18,17 +18,18 @@ export default function TheSocialMedias({ social_media }: Props) {
   };
   return (
     <ul className="flex items-center gap-4 pt-10">
-      {Object.entries(social_media).map(([platform, link]) => (
-        <li key={platform}>
-          <a href={link} target="_blank" rel="noopener noreferrer">
-            <div className="bg-gray-600 text-gray-50 flex justify-center items-center size-10 rounded-full relative group">
-              <div className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-gray-600 group-hover:animate-ping-once"></div>
-              {iconMapping[platform]}{" "}
-              {/* Render the icon based on the platform */}
-            </div>
-          </a>
-        </li>
-      ))}
+      {Object.entries(social_media)
+        .filter(([_, link]) => link !== "")
+        .map(([platform, link]) => (
+          <li key={platform}>
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              <div className="bg-gray-600 text-gray-50 flex justify-center items-center size-10 rounded-full relative group">
+                <div className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-gray-600 group-hover:animate-ping-once"></div>
+                {iconMapping[platform]}{" "}
+              </div>
+            </a>
+          </li>
+        ))}
     </ul>
   );
 }

@@ -1,5 +1,6 @@
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
+import { API_URL } from "./availableDate";
 
 export type Feedback = {
   store: string;
@@ -9,6 +10,6 @@ export type Feedback = {
 };
 
 export const createFeedback = async (storeId: string, data: Feedback) => {
-  const url = `http://localhost:8001/api/feedback/${storeId}/feedback`;
+  const url = `${API_URL}/api/feedback/${storeId}/feedback`;
   return makeRequest("POST", url, data);
 };

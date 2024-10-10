@@ -154,7 +154,10 @@ export default function TheStoreAddressPage() {
                 <Pencil size={15} />
               </span>
             </DialogTrigger>
-            <TheUpdateImagesForm storeId={session?.user.store._id} />
+            <TheUpdateImagesForm
+              storeId={session?.user.store._id}
+              existingImages={storeData?.store.collageImages}
+            />
           </Dialog>
         </CardHeader>
         <CardContent>
@@ -163,16 +166,14 @@ export default function TheStoreAddressPage() {
               storeData?.store?.collageImages.map((image, idx) => (
                 <div
                   key={idx}
-                  className="p-2 border rounded-lg w-40 flex justify-center "
+                  className="relative overflow-hidden size-32 rounded-lg"
                 >
-                  <div className="relative overflow-hidden size-32 rounded-lg">
-                    <Image
-                      src={image}
-                      alt="butiksbilder"
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
+                  <Image
+                    src={image}
+                    alt="butiksbilder"
+                    layout="fill"
+                    objectFit="cover"
+                  />
                 </div>
               ))}
           </ul>

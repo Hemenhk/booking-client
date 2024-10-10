@@ -72,7 +72,7 @@ export default function TheAdminAppointmentPage() {
         </Select>
       </div>
       {selectedValue ? (
-        <TheSubUserAppointmentsMobile selectedUserId={selectedValue} />
+        <TheSubUserAppointmentsMobile selectedUserId={selectedValue} storeData={storeData}  />
       ) : (
         ""
       )}
@@ -81,7 +81,7 @@ export default function TheAdminAppointmentPage() {
         <CardContent>
           {selectedValue ? (
               
-                <TheSubUserAppointments selectedUserId={selectedValue} />
+                <TheSubUserAppointments selectedUserId={selectedValue} storeData={storeData} />
           ) : (
             <p>Välj en anställd för att se schemat.</p>
           )}

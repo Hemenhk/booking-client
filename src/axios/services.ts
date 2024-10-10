@@ -1,6 +1,7 @@
 import { Service } from "@/types/types";
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
+import { API_URL } from "./availableDate";
 
 export type CreateServiceType = {
   name: string;
@@ -16,7 +17,7 @@ export type GetAllServicesType = {
 export const getAllServices = async () => {
   try {
     const response = await axios.get<GetAllServicesType>(
-      "http://localhost:8001/api/services"
+      `${API_URL}http://localhost:8001/api/services`
     );
     return response.data.data;
   } catch (error: any) {
@@ -25,14 +26,14 @@ export const getAllServices = async () => {
 };
 
 export const getSingleService = async (serviceId: string) => {
-  const url = `http://localhost:8001/api/sub-users/services/${serviceId}`;
+  const url = `${API_URL}/api/sub-users/services/${serviceId}`;
   return makeRequest("GET", url);
 };
 
 export const getServicesForSubUser = async (userId: string) => {
   try {
     const res = await axios.get<GetAllServicesType>(
-      `http://localhost:8001/api/sub-users/${userId}/services`
+      `${API_URL}/api/sub-users/${userId}/services`
     );
     return res.data.data;
   } catch (error) {
@@ -44,12 +45,12 @@ export const createService = async (
   userId: string,
   serviceData: CreateServiceType
 ) => {
-  const url = `http://localhost:8001/api/sub-users/${userId}/services`;
+  const url = `${API_URL}/api/sub-users/${userId}/services`;
   return makeRequest("POST", url, serviceData);
 };
 
 export const deleteService = async (userId: string, serviceId: string) => {
-  const url = `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`;
+  const url = `${API_URL}/api/sub-users/${userId}/services/${serviceId}`;
   return makeRequest("DELETE", url);
 };
 
@@ -58,6 +59,6 @@ export const updateService = async (
   serviceId: string,
   serviceData: CreateServiceType
 ) => {
-  const url = `http://localhost:8001/api/sub-users/${userId}/services/${serviceId}`;
+  const url = `${API_URL}/api/sub-users/${userId}/services/${serviceId}`;
   return makeRequest("PATCH", url, serviceData);
 };
