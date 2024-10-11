@@ -2,6 +2,7 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 import { Store } from "@/types/types";
+import { API_URL } from "@/axios/availableDate";
 
 type User = {
   id: string;
@@ -29,7 +30,7 @@ const handler = NextAuth({
         try {
           // First, try logging in as a subscription-based user (BooksyUser)
           let response = await axios.post(
-            "http://localhost:8001/api/auth/login",
+            `${API_URL}/api/auth/login`,
             { email, password, userType: "booksyUser" } // You can differentiate user types on your backend
           );
 
@@ -47,7 +48,7 @@ const handler = NextAuth({
           }
 
           // If no BooksyUser found, try logging in as a standard user
-          response = await axios.post("http://localhost:8001/api/auth/login", {
+          response = await axios.post(`${API_URL}/api/auth/login`, {
             email,
             password,
             userType: "standardUser",
@@ -78,31 +79,13 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user, session }) {
       return { ...token, ...user };
-      // if (user) {
-      //   return {
-      //     ...token,
-      //     id: user.id,
-      //     role: user.role,
-      //     store: user.store,
-      //   };
-      // }
-      // return token;
     },
     async session({ session, token }) {
       session.user = token as any;
       return session;
-      // return {
-      //   ...session,
-      //   user: {
-      //     ...session.user,
-      //     id: token.id as string,
-      //     role: token.role as string,
-      //     store: token.store as string,
-      //   },
-      // };
     },
   },
-    secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };
