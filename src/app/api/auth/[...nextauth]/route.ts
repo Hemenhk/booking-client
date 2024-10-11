@@ -29,11 +29,13 @@ const handler = NextAuth({
 
         try {
           // First, try logging in as a subscription-based user (BooksyUser)
-          let response = await axios.post(
-            `${API_URL}/api/auth/login`,
-            { email, password, userType: "booksyUser" } // You can differentiate user types on your backend
-          );
 
+          let response = await axios.post(`${API_URL}/api/auth/login`, {
+            email,
+            password,
+            userType: "booksyUser",
+          });
+          console.log("Login Response:", response.data);
           let user = response.data;
 
           if (user) {

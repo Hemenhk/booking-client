@@ -18,7 +18,9 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 export default function TheUserAvatar() {
   const { data: session, status } = useSession();
 
-  const { storeData, isLoading, isError } = useAdminQuery(session?.user.store.handle);
+  const { storeData, isLoading, isError } = useAdminQuery(
+    session?.user.store.handle
+  );
 
   const isAdmin = session?.user.role === "store_admin";
   const isSubUser = session?.user.role === "sub_user";
@@ -33,11 +35,14 @@ export default function TheUserAvatar() {
     }
   };
 
+  const profileImage = isAdmin
+    ? storeData?.store?.admin?.profileImage || ""
+    : session?.user?.profileImage || "";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="size-8 relative md:size-10">
-          <AvatarImage src={storeData?.store.admin.profileImage || ""} />
+          <AvatarImage src={profileImage} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
