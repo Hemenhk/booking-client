@@ -2,7 +2,7 @@ import TheSigninForm from "@/components/forms/signinForm/TheSigninForm";
 
 export default function SigninPage() {
   return (
-    <div className="flex flex-col my-20 h-[650px] max-w-[1200px] md:mx-auto items-center justify-center mx-auto md:grid lg:grid-cols-2 md:border rounded-md md:shadow-md">
+    <div className="flex flex-col my-16 h-[650px] max-w-[1200px] md:mx-auto items-center justify-center mx-auto md:grid lg:grid-cols-2 md:border rounded-md md:shadow-md">
       <div className="lg:p-8">
         <TheSigninForm />
       </div>{" "}

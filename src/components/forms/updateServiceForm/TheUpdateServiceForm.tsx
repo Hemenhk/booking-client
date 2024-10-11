@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { serviceFormFields } from "@/lib/utils";
 import {
   CreateServiceType,
+  SingleService,
   getSingleService,
   updateService,
 } from "@/axios/services";
@@ -57,7 +58,7 @@ export default function TheUpdateServiceForm({
     data: serviceData,
     isLoading,
     isError,
-  } = useQuery<Service>({
+  } = useQuery<SingleService>({
     queryKey: ["services", serviceId],
     queryFn: () => getSingleService(serviceId),
   });
@@ -65,13 +66,14 @@ export default function TheUpdateServiceForm({
   console.log("single service data", serviceData);
   const { toast, dismiss } = useToast();
 
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: serviceData?.name || "",
-      duration: serviceData?.duration?.toString() || "0",
-      price: serviceData?.price?.toString() || "0",
-      bgColor: serviceData?.bgColor || "bg-lime-100",
+    values: {
+      name: serviceData?.data?.name || "",
+      duration: serviceData?.data?.duration?.toString() || "0",
+      price: serviceData?.data?.price?.toString() || "0",
+      bgColor: serviceData?.data?.bgColor || "bg-lime-100",
     },
   });
 

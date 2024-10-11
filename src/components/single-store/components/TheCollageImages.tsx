@@ -34,28 +34,27 @@ export default function TheCollageImages({
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
-  const mappedImages =
-    collageImages &&
-    collageImages.map((image, idx) => (
-      <CarouselItem key={idx}>
+  
+  const mappedImages = collageImages?.map((image, idx) => (
+    <CarouselItem key={idx}>
+      <div className="relative w-full h-64 md:h-96">
+        {/* Use layout="fill" to ensure the image adjusts to container size */}
         <Image
           src={image}
           alt="collage image"
-          width={1000}
-          height={1000}
+          layout="fill" // Takes up the parent container's space
+          objectFit="cover" // Ensures image covers the container without distortion
           className="rounded-sm md:rounded-md"
         />
-      </CarouselItem>
-    ));
+      </div>
+    </CarouselItem>
+  ));
 
   const circles = Array.from({ length: count }, (_, i) => i + 1);
 
   return (
     <div className="flex flex-col">
-      <Carousel
-        className="w-full xl:w-[600px]"
-        setApi={setApi}
-      >
+      <Carousel className="w-full xl:w-[600px]" setApi={setApi}>
         <CarouselContent>{mappedImages}</CarouselContent>
         {collageImages.length > 1 ? (
           <div className="hidden md:flex">
@@ -67,17 +66,17 @@ export default function TheCollageImages({
         )}
       </Carousel>
       <div className="flex gap justify-center pt-5 text-center text-sm text-muted-foreground">
-        {collageImages.length > 1 && circles.map((circle) => (
-          <div
-            key={circle}
-            className={`size-2 rounded-full mx-1 cursor-pointer ${
-              circle === current ? "bg-gray-700" : "bg-gray-300"
-            }`}
-            onClick={() => api?.scrollTo(circle - 1)}
-          />
-        ))}
+        {collageImages.length > 1 &&
+          circles.map((circle) => (
+            <div
+              key={circle}
+              className={`size-2 rounded-full mx-1 cursor-pointer ${
+                circle === current ? "bg-gray-700" : "bg-gray-300"
+              }`}
+              onClick={() => api?.scrollTo(circle - 1)}
+            />
+          ))}
       </div>
     </div>
-   
   );
 }

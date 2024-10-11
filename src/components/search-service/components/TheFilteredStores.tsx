@@ -20,7 +20,7 @@ export default function TheFilteredStores({ filteredStores }: Props) {
   return (
     <div className="h-[80vh] w-full p-4 pt-10">
       {filteredStores.length === 0 ? (
-        <p>No stores found matching your search criteria.</p>
+        <p>Det finns inga verksamheter som matchar din sökning.</p>
       ) : (
         <>
           <TheFilteredStoresMobile filteredStores={filteredStores} />

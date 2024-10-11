@@ -87,10 +87,9 @@ export default function TheUpdateImagesForm({
       // Append only the remaining existing images that haven't been deleted
       imagePreviews.forEach((imageUrl) => {
         if (existingImages.includes(imageUrl)) {
-          formData.append("existingImages", imageUrl);
+          formData.append("existingImages[]", imageUrl); // Ensure the imageUrl is appended as a single string
         }
       });
-
       // Append each collage image (new images) to FormData
       values.collageImages?.forEach((file) => {
         formData.append("collageImages", file);

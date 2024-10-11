@@ -14,6 +14,10 @@ export type GetAllServicesType = {
   data: Service[];
 };
 
+export type SingleService = {
+  data: Service
+}
+
 export const getAllServices = async () => {
   try {
     const response = await axios.get<GetAllServicesType>(

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getAllStores } from "@/axios/stores";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
+
 import TheStoreInput from "./TheStoreInput";
 import { DialogContent, DialogHeader } from "@/components/ui/dialog";
 import TheCityInput from "./TheCityInput";
