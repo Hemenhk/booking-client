@@ -38,9 +38,7 @@ export type StoreByName = {
 
 export const getAllStores = async () => {
   try {
-    const res = await axios.get<StoresResponse>(
-      `${API_URL}/api/stores/`
-    );
+    const res = await axios.get<StoresResponse>(`${API_URL}/api/stores/`);
     return res.data.stores;
   } catch (error) {
     console.log(error);
@@ -140,19 +138,20 @@ export const updateStoreImages = async (storeId: string, data: any) => {
     if (!session || !session.user) {
       throw new Error("User is not authenticated");
     }
-    const res = await axios.patch(
-      `${API_URL}/api/stores/${storeId}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const res = await axios.patch(`${API_URL}/api/stores/${storeId}`, data, {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res.data;
   } catch (error) {
     console.error("Error in createStore:", error);
     throw error;
   }
+};
+
+export const cancelSubscription = async (customerId: string) => {
+  const url = `${API_URL}/api/stores/subscription/${customerId}`;
+  return makeRequest("POST", url);
 };

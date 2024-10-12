@@ -1,6 +1,6 @@
 "use client";
 
-import { getSubscriptionCustomer } from "@/axios/stores";
+import { cancelSubscription, getSubscriptionCustomer } from "@/axios/stores";
 import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,8 @@ export default function TheSubscriptionPortalPage() {
   const [canCancel, setCanCancel] = useState(false); // State for cancel button
   const [errorMessage, setErrorMessage] = useState(""); // Error message for cancelation attempt
   const [endDate, setEndDate] = useState<Date | null>(null); // State for storing subscription end date
-
+  const [cancellationConfirmed, setCancellationConfirmed] = useState(false);
+  const [cancelledDate, setCancelledDate] = useState<Date | null>(null);
   console.log("customer id", customerId);
 
   // Fetch subscription data
@@ -64,7 +65,7 @@ export default function TheSubscriptionPortalPage() {
       setCanCancel(true); // Allow cancellation if the commitment period has passed
     } else {
       setErrorMessage(
-        `You can cancel after ${commitmentEndDate.toLocaleDateString()}`
+        `Du kan säga upp prenumerationen efter ${commitmentEndDate.toLocaleDateString()}`
       );
     }
   };
@@ -77,15 +78,17 @@ export default function TheSubscriptionPortalPage() {
   }, [subscriptionData]);
 
   // Handle cancelation attempt
-  const handleCancelSubscription = () => {
-    if (canCancel) {
-      // Call your API to cancel the subscription
-      console.log("Canceling subscription...");
-      // Implement your cancelation API call here
-    } else {
-      console.error(
-        "Cannot cancel subscription before commitment period ends."
-      );
+  const handleCancelSubscription = async () => {
+    try {
+      const result = await cancelSubscription(customerId); // API call to cancel subscription
+      if (result.cancel_at) {
+        setCancelledDate(new Date(result.cancel_at * 1000)); // Store the cancellation date
+      } else {
+        setCancelledDate(endDate); // Use calculated end date
+      }
+      setCancellationConfirmed(true); // Set cancellation confirmation
+    } catch (error) {
+      console.error("Error canceling subscription", error);
     }
   };
 
@@ -114,7 +117,7 @@ export default function TheSubscriptionPortalPage() {
   );
 
   const customerPortalLink =
-    "https://billing.stripe.com/p/login/test_aEU28T9ah6SAeAgcMM";
+    "https://billing.stripe.com/p/login/9AQdQRa20gmgawEfYY";
 
   const getSubscriptionPlan = (commitmentPeriod: number) => {
     switch (commitmentPeriod) {
@@ -231,14 +234,13 @@ export default function TheSubscriptionPortalPage() {
           </p>
         </div>
 
-        <div>
-          <Button
-            variant={"destructive"}
-            onClick={handleCancelSubscription}
-            disabled={!canCancel}
-          >
+        <div className="flex flex-row gap-3 items-center">
+          <Button variant={"destructive"} onClick={handleCancelSubscription}>
             Avsluta Prenumeration
           </Button>
+          {cancellationConfirmed && cancelledDate && (
+            <p>Din prenumeration avslutas {cancelledDate.toDateString()}</p>
+          )}
         </div>
       </CardContent>
     </Card>
