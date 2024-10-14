@@ -98,7 +98,7 @@ export default function TheSigninForm() {
           <FormLabel>{formField.label}</FormLabel>
           <FormControl>
             <Input
-              className="h-9 rounded-lg"
+              className="h-9 rounded-lg shadow-md"
               placeholder={formField.placeholder}
               type={formField.type}
               {...field}
@@ -122,7 +122,7 @@ export default function TheSigninForm() {
           Fyll i formuläret för att logga in på ditt konto
         </p>
         {mappedFormFields}
-        <Button type="submit" className="font-normal mt-5">
+        <Button type="submit" className="font-normal mt-5 shadow-md">
           {status === "loading" ? "Loggar in..." : "Logga in"}
         </Button>
         <p className="text-center text-sm text-muted-foreground font-light pt-3">
