@@ -151,7 +151,20 @@ export const updateStoreImages = async (storeId: string, data: any) => {
   }
 };
 
+export const renewSubscription = async (
+  customerId: string,
+  priceId: string
+) => {
+  const url = `${API_URL}/api/stores/renew-subscription`;
+  return makeRequest("POST", url, { customerId, priceId });
+};
+
 export const cancelSubscription = async (customerId: string) => {
   const url = `${API_URL}/api/stores/subscription/${customerId}`;
   return makeRequest("POST", url);
+};
+
+export const undoCancelSubscription = async (customerId: string) => {
+  const url = `${API_URL}/api/stores/subscription/${customerId}`;
+  return makeRequest("PATCH", url);
 };

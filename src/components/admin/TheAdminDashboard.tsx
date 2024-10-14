@@ -19,6 +19,7 @@ import TheBookingsCard from "./components/TheBookingsCard";
 import TheDailyAppointments from "./components/TheDailyAppointments";
 import { TriangleAlert } from "lucide-react";
 import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
+import TheHasNotAccess from "../access/TheHasNotAccess";
 
 export default function TheAdminDashboard({
   storeHandle,
@@ -49,6 +50,10 @@ export default function TheAdminDashboard({
   // Fetch data for the previous month
   const { storeData: previousStoreData, isLoading: isPreviousLoading } =
     useAdminQuery(storeHandle, previousYear, previousMonth);
+
+  if (storeData?.store?.hasAccess === false) {
+    return <TheHasNotAccess />;
+  }
 
   if (isLoading || isPreviousLoading) {
     return (

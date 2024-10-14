@@ -1,9 +1,14 @@
 "use client";
 
-import { cancelSubscription, getSubscriptionCustomer } from "@/axios/stores";
+import {
+  cancelSubscription,
+  getSubscriptionCustomer,
+  undoCancelSubscription,
+} from "@/axios/stores";
 import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useQuery } from "@tanstack/react-query";
 import { CreditCard } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -13,6 +18,7 @@ export default function TheSubscriptionPortalPage() {
   const { data: session } = useSession();
   const customerId = session?.user.store.customerId;
   const commitmentPeriod = session?.user.store.commitmentPeriod || 1; // Default to 1 month if not provided
+
 
   const [canCancel, setCanCancel] = useState(false); // State for cancel button
   const [errorMessage, setErrorMessage] = useState(""); // Error message for cancelation attempt
@@ -92,6 +98,18 @@ export default function TheSubscriptionPortalPage() {
     }
   };
 
+  const handleUndoCancelSubscription = async () => {
+    try {
+      const result = await undoCancelSubscription(customerId);
+      if (result.cancel_at) {
+        setCancelledDate(null);
+      }
+      setCancellationConfirmed(false);
+    } catch (error) {
+      console.error("Error undoing canceling subscription", error);
+    }
+  };
+
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat("sv-SE", {
       style: "currency",
@@ -117,7 +135,7 @@ export default function TheSubscriptionPortalPage() {
   );
 
   const customerPortalLink =
-    "https://billing.stripe.com/p/login/9AQdQRa20gmgawEfYY";
+    "https://billing.stripe.com/p/login/test_aEU28T9ah6SAeAgcMM";
 
   const getSubscriptionPlan = (commitmentPeriod: number) => {
     switch (commitmentPeriod) {
@@ -134,7 +152,15 @@ export default function TheSubscriptionPortalPage() {
 
   console.log("plans", subscriptionData?.data?.items);
 
+  const isCancelledAt = subscriptionData?.data?.cancel_at;
+  const isCancelledAtUnix = new Date(isCancelledAt * 1000)
+    .toLocaleDateString("sv")
+    .split("-")
+    .reverse()
+    .join("-");
+
   return (
+    
     <Card className="overflow-hidden max-w-[700px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Din prenumeration</CardTitle>
@@ -164,7 +190,7 @@ export default function TheSubscriptionPortalPage() {
             <span className="font-medium">{formatPrice(planCost)}</span>/månaden
           </p>
         </div>
-        {subscriptionData?.data?.items?.data[1]?.quantity !== 0 ? (
+        {subscriptionData?.data?.items?.data.length > 1 ? (
           <>
             <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
               <p className="text-sm">
@@ -234,12 +260,22 @@ export default function TheSubscriptionPortalPage() {
           </p>
         </div>
 
-        <div className="flex flex-row gap-3 items-center">
-          <Button variant={"destructive"} onClick={handleCancelSubscription}>
-            Avsluta Prenumeration
-          </Button>
-          {cancellationConfirmed && cancelledDate && (
-            <p>Din prenumeration avslutas {cancelledDate.toDateString()}</p>
+        <div className="flex flex-row gap-3 justify-between items-center">
+          {isCancelledAt ? (
+            <Button onClick={handleUndoCancelSubscription}>
+              Ångra upphöringen
+            </Button>
+          ) : (
+            <Button variant={"destructive"} onClick={handleCancelSubscription}>
+              Avsluta Prenumeration
+            </Button>
+          )}
+
+          {isCancelledAt !== null && (
+            <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
+              <p className="text-sm">Din prenumeration upphör:</p>
+              <p className="text-sm font-medium">{isCancelledAtUnix}</p>
+            </div>
           )}
         </div>
       </CardContent>

@@ -1,4 +1,5 @@
 "use client";
+import TheHasNotAccess from "@/components/access/TheHasNotAccess";
 import TheToolbar from "@/components/dashboard/TheToolbar";
 import TheDashboardHeader from "@/components/header/TheDashboardHeader";
 import TheDashboardHeaderMobile from "@/components/header/TheDashboardHeaderMobile";
@@ -25,6 +26,10 @@ export default function DashboardLayout({
 
   if (status === "unauthenticated") {
     router.push("/signin");
+  }
+
+  if (session?.user.store.hasAccess === false){
+    return <TheHasNotAccess />
   }
 
   console.log("session", session?.user);

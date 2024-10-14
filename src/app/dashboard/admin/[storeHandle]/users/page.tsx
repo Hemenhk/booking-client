@@ -1,13 +1,10 @@
 "use client";
 
-import { getSingleStore } from "@/axios/stores";
 import TheUsersTable from "@/components/dashboard/usersTable/TheUsersTable";
 import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function StoreUserPage() {
