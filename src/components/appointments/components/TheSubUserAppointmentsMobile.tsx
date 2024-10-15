@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { StoreData } from "@/axios/stores";
 import { Appointment } from "@/types/types";
+import { MoonLoader } from "react-spinners";
 
 
 type Props = {
@@ -77,7 +78,11 @@ export default function TheSubUserAppointmentsMobile({
   });
 
   if (isLoading) {
-    return <div>Laddar data...</div>;
+    return (
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <MoonLoader size={30} />
+      </div>
+    );
   }
 
   if (isError) {

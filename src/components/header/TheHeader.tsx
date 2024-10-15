@@ -56,7 +56,7 @@ export default function TheHeader() {
               default:
                 return (
                   <Link
-                    href={`/dashboard/user/${session?.user.store.handle}/${session?.user.id}`}
+                    href={`/dashboard/sub-user/${session?.user.store.handle}/${session?.user.id}/appointments`}
                   >
                     <HiOutlineUserCircle
                       className={`size-9 cursor-pointer ${

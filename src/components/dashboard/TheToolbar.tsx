@@ -69,12 +69,6 @@ export default function TheToolbar() {
 
   const userLinks = [
     {
-      href: `/dashboard/sub-user/${storeHandle}/${userId}`,
-      name: "Hem",
-      icon: <Home className="size-5" />,
-      showRedIndicator: false,
-    },
-    {
       href: `/dashboard/sub-user/${storeHandle}/${userId}/appointments`,
       name: "Schema",
       icon: <Calendar className="size-5" />,

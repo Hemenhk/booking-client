@@ -9,14 +9,33 @@ import { useSession } from "next-auth/react";
 type Props = {
   userId: string;
   storeData?: Store;
+  subuserProfileImage: string;
 };
 
-export default function TheProfileImageCard({ userId, storeData }: Props) {
+export default function TheProfileImageCard({
+  userId,
+  storeData,
+  subuserProfileImage,
+}: Props) {
   const { data: session } = useSession();
 
   if (!session?.user) {
     return <div>Ingen användare hottades</div>;
   }
+
+  const getProfileImage = (userRole: string) => {
+    switch (userRole) {
+      case "store_admin":
+        return storeData?.admin.profileImage;
+      case "sub_user":
+        return subuserProfileImage;
+
+      default:
+        ""; // Default to the session's profile image
+    }
+  };
+
+  const profileImageSrc = getProfileImage(session?.user.role);
 
   return (
     <Card className="overflow-hidden max-w-[600px]">
@@ -30,7 +49,7 @@ export default function TheProfileImageCard({ userId, storeData }: Props) {
           </DialogTrigger>
           <TheUpdateProfileForm
             userId={userId}
-            profileImage={session.user.profileImage}
+            profileImage={profileImageSrc}
           />
         </Dialog>
       </CardHeader>
@@ -38,7 +57,7 @@ export default function TheProfileImageCard({ userId, storeData }: Props) {
         <div className="p-3 border rounded-lg w-40 flex justify-center ">
           <div className="relative overflow-hidden size-32 rounded-lg">
             <Image
-              src={storeData.admin.profileImage || ""}
+              src={profileImageSrc}
               alt="profile image"
               layout="fill"
               objectFit="cover"

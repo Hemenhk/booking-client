@@ -34,6 +34,7 @@ import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { useParams } from "next/navigation";
 import { OpeningHours } from "@/types/types";
 import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 // Generate time slots (from 00:00 to 23:30, with 30-minute intervals)
 const timeSlots = Array.from({ length: 48 }, (_, i) => {
@@ -45,42 +46,57 @@ const timeSlots = Array.from({ length: 48 }, (_, i) => {
 const formSchema = z.object({
   monday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   tuesday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   wednesday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   thursday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   friday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   saturday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
   sunday: z.object({
     open: z.string().optional(),
+    break: z.string().optional(),
+    breakOver: z.string().optional(),
     close: z.string().optional(),
     closed: z.boolean().default(false),
   }),
 });
 
 export default function TheOpeningHoursForm() {
+  const { toast, dismiss } = useToast();
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const { storeHandle } = useParams<{ storeHandle: string }>();
@@ -91,48 +107,104 @@ export default function TheOpeningHoursForm() {
     ? {
         monday: storeData.store.opening_hours[0].monday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         tuesday: storeData.store.opening_hours[0].tuesday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         wednesday: storeData.store.opening_hours[0].wednesday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         thursday: storeData.store.opening_hours[0].thursday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         friday: storeData.store.opening_hours[0].friday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         saturday: storeData.store.opening_hours[0].saturday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         sunday: storeData.store.opening_hours[0].sunday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
       }
     : {
-        monday: { open: "", close: "", closed: false },
-        tuesday: { open: "", close: "", closed: false },
-        wednesday: { open: "", close: "", closed: false },
-        thursday: { open: "", close: "", closed: false },
-        friday: { open: "", close: "", closed: false },
-        saturday: { open: "", close: "", closed: false },
-        sunday: { open: "", close: "", closed: false },
+        monday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        tuesday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        wednesday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        thursday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        friday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        saturday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        sunday: {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
       };
 
   const form = useForm({
@@ -144,25 +216,55 @@ export default function TheOpeningHoursForm() {
     if (storeData?.store.opening_hours?.[0]) {
       const openingHours = storeData.store.opening_hours[0];
       const newDefaultValues = {
-        monday: openingHours.monday || { open: "", close: "", closed: false },
-        tuesday: openingHours.tuesday || { open: "", close: "", closed: false },
+        monday: openingHours.monday || {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
+        tuesday: openingHours.tuesday || {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
         wednesday: openingHours.wednesday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
         thursday: openingHours.thursday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
-        friday: openingHours.friday || { open: "", close: "", closed: false },
+        friday: openingHours.friday || {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
         saturday: openingHours.saturday || {
           open: "",
+          break: "",
+          breakOver: "",
           close: "",
           closed: false,
         },
-        sunday: openingHours.sunday || { open: "", close: "", closed: false },
+        sunday: openingHours.sunday || {
+          open: "",
+          break: "",
+          breakOver: "",
+          close: "",
+          closed: false,
+        },
       };
       form.reset(newDefaultValues);
     }
@@ -187,43 +289,64 @@ export default function TheOpeningHoursForm() {
       const formattedValues: OpeningHours = {
         monday: {
           open: values.monday.open || "",
+          break: values.monday.break || "",
+          breakOver: values.monday.breakOver || "",
           close: values.monday.close || "",
           closed: values.monday.closed,
         },
         tuesday: {
           open: values.tuesday.open || "",
+          break: values.tuesday.break || "", // Ensure this is included
+          breakOver: values.tuesday.breakOver || "", // Ensure this is included
           close: values.tuesday.close || "",
           closed: values.tuesday.closed,
         },
         wednesday: {
           open: values.wednesday.open || "",
+          break: values.wednesday.break || "", // Ensure this is included
+          breakOver: values.wednesday.breakOver || "", // Ensure this is included
           close: values.wednesday.close || "",
           closed: values.wednesday.closed,
         },
         thursday: {
           open: values.thursday.open || "",
+          break: values.thursday.break || "", // Ensure this is included
+          breakOver: values.thursday.breakOver || "", // Ensure this is included
           close: values.thursday.close || "",
           closed: values.thursday.closed,
         },
         friday: {
           open: values.friday.open || "",
+          break: values.friday.break || "", // Ensure this is included
+          breakOver: values.friday.breakOver || "", // Ensure this is included
           close: values.friday.close || "",
           closed: values.friday.closed,
         },
         saturday: {
           open: values.saturday.open || "",
+          break: values.saturday.break || "", // Ensure this is included
+          breakOver: values.saturday.breakOver || "", // Ensure this is included
           close: values.saturday.close || "",
           closed: values.saturday.closed,
         },
         sunday: {
           open: values.sunday.open || "",
+          break: values.sunday.break || "", // Ensure this is included
+          breakOver: values.sunday.breakOver || "", // Ensure this is included
           close: values.sunday.close || "",
           closed: values.sunday.closed,
         },
       };
 
-      console.log("formatted values:", formattedValues);
+      console.log("formatted values:", formattedValues); // Debugging
+
       const res = await updateOpeningHoursMutation(formattedValues);
+      toast({
+        title: "Öppettiderna uppdaterades!",
+      });
+      setTimeout(() => {
+        dismiss();
+      }, 2000);
       console.log("Updated Opening Hours: ", res);
     } catch (error) {
       console.error("Error updating opening hours:", error);
@@ -271,7 +394,7 @@ export default function TheOpeningHoursForm() {
                           control={form.control}
                           name={`${day}.open` as any}
                           render={({ field }) => (
-                            <FormItem className="w-1/3">
+                            <FormItem className="w-1/4">
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -295,11 +418,70 @@ export default function TheOpeningHoursForm() {
                             </FormItem>
                           )}
                         />
+
+                        <FormField
+                          control={form.control}
+                          name={`${day}.break` as any}
+                          render={({ field }) => (
+                            <FormItem className="w-1/4">
+                              <FormControl>
+                                <Select
+                                  key={field.value}
+                                  value={field.value}
+                                  defaultValue={field.value}
+                                  onValueChange={field.onChange}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Rast börjar" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {timeSlots.map((time) => (
+                                      <SelectItem key={time} value={time}>
+                                        {time}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name={`${day}.breakOver` as any}
+                          render={({ field }) => (
+                            <FormItem className="w-1/4">
+                              <FormControl>
+                                <Select
+                                  key={field.value}
+                                  value={field.value}
+                                  defaultValue={field.value}
+                                  onValueChange={field.onChange}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Rast slut" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {timeSlots.map((time) => (
+                                      <SelectItem key={time} value={time}>
+                                        {time}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
                         <FormField
                           control={form.control}
                           name={`${day}.close` as any}
                           render={({ field }) => (
-                            <FormItem className="w-1/3">
+                            <FormItem className="w-1/4">
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -325,13 +507,14 @@ export default function TheOpeningHoursForm() {
                         />
                       </>
                     )}
+
                     {isClosed && (
                       <>
                         <FormField
                           control={form.control}
                           name={`${day}.open` as any}
                           render={() => (
-                            <FormItem className="w-1/3">
+                            <FormItem className="w-1/4">
                               <FormControl>
                                 <Select disabled value="">
                                   <SelectTrigger>
@@ -346,7 +529,7 @@ export default function TheOpeningHoursForm() {
                           control={form.control}
                           name={`${day}.close` as any}
                           render={() => (
-                            <FormItem className="w-1/3">
+                            <FormItem className="w-1/4">
                               <FormControl>
                                 <Select disabled value="">
                                   <SelectTrigger>
@@ -359,6 +542,7 @@ export default function TheOpeningHoursForm() {
                         />
                       </>
                     )}
+
                     <FormField
                       control={form.control}
                       name={`${day}.closed` as any}

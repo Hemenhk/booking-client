@@ -15,23 +15,41 @@ import { Button } from "@/components/ui/button";
 
 export const plans = [
   {
-    link: "https://buy.stripe.com/8wMbM29va7Ri3za7su",
-    priceId: "price_1Q7wSaCwzfkCBOe6ywsf0GS1",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_6oE4gk40r6Aag92dR1"
+        : "https://buy.stripe.com/8wMeYecHm2wY6LmaEH",
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1QA3ZvCwzfkCBOe6j0KQ0xuy"
+        : "price_1QA3iCCwzfkCBOe6uWtzgjMQ",
     price: 699.0,
     duration: "/Månaden",
     title: "Månadsvis",
   },
   {
-    link: "https://buy.stripe.com/3cs9DUaze9Zq0mYdQR",
-    priceId: "price_1Q7wQlCwzfkCBOe6W5O0URvl",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_5kAaEI1SjcYy1e8aEO"
+        : "https://buy.stripe.com/8wM9DU8r66Ne9Xy8wA",
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1QA3aLCwzfkCBOe6Uvh7RhMy"
+        : "price_1QA3iWCwzfkCBOe6oxANvpqy",
     price: 599.0,
     discountPrice: 299,
     duration: "/Månaden",
     title: "Kvartalsvis",
   },
   {
-    link: "https://buy.stripe.com/test_aEU148eF52jU5uodQV",
-    priceId: "price_1Q5UY1CwzfkCBOe6az94LGcm",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_00g0049kL2jU8GAdQZ"
+        : "https://buy.stripe.com/3cs03k5eUdbC2v6005",
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1QA3acCwzfkCBOe6m19yccw0"
+        : "price_1QA3ipCwzfkCBOe6w6rw64yL",
     price: 499.0,
     discountPrice: 249,
     duration: "/Månaden",
@@ -79,7 +97,7 @@ export default function RenewSubPage() {
         {plans.map((plan) => (
           <Card
             key={plan.priceId}
-            className={`w-[400px] h-[625x] rounded-3xl shadow-lg overflow-hidden relative ${
+            className={`w-[350px] h-[400x] rounded-3xl shadow-lg overflow-hidden relative ${
               plan.title === "Årsvis"
                 ? "bg-gradient-to-br from-purple-600 via-pink-500 to-purple-600"
                 : "bg-white"

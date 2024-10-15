@@ -19,12 +19,12 @@ export default function TheSubscriptionPortalPage() {
   const customerId = session?.user.store.customerId;
   const commitmentPeriod = session?.user.store.commitmentPeriod || 1; // Default to 1 month if not provided
 
-
   const [canCancel, setCanCancel] = useState(false); // State for cancel button
   const [errorMessage, setErrorMessage] = useState(""); // Error message for cancelation attempt
   const [endDate, setEndDate] = useState<Date | null>(null); // State for storing subscription end date
   const [cancellationConfirmed, setCancellationConfirmed] = useState(false);
   const [cancelledDate, setCancelledDate] = useState<Date | null>(null);
+  const [trialCountDown, setTrialCountDown] = useState<number | null>(null);
   console.log("customer id", customerId);
 
   // Fetch subscription data
@@ -117,6 +117,30 @@ export default function TheSubscriptionPortalPage() {
     }).format(amount / 100);
   };
 
+  const trialEndDate = new Date(subscriptionData?.data?.trial_end * 1000);
+
+  // Function to update countdown for the trial end date
+  const updateTrialCountdown = () => {
+    if (trialEndDate) {
+      const now = new Date();
+      const timeDiff = trialEndDate.getTime() - now.getTime();
+      const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+      setTrialCountDown(daysRemaining > 0 ? daysRemaining : 0); // Ensure no negative countdown
+    }
+  };
+
+  useEffect(() => {
+    updateTrialCountdown(); // Call it once on component mount
+
+    // Set interval to update countdown every day
+    const countdownInterval = setInterval(
+      updateTrialCountdown,
+      1000 * 60 * 60 * 24
+    );
+
+    return () => clearInterval(countdownInterval); // Clear the interval on component unmount
+  }, [trialEndDate]);
+
   if (isLoading) {
     return (
       <div className="h-[80vh] w-full p-4 pt-10">
@@ -130,6 +154,11 @@ export default function TheSubscriptionPortalPage() {
 
   // Convert Unix timestamps to JavaScript Date objects
   const startDate = new Date(subscriptionData.data.start_date * 1000);
+  const trialStartDate = new Date(subscriptionData.data.trial_start * 1000)
+    .toLocaleDateString("sv")
+    .split("-")
+    .reverse()
+    .join("-");
   const billingCycleAnchorDate = new Date(
     subscriptionData.data.billing_cycle_anchor * 1000
   );
@@ -160,7 +189,6 @@ export default function TheSubscriptionPortalPage() {
     .join("-");
 
   return (
-    
     <Card className="overflow-hidden max-w-[700px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Din prenumeration</CardTitle>
@@ -190,7 +218,8 @@ export default function TheSubscriptionPortalPage() {
             <span className="font-medium">{formatPrice(planCost)}</span>/månaden
           </p>
         </div>
-        {subscriptionData?.data?.items?.data.length > 1 ? (
+        {subscriptionData?.data?.items?.data.length > 1 &&
+        subscriptionData?.data?.items?.data[1].quantity > 0 ? (
           <>
             <div className="bg-gray-50 flex flex-row justify-between items-center gap-2 p-3 border rounded-lg">
               <p className="text-sm">
@@ -245,6 +274,23 @@ export default function TheSubscriptionPortalPage() {
                 <span className="font-medium">
                   {endDate.toLocaleDateString()}
                 </span>
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="bg-gray-50 flex flex-row justify-between items-center p-3 border rounded-lg">
+          <p className="text-sm">
+            Provtid:{" "}
+            <span className="font-medium">
+              {isNaN(startDate.getTime()) ? "Invalid Date" : trialStartDate}
+            </span>
+          </p>
+
+          {endDate && (
+            <div className="text-sm">
+              <p>
+                Provtiden upphör om:{" "}
+                <span className="font-medium">{trialCountDown} dagar</span>
               </p>
             </div>
           )}

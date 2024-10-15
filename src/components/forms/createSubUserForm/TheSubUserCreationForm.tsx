@@ -108,8 +108,8 @@ export default function TheSubUserCreationForm() {
   ));
   return (
     <Form {...form}>
-      <Card>
-        <CardContent>
+      <Card className="w-2/4">
+        <CardContent className="p-2 text-sm">
           Den första anställda är kostnadsfri, därefter kostar varje anställd
           199kr/månaden.
         </CardContent>

@@ -27,15 +27,19 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
-  form: UseFormReturn<{
-    name?: string;
-    last_name?: string;
-    email?: string;
-    phone_number?: string;
-    service?: string;
-    date?: string;
-    time?: string;
-}, any, undefined>
+  form: UseFormReturn<
+    {
+      name?: string;
+      last_name?: string;
+      email?: string;
+      phone_number?: string;
+      service?: string;
+      date?: string;
+      time?: string;
+    },
+    any,
+    undefined
+  >;
 };
 
 export default function TheDatePicker({ form, setStep }: DatePickerProps) {
@@ -52,11 +56,14 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
 
   const service: Service = JSON.parse(savedService);
 
+  console.log("store handle", service.createdBy.store.handle);
+
   // Fetch available dates data and pass service duration
   const { data: dateData, isLoading: isDateLoading } = useQuery({
     queryKey: ["available-data", service.duration, weekStart], // Add weekStart to the query key
     queryFn: () =>
       getAvailableDate(
+        service.createdBy.store.handle,
         service.createdBy._id,
         format(weekStart, "yyyy-MM-dd"),
         service.duration

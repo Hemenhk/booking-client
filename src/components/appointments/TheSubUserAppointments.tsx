@@ -17,11 +17,12 @@ import { useState } from "react"; // Import useState
 import { getBookedAppointmentsForSubuser } from "@/axios/bookAppointment";
 import TheAppointments from "./TheAppointments";
 import { Button } from "../ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, TriangleAlert } from "lucide-react";
 import { StoreData } from "@/axios/stores";
 import TheTimeLine from "./components/TheTimeLine";
 import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
 import { Appointment } from "@/types/types";
+import { MoonLoader } from "react-spinners";
 
 type Props = {
   selectedUserId: string;
@@ -52,18 +53,42 @@ export default function TheSubUserAppointments({
     queryKey: ["sub-appointments", selectedUserId, weekStart], // Add weekStart to query key
     queryFn: () => getBookedAppointmentsForSubuser(selectedUserId),
   });
+
   if (isLoading) {
     return (
-      <div className="h-[80vh] w-full p-4 pt-10">
-        <TheSkeletonCard />
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <MoonLoader size={30} />
       </div>
     );
   }
+  
   if (isError) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
   const openingHours = storeData?.store?.opening_hours[0];
+
+  console.log("opening hrs", openingHours);
+
+  if (openingHours === undefined) {
+    return (
+      <div className="h-[80vh] w-full flex flex-col justify-center items-center">
+        {/* Icon */}
+        <TriangleAlert size={80} className="text-red-500 mb-6" />
+
+        {/* Title */}
+        <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+          Schemat är inte tillgängligt
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-gray-600 text-lg text-center mb-8 w-3/4">
+          Din butik har inte några öppettider valda och ditt schema kommer
+          därmed inte visas.
+        </p>
+      </div>
+    );
+  }
 
   const openingTimes = Object.values(openingHours)
     .filter((day) => !day.closed)

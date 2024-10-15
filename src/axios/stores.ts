@@ -168,3 +168,11 @@ export const undoCancelSubscription = async (customerId: string) => {
   const url = `${API_URL}/api/stores/subscription/${customerId}`;
   return makeRequest("PATCH", url);
 };
+
+export const getSingleSubuser = async (
+  subUserId: string,
+  storeHandle: string
+) => {
+  const url = `${API_URL}/api/stores/${subUserId}/subuser/${storeHandle}`;
+  return makeRequest("GET", url);
+};

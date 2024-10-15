@@ -38,6 +38,7 @@ export default function TheUserAvatar() {
   const profileImage = isAdmin
     ? storeData?.store?.admin?.profileImage || ""
     : session?.user?.profileImage || "";
+    
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

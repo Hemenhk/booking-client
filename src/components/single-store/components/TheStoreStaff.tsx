@@ -98,8 +98,9 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
           </AccordionItem>
           {subUsers?.map((user) => {
             const lastIndexOfUserServices = user?.services?.length - 1; // Get the last index for each sub-user's services
+            const userHasServices = user?.services.length > 0;
 
-            return (
+            return userHasServices ? (
               <AccordionItem value={user._id} key={user._id}>
                 <AccordionTrigger className="hover:no-underline">
                   <li className="flex flex-row items-center justify-between py-6 w-3/4">
@@ -156,6 +157,8 @@ export default function TheStoreStaff({ admin, subUsers, storeHandle }: Props) {
                   </ul>
                 </AccordionContent>
               </AccordionItem>
+            ) : (
+              ""
             );
           })}
         </Accordion>

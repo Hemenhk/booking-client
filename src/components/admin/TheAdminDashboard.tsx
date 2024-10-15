@@ -20,6 +20,7 @@ import TheDailyAppointments from "./components/TheDailyAppointments";
 import { TriangleAlert } from "lucide-react";
 import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
 import TheHasNotAccess from "../access/TheHasNotAccess";
+import { MoonLoader } from "react-spinners";
 
 export default function TheAdminDashboard({
   storeHandle,
@@ -57,8 +58,8 @@ export default function TheAdminDashboard({
 
   if (isLoading || isPreviousLoading) {
     return (
-      <div className="h-[80vh] w-full p-4 pt-10">
-        <TheSkeletonCard />
+      <div className="flex h-[80vh] w-full justify-center items-center">
+        <MoonLoader size={30} />
       </div>
     );
   }

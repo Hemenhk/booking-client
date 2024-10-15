@@ -113,12 +113,16 @@ export default function TheReviews({ storeData }: Props) {
               </p>
             </div>
           ))}
-        <ThePagination
-          currentAmount={currentAmount}
-          reviewsData={storeData.reviews.length}
-          reviewsPerAmount={reviewsPerAmount}
-          setCurrentAmount={setCurrentAmount}
-        />
+        {totalReviews > 4 ? (
+          <ThePagination
+            currentAmount={currentAmount}
+            reviewsData={storeData.reviews.length}
+            reviewsPerAmount={reviewsPerAmount}
+            setCurrentAmount={setCurrentAmount}
+          />
+        ) : (
+          ""
+        )}
       </ul>
     </div>
   );
