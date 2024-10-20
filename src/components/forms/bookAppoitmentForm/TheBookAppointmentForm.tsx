@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CheckCircle } from "lucide-react";
+import { Check, CheckCircle } from "lucide-react";
 
 type DatePickerProps = {
   setStep: (value: SetStateAction<number>) => void;
@@ -65,7 +65,6 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
 
   const savedService = localStorage.getItem("service");
 
- 
   const service: Service = JSON.parse(savedService);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -144,7 +143,7 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
   const endTime = calculateEndTime(watchedTime, service.duration);
 
   return (
-    <div className="h-screen px-48 py-6 bg-zinc-50 flex flex-col items-center w-full gap-14">
+    <div className="px-48 py-28 bg-zinc-50 flex flex-col items-center w-full gap-14">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {step === 1 && <TheDatePicker form={form} setStep={setStep} />}
@@ -152,10 +151,14 @@ export default function TheBookAppointmentForm({ storeHandle, userId }: Props) {
             <ThePersonalInformation form={form} step={step} setStep={setStep} />
           )}
           {step === 3 && (
-            <Card className="shadow-md w-[370px] md:w-[500px] max-w-[700px] py-8 text-center space-y-8">
+            <Card className="shadow-none bg-transparent border-none w-[370px] md:w-[500px] max-w-[700px] py-8 text-center space-y-8">
               <CardHeader className="border-b pb-4">
-                <CheckCircle className="mx-auto mb-3" size={50} />
-                <CardTitle className="text-4xl font-medium">Woo hoo!</CardTitle>
+                {/* <CheckCircle className="mx-auto mb-3" size={50} /> */}
+                <div className="bg-violet-600 text-white flex size-20 justify-center items-center rounded-full mx-auto mb-10">
+                  <Check size={50} />
+                </div>
+
+                <CardTitle className="text-4xl font-medium text-violet-700">Woo hoo!</CardTitle>
                 <CardDescription className="w-4/5 mx-auto text-base pt-4">
                   {service.name} bokades för den{" "}
                   <span className="font-medium">

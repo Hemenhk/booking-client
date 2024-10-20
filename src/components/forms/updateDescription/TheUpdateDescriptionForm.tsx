@@ -15,13 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStore } from "@/axios/stores";
 import { Store } from "@/types/types";
@@ -29,10 +30,17 @@ import { useSession } from "next-auth/react";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  description: z
+    .string()
+    .min(1, {
+      message: "Beskrivningen får inte vara tom.",
+    })
+    .max(1000, {
+      message: "Beskrivningen får högst bestå av 1000 karaktärer.",
+    }),
 });
 
-export default function TheUpdateStoreName() {
+export default function TheUpdateDescriptionForm() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const { toast, dismiss } = useToast();
@@ -42,7 +50,7 @@ export default function TheUpdateStoreName() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      name: storeData?.store.name || "",
+      description: storeData?.store.description || "",
     },
   });
 
@@ -64,11 +72,11 @@ export default function TheUpdateStoreName() {
     try {
       const updatedStoreData: Store = {
         ...storeData.store, // Spread existing store data
-        name: values.name, // Update name
+        description: values.description, // Update descriåtion
       };
       const res = await mutateAsync(updatedStoreData);
       toast({
-        title: `Butikens namn ändrades!`,
+        title: `Butikens beskrivning ändrades!`,
       });
       setTimeout(() => {
         dismiss();
@@ -80,26 +88,31 @@ export default function TheUpdateStoreName() {
       console.log(error);
     }
   };
+
   return (
     <Form {...form}>
       <DialogContent className="overflow-hidden max-w-[600px]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <DialogHeader>
             <h2 className="text-2xl font-semibold tracking-tight">
-              Ändra Butikens namn
+              Ändra Butikens beskrivning
             </h2>
             <p className="mb-5 text-sm text-muted-foreground">
-              Fyll i fälten för att ändra din butiks namn
+              Fyll i fälten för att ändra din butiks beskrivning
             </p>
           </DialogHeader>
           <FormField
             control={form.control}
-            name="name"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Butikens namn</FormLabel>
+                <FormLabel>Butikens beskrivning</FormLabel>
                 <FormControl>
-                  <Input type="text" value={field.value} {...field} />
+                  <Textarea
+                    placeholder="Berätta lite om er för kunderna"
+                    className="resize-none"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />

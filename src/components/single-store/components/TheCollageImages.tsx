@@ -53,7 +53,7 @@ export default function TheCollageImages({
   const circles = Array.from({ length: count }, (_, i) => i + 1);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Carousel className="w-full xl:w-[600px]" setApi={setApi}>
         <CarouselContent>{mappedImages}</CarouselContent>
         {collageImages.length > 1 ? (

@@ -11,6 +11,7 @@ import {
   addMinutes,
   isBefore,
 } from "date-fns";
+import { sv } from "date-fns/locale";
 
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
@@ -132,8 +133,8 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                 </Button>
 
                 {/* Display dynamic month and year */}
-                <h1 className="text-xl md:text-2xl font-medium">
-                  {format(weekStart, "MMMM yyyy")}
+                <h1 className="text-xl md:text-2xl font-medium capitalize">
+                  {format(weekStart, "MMMM yyyy", { locale: sv })}
                 </h1>
 
                 {/* Button to go to next week */}
@@ -156,10 +157,12 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                     } shadow-md hover:shadow-lg transition-all duration-200 ease-out`}
                     onClick={() => setSelectedDate(day)}
                   >
-                    <h3 className="font-semibold text-center">
-                      {format(day, "EEE")}
+                    <h3 className="font-semibold text-center capitalize">
+                      {format(day, "EEE", { locale: sv })}
                     </h3>
-                    <p className="text-center">{format(day, "d")}</p>
+                    <p className="text-center">
+                      {format(day, "d", { locale: sv })}
+                    </p>
                   </Card>
                 ))}
               </div>
@@ -178,7 +181,7 @@ export default function TheDatePicker({ form, setStep }: DatePickerProps) {
                     .map((time: string) => (
                       <li
                         key={time}
-                        className={`cursor-pointer px-4 py-2 text-center rounded-lg border ${
+                        className={`cursor-pointer px-4 py-2 text-center rounded-lg border shadow-sm ${
                           selectedTime === time
                             ? "bg-gray-800 text-white"
                             : "border-gray-200 text-gray-800"

@@ -385,9 +385,9 @@ export default function TheOpeningHoursForm() {
               const isClosed = watchedFields[index];
 
               return (
-                <div key={day} className="flex flex-col gap-3 pb-6">
+                <div key={day} className="flex flex-col border-b py-4 gap-3 pb-6">
                   <h3 className="capitalize font-medium">{day}</h3>
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-row items-center gap-4">
                     {!isClosed && (
                       <>
                         <FormField
@@ -395,6 +395,7 @@ export default function TheOpeningHoursForm() {
                           name={`${day}.open` as any}
                           render={({ field }) => (
                             <FormItem className="w-1/4">
+                              <FormLabel>Öppnar</FormLabel>
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -424,6 +425,8 @@ export default function TheOpeningHoursForm() {
                           name={`${day}.break` as any}
                           render={({ field }) => (
                             <FormItem className="w-1/4">
+                              <FormLabel>Rast börjar</FormLabel>
+
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -453,6 +456,8 @@ export default function TheOpeningHoursForm() {
                           name={`${day}.breakOver` as any}
                           render={({ field }) => (
                             <FormItem className="w-1/4">
+                              <FormLabel>Rast slutar</FormLabel>
+
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -482,6 +487,8 @@ export default function TheOpeningHoursForm() {
                           name={`${day}.close` as any}
                           render={({ field }) => (
                             <FormItem className="w-1/4">
+                              <FormLabel>Stänger</FormLabel>
+
                               <FormControl>
                                 <Select
                                   key={field.value}
@@ -547,7 +554,7 @@ export default function TheOpeningHoursForm() {
                       control={form.control}
                       name={`${day}.closed` as any}
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4">
+                        <FormItem className="flex flex-row items-start space-x-3 mt-7 space-y-0 p-4">
                           <FormControl>
                             <Checkbox
                               checked={field.value}

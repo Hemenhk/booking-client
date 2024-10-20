@@ -1,4 +1,3 @@
-
 import { Appointment, Appointments } from "@/types/types";
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
@@ -13,8 +12,12 @@ export type CreateAppointment = {
   phone_number: string;
   service: string;
   time: string;
-  date: string
+  date: string;
 };
+
+export type SingleAppointment = {
+  appointment: Appointment
+}
 
 export const bookAppointment = async (
   userId: string,
@@ -32,7 +35,6 @@ export const bookAppointment = async (
     console.log(error);
   }
 };
-
 
 export const getAllBookedAppointments = async () => {
   try {
@@ -99,4 +101,15 @@ export const cancelBookedAppointment = async (id: string) => {
 export const updateAppointmentPrice = async (id: string, newPrice: number) => {
   const url = `${API_URL}/api/appointments/${id}/update`;
   makeRequest("PATCH", url, { newPrice });
+};
+
+export const getSingleAppointment = async (id: string) => {
+  try {
+    const res = await axios.get<SingleAppointment>(
+      `${API_URL}/api/appointments/${id}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
 };

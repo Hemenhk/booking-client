@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReactElement } from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Calendar, Clock3, Home, SquarePen, Store, User } from "lucide-react";
 import TheUserAvatar from "./TheUserAvatar";
@@ -15,6 +15,7 @@ export interface LinkProps {
 
 export default function TheToolbar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const { storeHandle, userId } = useParams<{
     storeHandle: string;
     userId: string;
@@ -130,7 +131,9 @@ export default function TheToolbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary  ${
+                  pathname === link.href ? "text-primary bg-[#eeeeee] font-medium" : ""
+                }`}
               >
                 <div className="relative">
                   {link.icon}

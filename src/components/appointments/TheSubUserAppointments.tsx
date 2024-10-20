@@ -20,9 +20,8 @@ import { Button } from "../ui/button";
 import { ArrowLeft, ArrowRight, TriangleAlert } from "lucide-react";
 import { StoreData } from "@/axios/stores";
 import TheTimeLine from "./components/TheTimeLine";
-import { TheSkeletonCard } from "../skeletons/TheSkeletonCard";
-import { Appointment } from "@/types/types";
 import { MoonLoader } from "react-spinners";
+import { Appointment } from "@/types/types";
 
 type Props = {
   selectedUserId: string;
@@ -61,16 +60,14 @@ export default function TheSubUserAppointments({
       </div>
     );
   }
-  
+
   if (isError) {
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
   const openingHours = storeData?.store?.opening_hours[0];
 
-  console.log("opening hrs", openingHours);
-
-  if (openingHours === undefined) {
+  if (!openingHours) {
     return (
       <div className="h-[80vh] w-full flex flex-col justify-center items-center">
         {/* Icon */}
@@ -189,7 +186,7 @@ export default function TheSubUserAppointments({
 
       {/* Render time slots */}
       {hours.map((hour) => (
-        <div key={hour} className="flex">
+        <div key={hour} className="flex relative">
           {/* Time label on the left */}
           <div className="w-16 h-20 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
             {`${hour}:00`}
@@ -238,13 +235,33 @@ export default function TheSubUserAppointments({
                 className="flex-1 border-[0.4px] border-gray-300 relative"
               >
                 {/* Render multiple appointments if available */}
-                {appointments?.map((appointment: Appointment) => (
-                  <div key={appointment._id} className="mb-1">
-                    <TheAppointments appointment={appointment} />
-                  </div>
-                ))}
+                {appointments?.map((appointment: Appointment) => {
+                  // Calculate top offset and height based on the appointment time and duration
+                  const appointmentStartTime = parse(
+                    `${appointment.date} ${appointment.time}`,
+                    "dd/MM/yyyy HH:mm",
+                    new Date()
+                  );
+                  const startMinutes = getMinutes(appointmentStartTime);
+                  const appointmentDuration = appointment.service.duration;
+
+                  const topOffsetPercentage = (startMinutes / 60) * 100;
+                  const heightPercentage = (appointmentDuration / 60) * 100;
+
+                  return (
+                    <div
+                      key={appointment._id}
+                      className="absolute left-0 right-0 mb-1"
+                      style={{
+                        top: `${topOffsetPercentage}%`,
+                        height: `${heightPercentage}%`,
+                      }}
+                    >
+                      <TheAppointments appointment={appointment} />
+                    </div>
+                  );
+                })}
                 {/* Timeline indicator */}
-                {/* Calculate the position of the timeline */}
                 <TheTimeLine
                   currentHour={currentHour}
                   currentMinute={currentMinute}
@@ -258,7 +275,6 @@ export default function TheSubUserAppointments({
       ))}
 
       {/* Add the current time box next to the timeline */}
-      {/* Add closing time at the bottom without a time slot */}
       <div className="flex">
         <div className="w-16 h-20 text-center pt-2 px-2 border-gray-100 text-gray-500 text-sm font-light relative bottom-4">
           {`${latestClose}:00`} {/* Display the closing time */}

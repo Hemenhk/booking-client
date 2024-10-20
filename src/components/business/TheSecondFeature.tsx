@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import featureImage2 from "../../../public/feature-2.png";
+import featureImage2 from "../../../public/business-feature-3.png";
 import { useRef } from "react";
 import useInView from "@/hooks/useInView";
 
@@ -12,7 +12,7 @@ export default function TheSecondFeature() {
   return (
     <section
       ref={sectionRef}
-      className="flex flex-row items-center justify-center gap-32 bg-zinc-50 py-16 pb-32 px-48"
+      className="flex flex-row items-center justify-center gap-32 bg-zinc-50 py-16 pb-32 px-32"
     >
       <div className="relative">
         <Image

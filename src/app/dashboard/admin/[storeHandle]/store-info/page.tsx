@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
-import { Briefcase, MapPin, Pencil, Store, TriangleAlert } from "lucide-react";
+import { AlignLeft, Briefcase, MapPin, Pencil, Store, TriangleAlert } from "lucide-react";
 import { useParams } from "next/navigation";
 import { US, SE, NO, DK, GB, DE, CA } from "country-flag-icons/react/3x2";
 import TheUpdateAddressForm from "@/components/forms/updateAddress/TheUpdateAddressForm";
@@ -16,6 +16,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import TheUpdateMediaForm from "@/components/forms/updateMediaForm/TheUpdateMediaForm";
 import { TheSkeletonCard } from "@/components/skeletons/TheSkeletonCard";
 import TheUpdateStoreName from "@/components/forms/updateStoreName/TheUpdateStoreName";
+import TheUpdateDescriptionForm from "@/components/forms/updateDescription/TheUpdateDescriptionForm";
 
 export default function TheStoreAddressPage() {
   const { data: session } = useSession();
@@ -77,6 +78,14 @@ export default function TheStoreAddressPage() {
         return null; // Return null or a default icon if country is not in the list
     }
   };
+
+  const maxWordsToShow = 6;
+  const wordsArray = storeData?.store?.description.split(" ");
+  const isLongDescription = wordsArray.length > maxWordsToShow;
+
+  const collapsedText = isLongDescription
+    ? wordsArray.slice(0, maxWordsToShow).join(" ") + "..."
+    : storeData?.store?.description;
 
   return (
     <div className="flex flex-col gap-5 mx-2 md:mx-0">
@@ -219,6 +228,27 @@ export default function TheStoreAddressPage() {
                 </div>
               ))}
           </ul>
+        </CardContent>
+      </Card>
+      <Card className="overflow-hidden max-w-[600px]">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg">Butikens beskrivning</CardTitle>
+          <Dialog>
+            <DialogTrigger asChild>
+              <span className="cursor-pointer p-2 rounded-lg transition duration-300 ease-out hover:bg-gray-100">
+                <Pencil size={15} />
+              </span>
+            </DialogTrigger>
+            <TheUpdateDescriptionForm />
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-row items-center gap-2 p-3 border rounded-lg">
+            <AlignLeft size={18} />
+            <p className="flex flex-row items-center gap-5">
+              {collapsedText}{" "}
+            </p>
+          </div>
         </CardContent>
       </Card>
       <Card className="overflow-hidden max-w-[600px]">

@@ -28,7 +28,7 @@ export default function TheFooter() {
     <footer className="w-full flex flex-col justify-end min-h-56 bg-neutral-900 space-y-5 p-10 text-neutral-300">
       <div className="w-full flex flex-row justify-between items-center border-b-[0.4px] pb-5 border-neutral-500">
         <h2 className="text-2xl font-semibold">Bookely.</h2>
-        <ul className="flex flex-row gap-4 text-xs font-light">
+        <ul className="flex flex-col  md:flex-row gap-4 text-xs font-light">
           {pages.map((page) => (
             <Link
               key={page.name}

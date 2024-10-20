@@ -38,7 +38,7 @@ export default function DashboardLayout({
     <div className="grid min-h-screen bg-zinc-50 w-full  md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <TheToolbar />
       <TheDashboardHeaderMobile />
-      <main className="flex md:hidden flex-col w-full gap-4 py-4 lg:gap-6 lg:p-6">
+      <main className="flex md:hidden flex-col w-full gap-4 py-10 px-2 lg:gap-6 lg:p-6">
         {children}
       </main>
       <div className="flex flex-col h-full">

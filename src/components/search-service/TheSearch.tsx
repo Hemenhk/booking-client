@@ -40,10 +40,10 @@ export default function TheSearch() {
       let filtered = storeData.filter(
         (store) =>
           store.hasAccess &&
-          store.categories.length > 0 &&
-          store.admin.services.length > 0 &&
-          store.phone_number &&
-          store.opening_hours.length > 0
+          store.categories.length > 0
+          // store.admin.services.length > 0 &&
+          // store.phone_number &&
+          // store.opening_hours.length > 0
       );
 
       // If no address is given, default to "SE"

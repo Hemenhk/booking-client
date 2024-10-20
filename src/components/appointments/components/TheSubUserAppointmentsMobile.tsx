@@ -22,7 +22,6 @@ import { StoreData } from "@/axios/stores";
 import { Appointment } from "@/types/types";
 import { MoonLoader } from "react-spinners";
 
-
 type Props = {
   selectedUserId: string;
   storeData: StoreData;
@@ -35,14 +34,9 @@ export default function TheSubUserAppointmentsMobile({
   const [weekStart, setWeekStart] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
   ); // Start with the current week
-  // State to manage the current date
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const currentWeek = getWeek(weekStart, { locale: sv });
 
-  // Calculate the start of the current week
-  // const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday is the start of the week
-
-  // Get an array of 7 days starting from the start of the week
   const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
     addDays(weekStart, index)
   );
@@ -60,13 +54,9 @@ export default function TheSubUserAppointmentsMobile({
   const earliestOpen = Math.min(...openingTimes.map((time) => getHours(time)));
   const latestClose = Math.max(...closingTimes.map((time) => getHours(time)));
 
-  // Generate consistent hours for the week (from earliest open to latest close)
   const hours = Array.from({ length: latestClose - earliestOpen }).map(
     (_, index) => earliestOpen + index
   );
-
-  // Hours range (9 AM to 6 PM)
-  // const hours = Array.from({ length: 10 }).map((_, index) => index + 9);
 
   const {
     data: bookedData,
@@ -89,10 +79,8 @@ export default function TheSubUserAppointmentsMobile({
     return <div>Ett fel uppstod när datan hämtades</div>;
   }
 
-  // Format current date to match appointment date format
   const formattedToday = format(currentDate, "yyyy-MM-dd");
 
-  // Filter appointments for the selected day
   const appointmentsForToday = bookedData?.filter(
     (appointment: Appointment) => {
       const appointmentDate = format(
@@ -103,20 +91,34 @@ export default function TheSubUserAppointmentsMobile({
     }
   );
 
-  // Function to go to the next week
-  const goToNextWeek = () => {
-    setWeekStart((prevWeek) => addDays(prevWeek, 7)); // Move to the next week
+  // Function to sort appointments by their start time
+  const sortAppointmentsByTime = (appointments: Appointment[]) => {
+    return appointments.sort((a, b) => {
+      const aStartTime = parse(
+        `${a.date} ${a.time}`,
+        "dd/MM/yyyy HH:mm",
+        new Date()
+      );
+      const bStartTime = parse(
+        `${b.date} ${b.time}`,
+        "dd/MM/yyyy HH:mm",
+        new Date()
+      );
+      return aStartTime.getTime() - bStartTime.getTime(); // Sort by ascending start time
+    });
   };
 
-  // Function to go to the previous week
+  const goToNextWeek = () => {
+    setWeekStart((prevWeek) => addDays(prevWeek, 7));
+  };
+
   const goToPreviousWeek = () => {
-    setWeekStart((prevWeek) => addDays(prevWeek, -7)); // Move to the previous week
+    setWeekStart((prevWeek) => addDays(prevWeek, -7));
   };
 
   return (
     <div className="py-2 mx-4 space-y-4 md:hidden">
       <div className="flex justify-center gap-5  items-center mb-8">
-        {/* Button to go to the previous week */}
         <Button
           onClick={goToPreviousWeek}
           className="size-6 bg-gray-50 border text-black p-0 hover:bg-gray-50"
@@ -130,7 +132,6 @@ export default function TheSubUserAppointmentsMobile({
           })}`}
         </h1>
 
-        {/* Button to go to the next week */}
         <Button
           onClick={goToNextWeek}
           className="size-6 bg-gray-50 border text-black p-0 hover:bg-gray-50"
@@ -138,7 +139,7 @@ export default function TheSubUserAppointmentsMobile({
           <ArrowRight size={15} />
         </Button>
       </div>
-      {/* Day Picker */}
+
       <div className="flex justify-center gap-2 border-b pb-2 w-full">
         {daysOfWeek.map((day, index) => (
           <button
@@ -148,8 +149,7 @@ export default function TheSubUserAppointmentsMobile({
           >
             <span className="text-gray-400 font-light uppercase text-xs">
               {format(day, "EEE", { locale: sv })}
-            </span>{" "}
-            {/* Example: Mon */}
+            </span>
             <span
               className={`text-gray-700 ${
                 format(day, "yyyy-MM-dd", { locale: sv }) === formattedToday
@@ -158,17 +158,13 @@ export default function TheSubUserAppointmentsMobile({
               }`}
             >
               {format(day, "d")}
-            </span>{" "}
-            {/* Example: 30 */}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* Grid Layout for Time Slots */}
       <div className="grid grid-cols-[50px_1fr] px-2">
-        {/* Render time slots */}
         {hours.map((hour) => {
-          // Filter appointments for the current hour
           const appointmentsForHour = appointmentsForToday?.filter(
             (appointment: Appointment) => {
               const appointmentStartTime = parse(
@@ -191,20 +187,23 @@ export default function TheSubUserAppointmentsMobile({
             }
           );
 
+          // Sort appointments within the hour
+          const sortedAppointmentsForHour =
+            sortAppointmentsByTime(appointmentsForHour);
+
           return (
             <>
-              {/* Time label in the first column */}
               <div key={`time-${hour}`} className="text-xs -mt-2 text-gray-400">
                 {`${hour}:00`}
               </div>
 
-              {/* Appointments or Empty slots in the second column */}
               <div
                 key={`slot-${hour}`}
                 className="border-t border-b border-gray-200 h-28"
               >
-                {appointmentsForHour && appointmentsForHour.length > 0 ? (
-                  appointmentsForHour.map((appointment: Appointment) => (
+                {sortedAppointmentsForHour &&
+                sortedAppointmentsForHour.length > 0 ? (
+                  sortedAppointmentsForHour.map((appointment: Appointment) => (
                     <div key={appointment._id} className="my-2">
                       <TheAppointments appointment={appointment} />
                     </div>

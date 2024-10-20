@@ -25,20 +25,19 @@ export default function TheTimeLine({
           }}
         ></div>
       )}
-      {hour === currentHour &&
-        dayIndex === 0 && ( // Check if it's the first day
-          <div
-            className="absolute left-0 bg-sky-500 text-white text-xs p-1.5 rounded-l-lg shadow"
-            style={{
-              top: `${(currentMinute / 60) * 100}%`,
-              zIndex: 15,
-              transform: "translateX(-100%) translateY(-50%)", // Center the box vertically on the timeline
-            }}
-          >
-            {`${currentHour}:${currentMinute < 10 ? "0" : ""}${currentMinute}`}{" "}
-            {/* Display current time */}
-          </div>
-        )}
+      {hour === currentHour && dayIndex === 0 && (
+        <div
+          className="absolute z-50 left-0 bg-sky-500 text-white text-xs p-1.5 rounded-l-lg shadow"
+          style={{
+            top: `${(currentMinute / 60) * 100}%`,
+            zIndex: 15,
+            transform: "translateX(-100%) translateY(-50%)",
+            whiteSpace: "nowrap", // Ensure the time doesn't break into two lines
+          }}
+        >
+          {`${currentHour}:${currentMinute < 10 ? "0" : ""}${currentMinute}`}
+        </div>
+      )}
     </>
   );
 }

@@ -3,7 +3,6 @@ import {
   OpeningHours,
   Store,
   StoresResponse,
-  SubUser,
 } from "@/types/types";
 import { makeRequest } from "@/utils/makeRequest";
 import axios from "axios";
@@ -32,6 +31,12 @@ export type StoreData = {
   monthlyTotalIncome: number;
 };
 
+export type SingleStore = {
+  data: {
+    store: Store;
+  };
+};
+
 export type StoreByName = {
   data: StoreData;
 };
@@ -45,28 +50,15 @@ export const getAllStores = async () => {
   }
 };
 
-// export const getSingleStore = async (storeId: string) => {
-//   try {
-//     const session = await getSession();
-
-//     if (!session || !session.user) {
-//       throw new Error("User is not authenticated");
-//     }
-//     const res = await axios.get<Store>(
-//       `http://localhost:8001/api/stores/${storeId}`,
-//       {
-//         headers: { Authorization: `Bearer ${session.user.accessToken}` },
-//       }
-//     );
-//     return res.data.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-export const getSingleStore = async (storeId: string) => {
-  const url = `${API_URL}/api/stores/${storeId}`;
-  return makeRequest("GET", url);
+export const getSingleStore = async (storeHandle: string) => {
+  try {
+    const res = await axios.get<SingleStore>(
+      `${API_URL}/api/stores/${storeHandle}`
+    );
+    return res.data.data.store;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getSingleStoreDetail = async (

@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import featureImage from "../../../public/peep-1.png";
 import { useRef } from "react";
 import useInView from "@/hooks/useInView";
+import featureImage from "../../../public/home-screen-feature-1.png"
 
 export default function TheFirstFeature() {
   const divRef = useRef(null);
@@ -12,33 +12,35 @@ export default function TheFirstFeature() {
       ref={divRef}
       className="flex flex-row items-center justify-center gap-32"
     >
-      <div className="flex flex-col w-1/3 gap-12">
+      <div className="flex flex-col w-2/5 gap-12">
         <h3
           className={`${
             isInView ? "animate-fade-in-right" : "opacity-0"
-          } text-5xl font-extrabold text-gray-800`}
+          } text-5xl font-extrabold text-[#A3A575]`}
         >
-          Lätta bokningar{" "}
-          <span className="text-cyan-800">utan något krångel</span>
+          Låt oss sköta <span className="text-[#A3A575]">dina bokningar</span>
         </h3>
         <p
           className={`${isInView ? "animate-fade-in-up" : "opacity-0"} text-lg`}
         >
-          Med vår enkla och smidiga bokningsprocess kan du snabbt hitta och boka
-          tider för dina favoritbehandlingar. Oavsett om du letar efter en{" "}
-          <span className="text-cyan-800 font-semibold">klipptid, massage eller skönhetsvård</span>
-          , gör vi det enkelt för dig att
-          hitta tillgängliga tider och boka på bara några klick.{" "}
-          <span className="text-cyan-800 font-semibold">
-            Inga fler samtal eller krångel, bara en stressfri upplevelse!
+          Låt oss hantera dina bokningar så att du kan fokusera på att driva din
+          verksamhet. Med vår plattform{" "}
+          <span className="text-[#A3A575] font-semibold">
+            slipper du tidskrävande administration och manuella bokningar
+          </span>
+          . Vi ser till att dina kunder enkelt hittar tillgängliga tider och
+          bokar direkt.{" "}
+          <span className="text-[#A3A575] font-semibold">
+            Vi tar hand om bokningsprocessen så att du kan fokusera på det du
+            gör bäst.
           </span>
         </p>
       </div>
       <Image
         src={featureImage}
         alt="feature image"
-        width={225}
-        height={225}
+        width={420}
+        height={420}
         className={`${isInView ? "animate-fade-in" : "opacity-0"}`}
       />
     </div>

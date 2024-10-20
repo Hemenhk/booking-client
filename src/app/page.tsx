@@ -1,12 +1,14 @@
 import TheFirstFeature from "@/components/home/TheFirstFeature";
 import bgImage from "../../public/search-bg.png";
 import TheSearchService from "@/components/search-service/TheSearchService";
-import TheServiceCategories from "@/components/home/TheServiceCategories";
+import TheServiceCategories from "@/components/home/TheCategories";
 import TheSearchServiceMobile from "@/components/search-service/components/TheSearchServiceMobile";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import TheCategories from "@/components/home/TheCategories";
+import TheSecondFeature from "@/components/home/TheSecondFeature";
 
 export default function Home() {
   const bgImageStyle = {
@@ -39,8 +41,9 @@ export default function Home() {
           <TheSearchServiceMobile />
         </Dialog>
       </section>
-      <section className="bg-zinc-50 flex flex-col justify-center px-48 py-32 gap-48">
-        {/* <TheServiceCategories /> */}
+      <section className="bg-zinc-50 flex flex-col justify-center items-center px-16 py-8 gap-48">
+        <TheCategories />
+        <TheSecondFeature />
         <TheFirstFeature />
       </section>
     </main>

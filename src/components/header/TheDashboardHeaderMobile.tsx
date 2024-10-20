@@ -22,12 +22,12 @@ export default function TheDashboardHeaderMobile() {
     {
       href: `/dashboard/admin/${storeHandle}`,
       name: "Hem",
-      icon: <Home className="size-6" />,
+      icon: <Home className="size-7" />,
     },
     {
       href: `/dashboard/admin/${storeHandle}/appointments`,
       name: "Schema",
-      icon: <Calendar className="size-6" />,
+      icon: <Calendar className="size-7" />,
     },
     // {
     //   href: `/dashboard/admin/${storeHandle}/${session?.user.id}/service`,
@@ -37,17 +37,17 @@ export default function TheDashboardHeaderMobile() {
     {
       href: `/dashboard/admin/${storeHandle}/users`,
       name: "Användare",
-      icon: <User className="size-6" />,
+      icon: <User className="size-7" />,
     },
     {
       href: `/dashboard/admin/${storeHandle}/opening-hours`,
       name: "Öppettider",
-      icon: <Clock3 className="size-6" />,
+      icon: <Clock3 className="size-7" />,
     },
     {
       href: `/dashboard/admin/${storeHandle}/store-info`,
       name: "Butik",
-      icon: <Store className="size-6" />,
+      icon: <Store className="size-7" />,
     },
   ];
 
@@ -97,13 +97,13 @@ export default function TheDashboardHeaderMobile() {
 
   const linksToRender = getLinks(session?.user.role || "");
   return (
-    <div className="w-full h-20 bg-black flex justify-center items-center text-white fixed bottom-0 md:hidden">
-      <nav className="flex flex-row gap-3">
+    <div className="w-full h-20 z-50 bg-black flex justify-center items-center text-neutral-400 fixed bottom-0 md:hidden">
+      <nav className="flex flex-row gap-7">
         {linksToRender.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary text-white"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary text-neutral-400"
           >
             {link.icon}
           </Link>

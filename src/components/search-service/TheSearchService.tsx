@@ -31,13 +31,7 @@ export default function TheSearchService() {
     queryFn: getAllStores,
   });
 
-  if (!categoriesData) {
-    return <div>Det finns inga kategorier tillgängliga</div>;
-  }
-
-  if (!storeData) {
-    return <div>Det finns inga butiker tillgängliga</div>;
-  }
+  console.log("stores", storeData);
 
   // New handleSearch function that redirects to /search
   const handleSearch = () => {
@@ -57,7 +51,7 @@ export default function TheSearchService() {
   }
 
   return (
-    <div className="hidden md:flex flex-row items-center w-2/4 justify-center bg-white h-20 px-5 rounded-full shadow-md">
+    <div className="hidden md:flex flex-row items-center w-3/5 justify-center bg-white h-16 pl-5 rounded-xl shadow-md">
       {/* Store/Service search input */}
       <TheStoreInput
         setStoreOrService={setStoreOrService}
@@ -77,7 +71,10 @@ export default function TheSearchService() {
       />
 
       {/* Search button */}
-      <Button className="w-36 h-12 rounded-3xl" onClick={handleSearch}>
+      <Button
+        className="h-full w-48 rounded-l-none rounded-r-lg duration-300 ease-out hover:bg-neutral-800 text-base font-light tracking-wide"
+        onClick={handleSearch}
+      >
         Sök
       </Button>
     </div>

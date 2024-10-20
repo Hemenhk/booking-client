@@ -10,7 +10,7 @@ export default function TheFirstFeature() {
   return (
     <section
       ref={sectionRef}
-      className={`flex flex-row items-center justify-center gap-32 bg-zinc-50 py-32 px-48`}
+      className={`flex flex-row items-center justify-center gap-32 bg-zinc-50 p-32`}
     >
       <div className="flex flex-col w-1/3">
         <h3

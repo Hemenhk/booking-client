@@ -1,7 +1,5 @@
 "use client";
-import { CircleUser, CircleUserRound, Plane } from "lucide-react";
-import React from "react";
-import TheUserAvatar from "../dashboard/TheUserAvatar";
+
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { GeistSans } from "geist/font/sans";
 import { Button } from "../ui/button";
@@ -9,6 +7,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import TheSideNav from "./TheSideNav";
+import useScroll from "@/hooks/useScroll"; // Import the new hook
+import useInView from "@/hooks/useInView";
+import { useRef } from "react";
 
 const links = [
   { handle: "Home", href: "/" },
@@ -18,14 +19,17 @@ const links = [
 ];
 
 export default function TheHeader() {
+  const divRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(divRef);
   const { status, data: session } = useSession();
   const pathname = usePathname();
   const isDashboardPage = pathname.startsWith("/dashboard");
   const isBusinessPage = pathname.startsWith("/business");
   const isHomePage = pathname === "/";
   const isAuthenticated = status === "authenticated";
-  const isAdmin = session?.user.role === "store_admin";
-  const isNotStoreUser = session?.user.role === "user";
+
+  // Use the custom scroll hook to detect if the user has scrolled past 50px
+  const isScrolled = useScroll(50);
 
   const header = (
     <>
@@ -38,7 +42,11 @@ export default function TheHeader() {
                   <Link href={`/dashboard/admin/${session?.user.store.handle}`}>
                     <HiOutlineUserCircle
                       className={`size-9 cursor-pointer ${
-                        isHomePage ? "text-white" : "text-black"
+                        isScrolled
+                          ? "text-black"
+                          : isHomePage
+                          ? "text-white"
+                          : "text-black"
                       } `}
                     />
                   </Link>
@@ -48,7 +56,11 @@ export default function TheHeader() {
                   <Link href={`/dashboard/user/${session?.user.id}`}>
                     <HiOutlineUserCircle
                       className={`size-9 cursor-pointer ${
-                        isHomePage ? "text-white" : "text-black"
+                        isScrolled
+                          ? "text-black"
+                          : isHomePage
+                          ? "text-white"
+                          : "text-black"
                       } `}
                     />
                   </Link>
@@ -60,7 +72,11 @@ export default function TheHeader() {
                   >
                     <HiOutlineUserCircle
                       className={`size-9 cursor-pointer ${
-                        isHomePage ? "text-white" : "text-black"
+                        isScrolled
+                          ? "text-black"
+                          : isHomePage
+                          ? "text-white"
+                          : "text-black"
                       } `}
                     />
                   </Link>
@@ -73,7 +89,9 @@ export default function TheHeader() {
           ) : (
             <Button
               className={`hidden md:flex rounded-lg px-8 h-8 font-medium ${
-                isHomePage
+                isScrolled
+                  ? "bg-black text-white transition ease-out duration-500 hover:bg-neutral-800"
+                  : isHomePage
                   ? "bg-white text-black transition ease-out duration-500 hover:bg-gray-200"
                   : ""
               } `}
@@ -87,7 +105,9 @@ export default function TheHeader() {
           <Link
             href={"/signin"}
             className={`relative ${
-              isHomePage
+              isScrolled
+                ? "text-black after:bg-black"
+                : isHomePage
                 ? "text-white after:bg-white "
                 : "text-black after:bg-black"
             }  w-fit block after:block after:content-[''] after:absolute after:h-[2px]   after:w-2/4 after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left`}
@@ -114,47 +134,30 @@ export default function TheHeader() {
         ""
       ) : (
         <div
-          className={`flex items-center justify-between bg-transparent ${
-            isHomePage ? "absolute z-50 w-full" : "bg-white border-b-[0.6px]"
-          } h-[8vh] px-8`}
+          ref={divRef}
+          className={`flex items-center justify-between transition-all ease-in-out ${
+            isScrolled
+              ? "bg-white border-b-[0.6px] h-[7vh] fixed w-full top-0 z-50 duration-300"
+              : isHomePage
+              ? "absolute z-50 w-full h-[8vh] bg-transparent duration-300"
+              : "bg-white border-b-[0.6px] h-[8vh] duration-300"
+          } px-8`}
         >
           <div className="flex md:hidden">
-
-          <TheSideNav links={links}/>
+            <TheSideNav links={links} />
           </div>
 
           <Link href={"/"}>
             <h2
-              className={` font-bold text-2xl tracking-tight ${
-                isHomePage ? "text-white" : "text-black"
-              } `}
+              className={`font-bold transition-all duration-500 ease-in-out ${
+                isScrolled
+                  ? "text-xl tracking-normal"
+                  : "text-2xl tracking-tight"
+              } ${isHomePage && !isScrolled ? "text-white" : "text-black"} `}
             >
               Bookely.
             </h2>
           </Link>
-
-          {/* {isDashboardPage ? (
-            ""
-          ) : (
-            <nav className="hidden md:flex">
-              <ul
-                className={`${GeistSans.className} ${
-                  isHomePage ? "text-white" : "text-black"
-                }  flex items-center space-x-10`}
-              >
-                {links.map((link) => (
-                  <li
-                    key={link.handle}
-                    className={`relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] ${
-                      isHomePage ? "after:bg-white" : "after:bg-black"
-                    }   after:w-2/4 after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left`}
-                  >
-                    <Link href={link.href}>{link.handle}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )} */}
 
           {!isDashboardPage && header}
         </div>
