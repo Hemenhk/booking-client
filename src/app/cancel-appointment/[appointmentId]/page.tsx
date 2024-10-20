@@ -15,10 +15,12 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format, parse } from "date-fns";
+import { format, parse, differenceInHours } from "date-fns";
 import { sv } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { MoonLoader } from "react-spinners";
+import { useState, useEffect } from "react";
+import { Ban } from "lucide-react";
 
 export default function CancelAppointmentPage({
   params,
@@ -28,6 +30,8 @@ export default function CancelAppointmentPage({
   const { appointmentId } = params;
   const { toast, dismiss } = useToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [isTooLate, setIsTooLate] = useState(false);
 
   const {
     data: appointmentData,
@@ -38,30 +42,42 @@ export default function CancelAppointmentPage({
     queryFn: () => getSingleAppointment(appointmentId),
   });
 
-  const queryClient = useQueryClient();
-
-  // Use mutation with proper handling of onSuccess without unnecessary refetch
   const { mutateAsync: cancelAppointmentMutation } = useMutation({
     mutationFn: (appointmentId: string) =>
       cancelBookedAppointment(appointmentId),
     onSuccess: () => {
-      // Show toast notification on success
       toast({
         title: `Din tid hos ${appointmentData.appointment.createdBy.store.name} avbokades!`,
       });
 
-      // Redirect after the toast appears
       setTimeout(() => {
         router.push("/");
-        dismiss(); // Dismiss the toast after the redirect
-      }, 2000); // Set a slight delay to show the toast
+        dismiss();
+      }, 2000);
 
-      // Invalidate relevant queries to update data after the appointment is canceled
       queryClient.invalidateQueries({ queryKey: ["available-data"] });
       queryClient.invalidateQueries({ queryKey: ["sub-appointments"] });
       queryClient.invalidateQueries({ queryKey: ["weekly-appointments"] });
     },
   });
+
+  useEffect(() => {
+    if (appointmentData) {
+      const appointmentDateTime = parse(
+        `${appointmentData.appointment.date} ${appointmentData.appointment.time}`,
+        "dd/MM/yyyy HH:mm",
+        new Date()
+      );
+      const hoursDifference = differenceInHours(
+        appointmentDateTime,
+        new Date()
+      );
+
+      if (hoursDifference < 24) {
+        setIsTooLate(true);
+      }
+    }
+  }, [appointmentData]);
 
   if (isLoading) {
     return (
@@ -75,7 +91,6 @@ export default function CancelAppointmentPage({
     return <div>Ett fel uppstod när vi skulle hämta din bokningsdata</div>;
   }
 
-  // Calculate end time of appointment
   const calculateEndTime = (startTime: string, duration: number) => {
     const [hours, minutes] = startTime.split(":").map(Number);
     const totalMinutes = hours * 60 + minutes + duration;
@@ -87,24 +102,19 @@ export default function CancelAppointmentPage({
     )}`;
   };
 
-  // Format time range for display
   const formatTimeRange = (startTime: string, endTime: string) => {
     return `${startTime} - ${endTime}`;
   };
 
-  // Calculate end time and format the date
   const endTime = calculateEndTime(
     appointmentData.appointment.time,
     appointmentData.appointment.service.duration
   );
   const formattedDate = format(
-    parse(appointmentData.appointment.date, "dd/MM/yyyy", new Date()), // Parse the date string to a Date object
-    "EEEE, d MMMM yyyy", // Format: "Thursday, 10 October 2024"
-    { locale: sv } // Optional: Use Swedish locale or omit for default (English)
+    parse(appointmentData.appointment.date, "dd/MM/yyyy", new Date()),
+    "EEEE, d MMMM yyyy",
+    { locale: sv }
   );
-
-  console.log("appointmentId", appointmentId);
-  console.log("app", appointmentData);
 
   return (
     <div className="flex justify-center items-center h-[80vh]">
@@ -133,11 +143,25 @@ export default function CancelAppointmentPage({
               {formattedDate}
             </p>
           </div>
+          {isTooLate && (
+            <Card className="overflow-hidden max-w-[600px] border-red-700">
+              <CardContent className="flex flex-row items-center gap-3 py-2">
+                <Ban size={30} className="text-red-700" />
+                <p className="flex flex-row items-center gap-5 text-sm">
+                  Det är för sent att avboka denna tid. Avbokning är tillåten
+                  fram till 24 timmar innan. Kontakta din utövare för att se vad
+                  de kan hjälpa dig med:{" "}
+                  {appointmentData.appointment.createdBy.store.phone_number}
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </CardContent>
         <CardFooter className="pt-6 border-t">
           <Button
             className="w-full font-light text-base"
             onClick={() => cancelAppointmentMutation(appointmentId)}
+            disabled={isTooLate}
           >
             Avboka
           </Button>

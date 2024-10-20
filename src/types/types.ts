@@ -93,13 +93,55 @@ type Coordinates = {
 };
 
 export type OpeningHours = {
-  monday: { open: string; close: string; closed: boolean };
-  tuesday: { open: string; close: string; closed: boolean };
-  wednesday: { open: string; close: string; closed: boolean };
-  thursday: { open: string; close: string; closed: boolean };
-  friday: { open: string; close: string; closed: boolean };
-  saturday: { open: string; close: string; closed: boolean };
-  sunday: { open: string; close: string; closed: boolean };
+  monday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  tuesday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  wednesday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  thursday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  friday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  saturday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
+  sunday: {
+    open: string;
+    break: string;
+    breakOver: string;
+    close: string;
+    closed: boolean;
+  };
 };
 
 export type TotalReviewArray = {

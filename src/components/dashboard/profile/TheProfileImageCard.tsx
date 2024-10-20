@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 type Props = {
   userId: string;
   storeData?: Store;
-  subuserProfileImage: string;
+  subuserProfileImage?: string;
 };
 
 export default function TheProfileImageCard({

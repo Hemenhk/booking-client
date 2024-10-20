@@ -1,7 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
-import { renewSubscription } from "@/axios/stores"; // Your axios call for renew subscription
 import {
   Card,
   CardContent,
@@ -13,7 +11,21 @@ import { useSession } from "next-auth/react";
 import { useAdminQuery } from "@/hooks/useAdminQuery";
 import { Button } from "@/components/ui/button";
 
-export const plans = [
+interface Plan {
+  link: string;
+  priceId: string;
+  price: number;
+  duration: string;
+  title: string;
+  discountPrice?: number;
+}
+
+interface Benefit {
+  icon: JSX.Element;
+  text: string;
+}
+
+const plans: Plan[] = [
   {
     link:
       process.env.NODE_ENV === "development"
@@ -57,7 +69,7 @@ export const plans = [
   },
 ];
 
-const benefits = [
+const benefits: Benefit[] = [
   { icon: <Check />, text: "Tillgång till alla våra tjänster" },
   {
     icon: <Check />,
@@ -71,24 +83,7 @@ const benefits = [
 
 export default function RenewSubPage() {
   const { data: session } = useSession();
-  const [email, setEmail] = useState<string | null>(null);
-  const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
   const { storeData } = useAdminQuery(session?.user.store.handle);
-
-  // Handle the renew subscription call
-  const handleRenewSubscription = async (priceId: string) => {
-    try {
-      const res = await renewSubscription(
-        storeData?.store?.customerId,
-        priceId
-      );
-      console.log("renewed sub", res);
-    } catch (error) {
-      console.log("Error renewing subscription:", error);
-    }
-  };
 
   return (
     <div>
@@ -170,7 +165,7 @@ export default function RenewSubPage() {
                 }`}
               >
                 <a
-                  href={`${plan.link}?prefilled_email=${storeData?.store?.admin.email}&customer_id=${storeData?.store?.customerId}`} // Append customerId here
+                  href={`${plan.link}?prefilled_email=${storeData?.store?.admin.email}&customer_id=${storeData?.store?.customerId}`}
                   target="_blank"
                 >
                   Kom igång

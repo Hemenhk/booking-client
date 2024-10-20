@@ -15,7 +15,7 @@ export default function AdminProfilePage() {
     userId: string;
   }>();
 
-  const { storeData, isLoading, isError } = useAdminQuery(storeHandle);
+  const { storeData, isLoading, isError, subUsers } = useAdminQuery(storeHandle);
 
   const hasPhonenumber = storeData && storeData?.store?.phone_number;
 
