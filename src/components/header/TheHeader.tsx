@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import TheSideNav from "./TheSideNav";
-import useScroll from "@/hooks/useScroll"; // Import the new hook
+import useScroll from "@/hooks/useScroll"; // Import the custom scroll hook
 import useInView from "@/hooks/useInView";
 import { useRef } from "react";
 
@@ -28,8 +28,10 @@ export default function TheHeader() {
   const isHomePage = pathname === "/";
   const isAuthenticated = status === "authenticated";
 
-  // Use the custom scroll hook to detect if the user has scrolled past 50px
-  const isScrolled = useScroll(50);
+  // Always call useScroll, but only use it if it's a scrollable page
+  const scrollY = useScroll(50);
+  const isScrollablePage = isHomePage;
+  const isScrolled = isScrollablePage && scrollY;
 
   const header = (
     <>
