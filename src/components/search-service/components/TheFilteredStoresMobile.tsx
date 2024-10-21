@@ -32,6 +32,7 @@ export default function TheFilteredStoresMobile( {filteredStores} : Props) {
                 alt="store image"
                 layout="fill"
                 objectFit="cover"
+                priority={true}
               />
             </div>
             <CardHeader className="px-0">

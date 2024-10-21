@@ -49,6 +49,7 @@ export default function TheTopRatedStores({
                         src={store.collageImages[0]}
                         alt="store image"
                         layout="fill"
+                        priority={true}
                         objectFit="cover"
                       />
                     </div>
@@ -79,6 +80,9 @@ export default function TheTopRatedStores({
                             }}
                             style={{ color: "goldenrod" }}
                           />
+                          <span className="text-gray-500">
+                            ({store.totalReviews}) recensioner
+                          </span>
                         </div>
                       </div>
                     </div>

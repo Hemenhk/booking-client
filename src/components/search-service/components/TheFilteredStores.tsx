@@ -51,6 +51,7 @@ export default function TheFilteredStores({ filteredStores }: Props) {
                           alt="store image"
                           layout="fill"
                           objectFit="cover"
+                          priority={true}
                         />
                       </div>
                     ) : (

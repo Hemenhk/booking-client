@@ -34,6 +34,7 @@ export default function TheTopRatedStoresMobile({ topRatedStores }: Props) {
                         alt="store image"
                         layout="fill"
                         objectFit="cover"
+                        priority={true}
                       />
                     </div>
                     <CardHeader className="space-y-0.5 px-0 pt-2">

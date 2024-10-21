@@ -54,7 +54,7 @@ export default function TheCollageImages({
 
   return (
     <div className="flex flex-col w-full">
-      <Carousel className="w-full xl:w-[700px]" setApi={setApi}>
+      <Carousel className="w-full xl:w-[600px]" setApi={setApi}>
         <CarouselContent>{mappedImages}</CarouselContent>
         {collageImages.length > 1 ? (
           <div className="hidden md:flex">
@@ -65,7 +65,7 @@ export default function TheCollageImages({
           ""
         )}
       </Carousel>
-      <div className="flex gap justify-center xl:w-[700px] pt-5 text-center text-sm text-muted-foreground">
+      <div className="flex gap justify-center xl:w-[600px] pt-5 text-center text-sm text-muted-foreground">
         {collageImages.length > 1 &&
           circles.map((circle) => (
             <div
